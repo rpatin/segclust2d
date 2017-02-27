@@ -1,11 +1,28 @@
 Package: segtools
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Title: segtools for behavioural segmentation
+Version: 0.0.0.9000
+Author: Remi Patin
+Maintainer: Remi Patin <remi.patin@cefe.cnrs.fr>
+Description: gpstools provides several tools helping behavioural segmentation of
+    GPS movement data from animals.
 License: What license is it under?
-Encoding: UTF-8
-LazyData: true
+LazyData: TRUE
+RoxygenNote: 6.0.1
+Depends:
+    R (>= 3.3.1),
+    ggplot2(>= 2.1.0)
+Imports:
+    segTraj (>= 1.0),
+    moveHMM (>= 1.2),
+    RColorBrewer (>= 1.1-2),
+    dygraphs (>= 1.1.1-1),
+    xts (>= 0.9-7),
+    leaflet (>= 1.0.1),
+    sp (>= 1.2-3),
+    dplyr (>= 0.5.0),
+    plyr (>= 1.8.4),
+    reshape2 (>= 1.4.1)
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
