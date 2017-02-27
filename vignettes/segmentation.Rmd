@@ -1,0 +1,191 @@
+---
+title: "Using segTraj R package to segment trajectories"
+author: "Rémi Patin - remi.patin@cefe.cnrs.fr"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    fig_caption: yes
+
+vignette: >
+  %\VignetteIndexEntry{Using segTraj R package to segment trajectories}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette present the use of `segTraj` R package that provides a method for segmenting trajectories acording to a bivariate algorithm, that is an extension of `adehabitatLT::lavielle`. This algorithm allow bivariate segmentation with a dynamic programming algorithm, along with the use of an EM (Expectation-Maximization) algorithm that allocates segment to different class. There are two different functions of segTraj package :
+- `segTraj::DynProg` : segmentation only method using Dynamic Programming
+- `segTraj::hybrid_simultanee` : clustering-segmentation alternating Dynamic Programming and EM.
+
+The `segtools` package provides some tools to use easily the function from `segTraj`. This vignette is divided in two section, first a presentation of tools from `segTraj` package and then how to use them through `segtools` package.
+
+```{r}
+#devtools::install_github('MarieEtienne/segTraj')
+#devtools::install_github('rpatin/segtools')
+
+# library(segtools)
+devtools::load_all()
+```
+
+
+## segTraj functions
+
+`segTraj` can be installed through `devtools::install_github('MarieEtienne/segTraj')`
+
+### Segmentation Only
+
+`segTraj` functions takes as argument a two line matrix with each observation as column. Two functions are called for the segmentation-only algorithm : `Gmean_simultanee` and `DynProg`. Arguments are `lmin`, the minimum length of segments and `Kmax` the maximum number of segments.
+
+```{r,cache=T}
+data <- t(hrshift[,c("x","y")])
+CostLoc <- segTraj::Gmean_simultanee(data, lmin = 100)
+res.DynProg <- segTraj::DynProg(CostLoc, Kmax = 8)
+```
+
+After segmentation is done, we have to look at likelihood to see which model is the best. 3 appears to be the best choice, because adding a third segment still adds some likelihood, but a fourth one is not a strong gain.
+
+```{r,fig.width = 6,fig.height=4}
+plot(-res.DynProg$J.est,xlab='Number of segments',ylab='log-Likelihood',type='b')
+abline(v=3,lty=2)
+```
+
+Now we can look at the segmentation.
+
+```{r,fig.width = 8,fig.height=4,fig.cap = "The default plotting function of segTraj package"}
+nseg=3
+segTraj::bisig_plot(data,rupt = res.DynProg$t.est[nseg,])
+```
+
+
+### Clustering-Segmentation
+
+Only `hybrid_simultanee` is called for joint clustering-segmentation algorithm.
+Arguments are `lmin`, the minimum length of segments, `Kmax` the maximum number of segments, `P` the number of class and `sameSigma` deciding whether all segment have the same variance or not.
+
+```{r,cache=T,results='hide',fig.keep='none'}
+res.hybrid <- segTraj::hybrid_simultanee(data,P=3, Kmax=8,lmin=100, sameSigma = F)
+```
+
+After segmentation is done, we have to look at likelihood to see which model is the best. 3 appears to be the best choice, because adding more segment does not change much likelihood.
+
+```{r,fig.width = 6,fig.height=4}
+plot(res.hybrid$Linc,xlab='Number of segments',ylab='log-Likelihood',type='b')
+abline(v=3,lty=2)
+```
+
+Now we can look at the segmentation.
+
+```{r,fig.width = 8,fig.height=4,fig.cap = "The default plotting function of segTraj package"}
+nseg=3
+segTraj::bisig_plot(data,rupt = res.hybrid$param[[nseg]]$rupt,mu = res.hybrid$param[[nseg]]$phi$mu,pop = res.hybrid$param[[nseg]]$cluster)
+```
+
+## With `segtools` R package
+
+`segtools` provides method for segmentation using `segTraj` functions and also usefull tools for plotting these segmentation. It can be installed through `devtools::install_github('rpatin/segtools')`
+
+### Segmentation only
+
+To create the segmentation we use `segtools::segmentation`. These creates an object of type `segmentation` for which several methods are available.
+
+```{r,cache=T}
+
+data.segmented <- segtools::segmentation(data = hrshift, seg.var = c("x","y"), order.var = "x", type = 'picard', picard.type = 'DynProg', lmin = 100, Kmax = 8)
+
+```
+
+To show likelihood, we use generic function `likelihood` that returns a ggplot object.
+
+```{r,fig.width = 6,fig.height=4}
+likelihood(data.segmented)
+```
+
+To show the segmentation we use the plot function for which we have to choose the number of segment, here 3 should again be the best.
+
+```{r,fig.width = 8,fig.height=4}
+nseg = 3
+plot(data.segmented,nseg)
+```
+
+We can also show statistics for the different segment and plot their statistics.
+
+```{r}
+states(data.segmented,nseg = nseg)
+```
+
+In the case of a segmentation-only algorithm, each segment has a different state.
+
+```{r,fig.width = 6,fig.height=4}
+stateplot(data.segmented,nseg = nseg)
+```
+
+We can also show statistics on segments.
+
+```{r}
+segment(data.segmented,nseg = nseg)
+```
+
+Using `augment` we can extract the original data, augmented by a new column `state` that contains the estimated state/segment for a given number of segment.
+
+```{r}
+head(augment(data.segmented,nseg = nseg))
+```
+
+We can also display a map of the segmentation.
+
+```{r,fig.width = 6,fig.height=6}
+segmap(data.segmented,nseg = nseg)
+```
+
+### Clustering-Segmentation
+
+To use the Clustering-Segmentation algorithm we just change `picard.type` to 'hybrid_simultanee' and specify the number of class.
+
+```{r,cache=T,results='hide',fig.keep='none'}
+
+data.segmented <- segtools::segmentation(data = hrshift, seg.var = c("x","y"), order.var = "x", type = 'picard', picard.type = 'hybrid_simultanee', lmin = 100, Kmax = 8,nclass=3)
+
+```
+
+To show likelihood, we use generic function `likelihood` that returns a ggplot object.
+
+```{r,fig.width = 6,fig.height=4}
+likelihood(data.segmented)
+```
+
+To show the segmentation we use the plot function for which we have to choose the number of segment, here 3 should again be the best.
+
+```{r,fig.width = 8,fig.height=4}
+nseg = 3
+plot(data.segmented,nseg)
+```
+
+We can also show statistics for the different segment and plot their statistics.
+
+```{r}
+states(data.segmented,nseg = nseg)
+```
+
+In the case of a segmentation-only algorithm, each segment has a different state.
+
+```{r,fig.width = 6,fig.height=4}
+stateplot(data.segmented,nseg = nseg)
+```
+
+We can also show statistics on segments.
+
+```{r}
+segment(data.segmented,nseg = nseg)
+```
+
+Using `augment` we can extract the original data, augmented by a new column `state` that contains the estimated state/segment for a given number of segment.
+
+```{r}
+head(augment(data.segmented,nseg = nseg))
+```
+
+We can also display a map of the segmentation.
+
+```{r,fig.width = 6,fig.height=6}
+segmap(data.segmented,nseg = nseg)
+```
+
