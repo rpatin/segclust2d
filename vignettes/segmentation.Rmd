@@ -22,8 +22,8 @@ The `segtools` package provides some tools to use easily the function from `segT
 #devtools::install_github('MarieEtienne/segTraj')
 #devtools::install_github('rpatin/segtools')
 
-# library(segtools)
-devtools::load_all()
+devtools::load_all() # used for building the vignette
+# library(segtools) # needs to be run for the following code to work.
 ```
 
 
@@ -88,7 +88,6 @@ segTraj::bisig_plot(data,rupt = res.hybrid$param[[nseg]]$rupt,mu = res.hybrid$pa
 To create the segmentation we use `segtools::segmentation`. These creates an object of type `segmentation` for which several methods are available.
 
 ```{r,cache=T}
-
 data.segmented <- segtools::segmentation(data = hrshift, seg.var = c("x","y"), order.var = "x", type = 'picard', picard.type = 'DynProg', lmin = 100, Kmax = 8)
 
 ```
