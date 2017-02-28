@@ -34,7 +34,7 @@ plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F
     if(is.null(nseg)) stop("nseg must be chosen for plotting picard segmentation")
     if(x$picard.type == 'variable_class'){
       if(is.null(nclass)) stop("nclass must be chosen for plotting variable_class segmentation")
-      g <- plot_segm(data = x$data, output = x$outputs[[paste(nclass," class -",nseg, "segments")]], separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html)
+      g <- plot_segm(data = x$data, output = x$outputs[[paste(nclass,"class -",nseg, "segments")]], separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html)
     } else {
       g <- plot_segm(data = x$data, output = x$outputs[[paste(nseg, "segments")]], separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html)
     }
@@ -74,7 +74,7 @@ stateplot <- function(x,nseg = NULL,nclass = NULL){
     if(is.null(nseg)) stop("nseg must be chosen for plotting picard states statistics")
     if(x$picard.type == 'variable_class'){
       if(is.null(nclass)) stop("nclass must be chosen for plotting variable_class segmentation")
-      g <- plot_states(x$outputs[[paste(nclass," class -",nseg, "segments")]],x$`Diagnostic variables`)
+      g <- plot_states(x$outputs[[paste(nclass,"class -",nseg, "segments")]],x$`Diagnostic variables`)
     } else  {
       g <- plot_states(x$outputs[[paste(nseg, "segments")]],x$`Diagnostic variables`)
     }
@@ -93,7 +93,7 @@ states <- function(x,nseg = NULL,nclass = NULL){
     if(is.null(nseg)) stop("nseg must be chosen for getting states statistics")
     if(x$picard.type == 'variable_class'){
       if(is.null(nclass)) stop("nclass must be chosen for plotting variable_class segmentation")
-      return(x$outputs[[paste(nclass," class -",nseg, "segments")]]$states)
+      return(x$outputs[[paste(nclass,"class -",nseg, "segments")]]$states)
     }
     else {
       return(x$outputs[[paste(nseg, "segments")]]$states)
@@ -112,7 +112,7 @@ segment <- function(x,nseg = NULL,nclass = NULL){
     if(is.null(nseg)) stop("nseg must be chosen for getting segment statistics")
     if(x$picard.type == 'variable_class'){
       if(is.null(nclass)) stop("nclass must be chosen for plotting variable_class segmentation")
-      return(x$outputs[[paste(nclass," class -",nseg, "segments")]]$segments)
+      return(x$outputs[[paste(nclass,"class -",nseg, "segments")]]$segments)
     } else {
       return(x$outputs[[paste(nseg, "segments")]]$segments)
     }
@@ -164,7 +164,7 @@ segmap <-  function(x,interactive=F,nseg = NULL,nclass = NULL,xcol="expectTime",
     if(is.null(nseg)) stop("nseg must be chosen for getting segment statistics")
     if(x$picard.type == 'variable_class'){
       if(is.null(nclass)) stop("nclass must be chosen for plotting variable_class segmentation")
-      outputs = x$outputs[[paste(nclass," class -",nseg, "segments")]]
+      outputs = x$outputs[[paste(nclass,"class -",nseg, "segments")]]
     } else {
       outputs = x$outputs[[paste(nseg, "segments")]]
     }
