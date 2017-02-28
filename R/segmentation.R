@@ -91,7 +91,9 @@ segmentation_picard <- function(data, seg.var = NULL, diag.var = NULL, order.var
                       "likelihood" = data.frame(nseg=1:Kmax,likelihood=-res.DynProg$J.est),
                       "Segmented variables" = seg.var,
                       "Diagnostic variables" = diag.var,
-                      "Order variable" = order.var)
+                      "Order variable" = order.var,
+                      "param"= list("lmin"=lmin,
+                                    "Kmax"=Kmax))
     class(segmented) <- "segmentation"
     return(segmented)
   } else if ( picard.type == 'hybrid_simultanee' ) {
@@ -110,7 +112,10 @@ segmentation_picard <- function(data, seg.var = NULL, diag.var = NULL, order.var
                       "picard.param" = res$param,
                       "Segmented variables" = seg.var,
                       "Diagnostic variables" = diag.var,
-                      "Order variable" = order.var)
+                      "Order variable" = order.var,
+                      "param"= list("lmin"=lmin,
+                                    "Kmax"=Kmax,
+                                    "nclass"=nclass))
     class(segmented) <- "segmentation"
     return(segmented)
 
