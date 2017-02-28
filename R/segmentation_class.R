@@ -94,6 +94,7 @@ augment.segmentation<- function(x,nseg = NULL,colname_state = "state"){
   if(x$type == 'picard'){
     if(is.null(nseg)) stop("nseg must be chosen for getting segment statistics")
     df.segm  <- segment(x,nseg=nseg)
+    x$data$indice <- 1:nrow(x$data)
     evalstr  <- paste("data <- dplyr::mutate(x$data,",colname_state,"= df.segm[findInterval(indice,df.segm$begin,rightmost.closed = F,left.open = F),\"state\"])",sep="")
     eval(parse(text=evalstr))
     return(data)
