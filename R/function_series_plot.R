@@ -12,7 +12,7 @@
 #' @export
 # plot_segm(subdf2,outputs,separate=T,interactive=T,diag.var=diag.var,x_col='date')
 
-plot_segm <- function(data,output,separate=T,interactive=F,diag.var,x_col="expectTime",html=F){
+plot_segm <- function(data,output,separate=T,interactive=F,diag.var,x_col="expectTime",html=F,order=F){
   # if(class(df.states) != "list"){
   #   df.states <- list(df.states)
   # }
@@ -24,7 +24,7 @@ plot_segm <- function(data,output,separate=T,interactive=F,diag.var,x_col="expec
   data$indice <- 1:nrow(data)
   df.states <- output[[2]]
   df.segm <- output[[1]]
-
+  state_color <- ifelse(order,"state_ordered","state")
   prepMu <- find_mu_sd(df.states,diag.var)
   # 1 seule segmentation
   if(class(prepMu)=='data.frame'){
@@ -36,8 +36,8 @@ plot_segm <- function(data,output,separate=T,interactive=F,diag.var,x_col="expec
     if(separate & !(interactive)){
       g <-   ggplot2::ggplot(data.melt)+ggplot2::geom_line(ggplot2::aes_string(x=x_col,y="value"))+
         ggplot2::facet_wrap(~variable,ncol=1,scales="free_y")+
-        ggplot2::geom_rect(data=segmentation,ggplot2::aes(xmin=begin_date,xmax=end_date,ymin=mu-sd,ymax=mu+sd,fill=factor(state_ordered)),alpha=0.2)+
-        ggplot2::geom_segment(data=segmentation,ggplot2::aes(x=begin_date,xend=end_date,y=mu,yend=mu,col=factor(state_ordered)))
+        ggplot2::geom_rect(data=segmentation,ggplot2::aes_string(xmin="begin_date",xmax="end_date",ymin="mu-sd",ymax="mu+sd",fill=paste("factor(",state_color,")",sep="")),alpha=0.2)+
+        ggplot2::geom_segment(data=segmentation,ggplot2::aes_string(x="begin_date",xend="end_date",y="mu",yend="mu",col=paste("factor(",state_color,")")))
       return(g)
     }
     if(separate & interactive){
