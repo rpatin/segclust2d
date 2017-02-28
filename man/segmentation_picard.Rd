@@ -2,25 +2,59 @@
 % Please edit documentation in R/segmentation.R
 \name{segmentation_picard}
 \alias{segmentation_picard}
-\title{Segmentation Function for Picard/segTraj}
+\alias{segmentation_picard_dynprog}
+\alias{segmentation_picard_hybrid}
+\alias{segmentation_picard_variable_class}
+\title{Segmentation Function for Picard/segTraj segmentation}
 \usage{
 segmentation_picard(data, seg.var = NULL, diag.var = NULL,
-  order.var = NULL, picard.type = "DynProg", scale.variable = F,
-  nclass = NULL, Kmax = NULL, lmin = NULL, sameSigma = F)
+  order.var = NULL, scale.variable = F, nclass.max = NULL, Kmax = NULL,
+  lmin = NULL, sameSigma = F, dat = NULL, picard.type = "DynProg")
+
+segmentation_picard_dynprog(data, seg.var = NULL, diag.var = NULL,
+  order.var = NULL, scale.variable = F, Kmax = NULL, lmin = NULL,
+  dat = NULL)
+
+segmentation_picard_hybrid(data, seg.var = NULL, diag.var = NULL,
+  order.var = NULL, scale.variable = F, nclass = NULL, Kmax = NULL,
+  lmin = NULL, sameSigma = F, dat = NULL)
+
+segmentation_picard_variable_class(data, seg.var = NULL, diag.var = NULL,
+  order.var = NULL, scale.variable = F, nclass.max = NULL, Kmax = NULL,
+  lmin = NULL, sameSigma = F, dat = NULL)
 }
 \arguments{
-\item{picard.type}{either 'hybrid' or 'dynprog'}
+\item{data}{data.frame}
 
-\item{scale.variable}{if variable needs to be scaled for segmentation}
+\item{seg.var}{names of the variables used for segmentation (either one or two names)}
 
-\item{nclass}{number of class for hybrid_simultanee}
+\item{diag.var}{names of the variables on which statistics are calculated}
+
+\item{order.var}{names of the variable with which states are ordered}
+
+\item{scale.variable}{whether variables need to be scaled for segmentation}
+
+\item{nclass.max}{maximum number of class (variable_class)}
 
 \item{Kmax}{maximum number of segments}
 
 \item{lmin}{minimum size of segments}
 
-\item{sameSigma}{whether segment should have equal variance or not.}
+\item{sameSigma}{whether segment should have equal variance or not.
+(hybrid_simultanee & variable_class)}
+
+\item{picard.type}{whether mode should be segmentation only (DynProg),
+clustering-segmentation with a given number of class (hybrid_simultanee) or
+with an unknown number of class (variable_class).}
+
+\item{nclass}{number of class (hybrid_simultanee)}
 }
 \description{
-Segmentation Function for Picard/segTraj
+Segmentation Function for Picard/segTraj segmentation
+
+Segmentation Function for Picard/segTraj segmentation only mode
+
+Segmentation Function for Picard/segTraj clustering-segmentation mode
+
+Segmentation Function for Picard/segTraj testing both clustering-segmentation and segmentation-only
 }

@@ -5,7 +5,7 @@
 \title{Plot segmentation on time-serie}
 \usage{
 plot_segm(data, output, separate = T, interactive = F, diag.var,
-  x_col = "expectTime", html = F)
+  x_col = "expectTime", html = F, order = F)
 }
 \arguments{
 \item{data}{the data.frame with the different variable}
