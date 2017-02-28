@@ -15,12 +15,36 @@
 #' segmentation(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
 #' @export
 
-segmentation <- function(data, seg.var, diag.var = seg.var, order.var = dplyr::first(diag.var), type = 'picard', ...){
+segmentation <- function(data, seg.var, diag.var = seg.var, order.var = dplyr::first(diag.var), type = 'picard', picard.type = NULL, scale.variable = F, ...){
   if(type == 'HMM'){
     seg <- segmentation_hmm(data, ...)
     return(seg)
   } else if (type == 'picard'){
-    seg <- segmentation_picard(data,seg.var = seg.var, diag.var = diag.var, order.var = order.var, ...)
+
+    if(is.null(seg.var)) stop("seg.var missing for picard segmentation")
+
+    if( length(seg.var) == 1 ){
+      dat <- t(data[,rep(seg.var,2)])
+    } else if ( length(seg.var) == 2 ) {
+      dat <- t(data[,seg.var])
+    } else {
+      stop("seg.var must contains either one or two column names")
+    }
+    if(scale.variable) {
+      dat[1,]<- scale(dat[1,])
+      dat[2,]<- scale(dat[2,])
+    }
+
+
+    if(picard.type == 'DynProg'){
+      seg <- segmentation_picard_dynprog(data,seg.var = seg.var, diag.var = diag.var, order.var = order.var, dat=dat, ...)
+    } else if ( picard.type == 'hybrid_simultanee' ) {
+      seg <- segmentation_picard_hybrid(data,seg.var = seg.var, diag.var = diag.var, order.var = order.var,  dat=dat, ...)
+    } else if ( picard.type == 'variable_class') {
+      seg <- segmentation_picard_variable_class(data,seg.var = seg.var, diag.var = diag.var, order.var = order.var, dat=dat, ...)
+    } else {
+      stop("picard.type must be either \'DynProg\', \'hybrid_simultanee\' or \'variable_class\' ")
+    }
     return(seg)
   } else {
     stop("type of segmentation not recognized. Either \'HMM\' or \'picard\'")
@@ -54,72 +78,125 @@ segmentation_hmm <- function(data, nbStates, mu0, sigma0, zeromass0, angleMean0,
   return(segmented)
 }
 
-#' Segmentation Function for Picard/segTraj
-#' @param picard.type either 'hybrid' or 'dynprog'
+#' Segmentation Function for Picard/segTraj Segmentation only mode
+#' @param scale.variable if variable needs to be scaled for segmentation
+#' @param Kmax maximum number of segments
+#' @param lmin minimum size of segments
+
+segmentation_picard_dynprog <- function(data, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = F, Kmax = NULL, lmin = NULL, dat=NULL){
+
+
+  CostLoc <- segTraj::Gmean_simultanee(dat, lmin = lmin)
+  res.DynProg <- segTraj::DynProg(CostLoc, Kmax)
+
+  outputs <- lapply(1:Kmax,function(k){
+    out <- stat_segm(data, diag.var, order.var, model.type='picard', picard.param = res.DynProg, picard.type = 'dynprog', picard.nseg=k)
+    names(out) <- c("segments","states")
+    return(out)
+  })
+  names(outputs) <- paste(1:Kmax, "segments")
+  segmented <- list("data" = data,
+                    "type" = "picard",
+                    "picard.type" = "DynProg",
+                    "outputs" = outputs,
+                    "likelihood" = data.frame(nseg=1:Kmax,likelihood=-res.DynProg$J.est),
+                    "Segmented variables" = seg.var,
+                    "Diagnostic variables" = diag.var,
+                    "Order variable" = order.var,
+                    "param"= list("lmin"=lmin,
+                                  "Kmax"=Kmax))
+  class(segmented) <- "segmentation"
+  return(segmented)
+}
+
+#' Segmentation Function for Picard/segTraj Clustering-Segmentation mode
 #' @param scale.variable if variable needs to be scaled for segmentation
 #' @param nclass number of class for hybrid_simultanee
 #' @param Kmax maximum number of segments
 #' @param lmin minimum size of segments
 #' @param sameSigma whether segment should have equal variance or not.
 
-segmentation_picard <- function(data, seg.var = NULL, diag.var = NULL, order.var = NULL, picard.type = 'DynProg', scale.variable = F, nclass = NULL, Kmax = NULL, lmin = NULL, sameSigma=F){
+segmentation_picard_hybrid <- function(data, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = F, nclass = NULL, Kmax = NULL, lmin = NULL, sameSigma=F, dat=NULL){
 
-  if(is.null(seg.var)) stop("seg.var missing for picard segmentation")
+  res <- segTraj::hybrid_simultanee(dat, P = nclass, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma)
+  outputs <- lapply(nclass:Kmax,function(k){
+    out <- stat_segm(data, diag.var, order.var, model.type='picard', picard.param = res$param[[k]], picard.type = 'hybrid')
+    names(out) <- c("segments","states")
+    return(out)
+  })
+  names(outputs) <- paste(nclass:Kmax, "segments")
+  segmented <- list("data" = data,
+                    "type" = "picard",
+                    "picard.type" = "hybrid_simultanee",
+                    "outputs" = outputs,
+                    "likelihood" = data.frame(nseg=1:Kmax,likelihood = c(res$Linc)),
+                    "picard.param" = res$param,
+                    "Segmented variables" = seg.var,
+                    "Diagnostic variables" = diag.var,
+                    "Order variable" = order.var,
+                    "param"= list("lmin"=lmin,
+                                  "Kmax"=Kmax,
+                                  "nclass"=nclass))
+  class(segmented) <- "segmentation"
+  return(segmented)
+}
 
-  if( length(seg.var) == 1 ){
-    dat <- t(data[,rep(seg.var,2)])
-  } else if ( length(seg.var) == 2 ) {
-    dat <- t(data[,seg.var])
-  } else {
-    stop("seg.var must contains either one or two column names")
-  }
+#' Segmentation Function for Picard/segTraj testing both clustering-segmentation and segmentation-only
+#' @param scale.variable if variable needs to be scaled for segmentation
+#' @param nclass.max number of class for hybrid_simultanee
+#' @param Kmax maximum number of segments
+#' @param lmin minimum size of segments
+#' @param sameSigma whether segment should have equal variance or not.
 
-  if ( picard.type == 'DynProg' ) {
-    CostLoc <- segTraj::Gmean_simultanee(dat, lmin = lmin)
-    res.DynProg <- segTraj::DynProg(CostLoc, Kmax)
+segmentation_picard_variable_class <- function(data, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = F, nclass.max = NULL, Kmax = NULL, lmin = NULL, sameSigma=F, dat=NULL){
 
-    outputs <- lapply(1:Kmax,function(k){
-      out <- stat_segm(data, diag.var, order.var, model.type='picard', picard.param = res.DynProg, picard.type = 'dynprog', picard.nseg=k)
-      names(out) <- c("segments","states")
-      return(out)
+  segmented <- list("data" = data,
+                    "type" = "picard",
+                    "picard.type" = "variable_class",
+                    "outputs" = list(),
+                    "likelihood" = NULL,
+                    "picard.param" = list(),
+                    "Segmented variables" = seg.var,
+                    "Diagnostic variables" = diag.var,
+                    "Order variable" = order.var,
+                    "param"= list("lmin"=lmin,
+                                  "Kmax"=Kmax,
+                                  "nclass.max"=nclass.max))
+
+  class(segmented) <- "segmentation"
+
+  # DynProg segmentation nclass=0
+  CostLoc <- segTraj::Gmean_simultanee(dat, lmin = lmin)
+  res.DynProg <- segTraj::DynProg(CostLoc, Kmax)
+
+  outputs <- lapply(1:Kmax,function(k){
+    out <- stat_segm(data, diag.var, order.var, model.type='picard', picard.param = res.DynProg, picard.type = 'dynprog', picard.nseg=k)
+    names(out) <- c("segments","states")
+    return(out)
+  })
+  names(outputs) <- paste("0 class -",1:Kmax, "segments")
+
+  likelihood <- data.frame(nseg=1:Kmax,likelihood=-res.DynProg$J.est,nclass=0)
+
+  segmented$outputs <- c(segmented$outputs,outputs)
+  segmented$likelihood <- likelihood
+
+  if(nclass.max < 2){stop("nclass.max must be >= 2")} else {
+    for(P in 2:nclass.max){
+      res <- segTraj::hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma)
+      outputs <- lapply(P:Kmax,function(k){
+        out <- stat_segm(data, diag.var, order.var, model.type='picard', picard.param = res$param[[k]], picard.type = 'hybrid')
+        names(out) <- c("segments","states")
+        return(out)
       })
-    names(outputs) <- paste(1:Kmax, "segments")
-    segmented <- list("data" = data,
-                      "type" = "picard",
-                      "picard.type" = "DynProg",
-                      "outputs" = outputs,
-                      "likelihood" = data.frame(nseg=1:Kmax,likelihood=-res.DynProg$J.est),
-                      "Segmented variables" = seg.var,
-                      "Diagnostic variables" = diag.var,
-                      "Order variable" = order.var,
-                      "param"= list("lmin"=lmin,
-                                    "Kmax"=Kmax))
-    class(segmented) <- "segmentation"
-    return(segmented)
-  } else if ( picard.type == 'hybrid_simultanee' ) {
-    res <- segTraj::hybrid_simultanee(dat, P = nclass, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma)
-    outputs <- lapply(nclass:Kmax,function(k){
-      out <- stat_segm(data, diag.var, order.var, model.type='picard', picard.param = res$param[[k]], picard.type = 'hybrid')
-      names(out) <- c("segments","states")
-      return(out)
-    })
-    names(outputs) <- paste(nclass:Kmax, "segments")
-    segmented <- list("data" = data,
-                      "type" = "picard",
-                      "picard.type" = "hybrid_simultanee",
-                      "outputs" = outputs,
-                      "likelihood" = data.frame(nseg=1:Kmax,likelihood = c(res$Linc)),
-                      "picard.param" = res$param,
-                      "Segmented variables" = seg.var,
-                      "Diagnostic variables" = diag.var,
-                      "Order variable" = order.var,
-                      "param"= list("lmin"=lmin,
-                                    "Kmax"=Kmax,
-                                    "nclass"=nclass))
-    class(segmented) <- "segmentation"
-    return(segmented)
-
-  } else {
-    stop("picard.type must be either \'DynProg\' or \'hybrid_simultanee\'")
+      names(outputs) <- paste(P,"class -",P:Kmax, "segments")
+      likelihood = data.frame(nseg=1:Kmax,likelihood = c(res$Linc),nclass=P)
+      picard.param <- list(res$param)
+      names(picard.param) <- paste(P,"class")
+      segmented$likelihood <- rbind(segmented$likelihood,likelihood)
+      segmented$picard.param <- c(segmented$picard.param,picard.param)
+      segmented$outputs <- c(segmented$outputs,outputs)
+    }
   }
+  return(segmented)
 }
