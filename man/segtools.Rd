@@ -9,3 +9,4 @@
 segtools provides usefull tools for the behavioural segmentation of animal
 movement
 }
+

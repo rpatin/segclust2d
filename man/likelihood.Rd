@@ -9,3 +9,4 @@ likelihood(x, ...)
 \description{
 Generic function for likelihood
 }
+

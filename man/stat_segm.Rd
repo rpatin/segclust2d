@@ -4,8 +4,8 @@
 \alias{stat_segm}
 \title{Calculate statistics on a given segmentation}
 \usage{
-stat_segm(data, diag.var, order.var = NULL, model.type = "hmm",
-  hmm.model = NULL, picard.param = NULL, picard.type = NULL, picard.nseg)
+stat_segm(data, diag.var, order.var = NULL, param = NULL, seg.type = NULL,
+  nseg)
 }
 \arguments{
 \item{data}{the data.frame with the different variable}
@@ -14,15 +14,9 @@ stat_segm(data, diag.var, order.var = NULL, model.type = "hmm",
 
 \item{order.var}{names of the variable with which states are ordered}
 
-\item{hmm.model}{the moveHMM::fitHMM output}
+\item{seg.type}{either 'hybrid' or 'dynprog'}
 
-\item{picard.param}{the param output of the segmentation}
-
-\item{picard.type}{either 'hybrid' or 'dynprog'}
-
-\item{picard.nseg}{number of segment chosen}
-
-\item{type}{type of model either 'hmm' or 'picard'}
+\item{nseg}{number of segment chosen}
 }
 \value{
 a list which first element is a data.frame with states of the
@@ -37,3 +31,4 @@ Actually implementation exists for \code{moveHMM} and \code{segTraj} methods.
 \examples{
 stat_segm(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
 }
+

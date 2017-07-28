@@ -4,7 +4,7 @@
 \alias{plot_states}
 \title{Plot states statistics}
 \usage{
-plot_states(outputs, diag.var, position_width = 0.3)
+plot_states(outputs, diag.var, position_width = 0.3, order = F)
 }
 \arguments{
 \item{diag.var}{names of the variables on which statistics are calculated}
@@ -22,3 +22,4 @@ a graph
 \examples{
 stat_segm(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
 }
+
