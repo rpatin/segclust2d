@@ -29,20 +29,29 @@ print.segmentation <- function(x,max.level = 1){
 #' @rdname segmentation-class
 #' @export
 
-plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F, xcol="indice", html = F) {
-  if(x$type == 'picard'){
-    if(is.null(nseg)) stop("nseg must be chosen for plotting picard segmentation")
-    if(x$picard.type == 'variable_class'){
-      if(is.null(nclass)) stop("nclass must be chosen for plotting variable_class segmentation")
-      g <- plot_segm(data = x$data, output = x$outputs[[paste(nclass,"class -",nseg, "segments")]], separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html)
-    } else {
-      g <- plot_segm(data = x$data, output = x$outputs[[paste(nseg, "segments")]], separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html)
-    }
-    return(g)
-  } else if (x$type == 'HMM'){
-    g <- plot_segm(data = x$data, output = x$outputs, separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html)
-    return(g)
+plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F, xcol="indice", html = F,order = NULL) {
+  if (is.null(order)){
+    if (x$type == "home-range") order <- F
+    if (x$type == "behaviour") order <- T
   }
+  if( x$seg.type == "segclust"){
+    if (is.null(nclass)){
+      nclass <- x$ncluster.BIC
+      nseg <- x$Kopt.BIC[nclass]
+      message(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
+    } else if (is.null(nseg)) {
+      nseg <- x$Kopt.BIC[nclass]
+      message(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
+    }
+    g <- plot_segm(data = x$data, output = x$outputs[[paste(nclass,"class -",nseg, "segments")]], separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html, order = order)
+  } else if( x$seg.type == "segmentation"){
+    if( is.null(nseg) ){
+      nseg <- x$Kopt.lavielle
+      message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
+    }
+    g <- plot_segm(data = x$data, output = x$outputs[[paste(nseg, "segments")]], separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html, order = order)
+  }
+  return(g)
 }
 
 
@@ -54,32 +63,89 @@ plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F
 #' @export
 
 likelihood.segmentation <- function(x) {
-  if(x$type != 'picard') stop("likelihood only pertinent for picard segmentation")
-  if(x$picard.type == 'variable_class'){
-    g <- ggplot2::ggplot(filter(x$likelihood,nclass != 0,is.finite(likelihood)),ggplot2::aes(x=nseg,y=likelihood,col=factor(nclass)))+ggplot2::geom_point()+ggplot2::geom_line()+ggplot2::xlab("Number of segments")+ggplot2::ylab("log-Likelihood")
 
-  } else  {
-    g <- ggplot2::ggplot(x$likelihood,ggplot2::aes(x=nseg,y=likelihood))+ggplot2::geom_point()+ggplot2::geom_line()+ggplot2::xlab("Number of segments")+ggplot2::ylab("log-Likelihood")
+  if( x$seg.type == "segclust"){
+    likedat <- x$likelihood
+    g <- ggplot2::ggplot(dplyr::filter(likedat,nclass != 0,is.finite(likelihood)),ggplot2::aes(x=nseg,y=likelihood,col=factor(nclass)))+ggplot2::geom_point()+ggplot2::geom_line()+ggplot2::xlab("Number of segments")+ggplot2::ylab("log-Likelihood")+scale_color_discrete(name="Number of \nCluster")
+
+  } else if( x$seg.type == "segmentation"){
+    nseg.lav <- x$Kopt.lavielle
+    tmpdf =  data.frame("nseg"=range(x$likelihood$nseg),"likelihood"=range(x$likelihood$likelihood))
+    g <- ggplot2::ggplot(x$likelihood,ggplot2::aes(x=nseg,y=likelihood))+ggplot2::geom_point()+ggplot2::geom_line()+ggplot2::xlab("Number of segments")+ggplot2::ylab("log-Likelihood")+
+      scale_color_discrete(name="Number of \nCluster") +
+      geom_vline(xintercept = nseg.lav, linetype = 2)+
+      geom_line(data=tmpdf,aes(linetype="Lavielle's optimal\n number of segment"),alpha=0)+ scale_linetype_discrete(name=NULL)+
+      guides(linetype = guide_legend(override.aes = list(alpha = 1,fill=NA,shape=NA,linetype=2)))+
+      theme(legend.title=element_blank(),legend.position=c(.83,.1))
   }
   return(g)
 }
 
 
+#' \code{getlikelihood} returns likelihood estimates of a \code{segmentation} object
+#' @rdname segmentation-class
+#' @export
+
+get_likelihood <- function(x) {
+  return(x$likelihood)
+}
+
+
+
+
+#' \code{BIC.segmentation} plot BIC estimates of a \code{segmentation} object
+#' - works only for segclust algorithm.
+#' @rdname segmentation-class
+#' @export
+
+BIC.segmentation <- function(x) {
+
+  if( x$seg.type == "segclust"){
+    likedat <- x$BIC
+    g <- ggplot2::ggplot(filter(likedat,is.finite(BIC)),ggplot2::aes(x=nseg,y=BIC,col=factor(ncluster)))+ggplot2::geom_point()+ggplot2::geom_line()+ggplot2::xlab("Number of segments")+ggplot2::ylab("BIC")+scale_color_discrete(name="Number of \nCluster")
+
+  } else if( x$seg.type == "segmentation"){
+    stop("no BIC estimates for segmentation only algorithm")
+  }
+  return(g)
+}
+
+
+#' \code{getlikelihood} returns likelihood estimates of a \code{segmentation} object
+#' @rdname segmentation-class
+#' @export
+
+get_BIC <- function(x) {
+  return(x$BIC)
+}
+
 #' \code{stateplot} plot state distribution of a \code{segmentation} object
 #' @rdname segmentation-class
 #' @export
 
-stateplot <- function(x,nseg = NULL,nclass = NULL){
-  if(x$type == 'picard'){
-    if(is.null(nseg)) stop("nseg must be chosen for plotting picard states statistics")
-    if(x$picard.type == 'variable_class'){
-      if(is.null(nclass)) stop("nclass must be chosen for plotting variable_class segmentation")
-      g <- plot_states(x$outputs[[paste(nclass,"class -",nseg, "segments")]],x$`Diagnostic variables`)
-    } else  {
-      g <- plot_states(x$outputs[[paste(nseg, "segments")]],x$`Diagnostic variables`)
+stateplot <- function(x,nseg = NULL,nclass = NULL,order = NULL){
+  if (is.null(order)){
+    if (x$type == "home-range") order <- F
+    if (x$type == "behaviour") order <- T
+  }
+  if( x$seg.type == "segclust"){
+    if (is.null(nclass)){
+      nclass <- x$ncluster.BIC
+      nseg <- x$Kopt.BIC[nclass]
+      message(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
+    } else if (is.null(nseg)) {
+      nseg <- x$Kopt.BIC[nclass]
+      message(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
     }
-  } else if (x$type == 'HMM'){
-    g <- plot_states(x$outputs,x$`Diagnostic variables`)
+    g <- plot_states(x$outputs[[paste(nclass,"class -",nseg, "segments")]],x$`Diagnostic variables`,order= order)
+
+  } else if( x$seg.type == "segmentation"){
+    if( is.null(nseg) ){
+      nseg <- x$Kopt.lavielle
+      message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
+    }
+    g <- plot_states(x$outputs[[paste(nseg, "segments")]],x$`Diagnostic variables`,order= order)
+
   }
   return(g)
 }
@@ -89,17 +155,27 @@ stateplot <- function(x,nseg = NULL,nclass = NULL){
 #' @export
 
 states <- function(x,nseg = NULL,nclass = NULL){
-  if(x$type == 'picard'){
-    if(is.null(nseg)) stop("nseg must be chosen for getting states statistics")
-    if(x$picard.type == 'variable_class'){
-      if(is.null(nclass)) stop("nclass must be chosen for plotting variable_class segmentation")
-      return(x$outputs[[paste(nclass,"class -",nseg, "segments")]]$states)
+  if( x$seg.type == "segclust"){
+    if (is.null(order)){
+      if (x$type == "home-range") order <- F
+      if (x$type == "behaviour") order <- T
     }
-    else {
-      return(x$outputs[[paste(nseg, "segments")]]$states)
+    if (is.null(nclass)){
+      nclass <- x$ncluster.BIC
+      nseg <- x$Kopt.BIC[nclass]
+      message(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
+    } else if (is.null(nseg)) {
+      nseg <- x$Kopt.BIC[nclass]
+      message(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
     }
-  } else if (x$type == 'HMM'){
-    return(x$outputs$states)
+    return(x$outputs[[paste(nclass,"class -",nseg, "segments")]]$states)
+
+  } else if( x$seg.type == "segmentation"){
+    if( is.null(nseg) ){
+      nseg <- x$Kopt.lavielle
+      message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
+    }
+    return(x$outputs[[paste(nseg, "segments")]]$states)
   }
 }
 
@@ -108,16 +184,28 @@ states <- function(x,nseg = NULL,nclass = NULL){
 #' @export
 
 segment <- function(x,nseg = NULL,nclass = NULL){
-  if(x$type == 'picard'){
-    if(is.null(nseg)) stop("nseg must be chosen for getting segment statistics")
-    if(x$picard.type == 'variable_class'){
-      if(is.null(nclass)) stop("nclass must be chosen for plotting variable_class segmentation")
-      return(x$outputs[[paste(nclass,"class -",nseg, "segments")]]$segments)
-    } else {
-      return(x$outputs[[paste(nseg, "segments")]]$segments)
+  if( x$seg.type == "segclust"){
+    if (is.null(nclass)){
+      nclass <- x$ncluster.BIC
+      nseg <- x$Kopt.BIC[nclass]
+      message(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
+    } else if (is.null(nseg)) {
+      nseg <- x$Kopt.BIC[nclass]
+      message(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
     }
-  } else if (x$type == 'HMM'){
-    return(x$outputs$segments)
+    statesdf <- x$outputs[[paste(nclass,"class -",nseg, "segments")]]$states
+    segmentdf <- x$outputs[[paste(nclass,"class -",nseg, "segments")]]$segments
+    totdf <- dplyr::left_join(segmentdf,statesdf, by = "state")
+    return(totdf)
+  } else if( x$seg.type == "segmentation"){
+    if( is.null(nseg) ){
+      nseg <- x$Kopt.lavielle
+      message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
+    }
+    statesdf <- x$outputs[[paste(nseg, "segments")]]$states
+    segmentdf <- x$outputs[[paste(nseg, "segments")]]$segments
+    totdf <- dplyr::left_join(segmentdf,statesdf, by = "state")
+    return(totdf)
   }
 }
 
@@ -129,23 +217,33 @@ segment <- function(x,nseg = NULL,nclass = NULL){
 augment.segmentation<- function(x,nseg = NULL,nclass=NULL,colname_state = "state"){
   if(any(colnames(x$data) == colname_state)) stop(paste(colname_state,"already exists as column names of the data.frame. Cannot erase"))
 
-  if(x$type == 'picard'){
-    if(is.null(nseg)) stop("nseg must be chosen for getting segment statistics")
-    if(x$picard.type == 'variable_class'){
-      if(is.null(nclass)) stop("nclass must be chosen for plotting variable_class segmentation")
-      df.segm  <- segment(x,nseg=nseg,nclass=nclass)
-    } else {
-      df.segm  <- segment(x,nseg=nseg)
+  if( x$seg.type == "segclust"){
+    if (is.null(nclass)){
+      nclass <- x$ncluster.BIC
+      nseg <- x$Kopt.BIC[nclass]
+      message(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
+    } else if (is.null(nseg)) {
+      nseg <- x$Kopt.BIC[nclass]
+      message(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
     }
-    x$data$indice <- 1:nrow(x$data)
-    evalstr  <- paste("data <- dplyr::mutate(x$data,",colname_state,"= df.segm[findInterval(indice,df.segm$begin,rightmost.closed = F,left.open = F),\"state\"])",sep="")
-    eval(parse(text=evalstr))
-    return(data)
-    } else if (x$type == 'HMM'){
-      cluster <- moveHMM::viterbi(x$model.hmm)
-      data[,colname_state] <- cluster
+    statesdf <- x$outputs[[paste(nclass,"class -",nseg, "segments")]]$states
+
+    df.segm  <- segment(x,nseg=nseg,nclass=nclass)
+  } else if( x$seg.type == "segmentation"){
+    if( is.null(nseg) ){
+      nseg <- x$Kopt.lavielle
+      message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
+    }
+    statesdf <- x$outputs[[paste(nseg, "segments")]]$states
+    df.segm  <- segment(x,nseg=nseg)
   }
-  return(data)
+  x$data$indice <- 1:nrow(x$data)
+  evalstr  <- paste("data <- dplyr::mutate(x$data,",colname_state,"= df.segm[findInterval(indice,df.segm$begin,rightmost.closed = F,left.open = F),\"state\"])",sep="")
+  eval(parse(text=evalstr))
+  totdf <- dplyr::left_join(data,statesdf, by = "state")
+
+  return(totdf)
+
 }
 
 
@@ -159,19 +257,31 @@ augment.segmentation<- function(x,nseg = NULL,nclass=NULL,colname_state = "state
 #' @rdname segmentation-class
 #' @export
 
-segmap <-  function(x,interactive=F,nseg = NULL,nclass = NULL,xcol="expectTime",html=F,scale=100,UTMstring="+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",width=400,height=400){
-  if(x$type == 'picard'){
-    if(is.null(nseg)) stop("nseg must be chosen for getting segment statistics")
-    if(x$picard.type == 'variable_class'){
-      if(is.null(nclass)) stop("nclass must be chosen for plotting variable_class segmentation")
-      outputs = x$outputs[[paste(nclass,"class -",nseg, "segments")]]
-    } else {
-      outputs = x$outputs[[paste(nseg, "segments")]]
-    }
-    map <- map_segm(data=x$data,output=outputs,interactive = interactive, x_col = x_col, html = html, scale=scale, UTMstring = UTMstring,width=width,height=height)
-  } else if (x$type == 'HMM'){
-    map <- map_segm(data = x$data, output = x$outputs, interactive = interactive, x_col = x_col, html = html, scale=scale, UTMstring = UTMstring,width=width,height=height)
+segmap <-  function(x,interactive=F,nseg = NULL,nclass = NULL,xcol="expectTime",html=F,scale=100,UTMstring="+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",width=400,height=400,order = NULL){
+
+  if (is.null(order)){
+    if (x$type == "home-range") order <- F
+    if (x$type == "behaviour") order <- T
   }
+  if( x$seg.type == "segclust"){
+    if (is.null(nclass)){
+      nclass <- x$ncluster.BIC
+      nseg <- x$Kopt.BIC[nclass]
+      message(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
+    } else if (is.null(nseg)) {
+      nseg <- x$Kopt.BIC[nclass]
+      message(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
+    }
+    outputs = x$outputs[[paste(nclass,"class -",nseg, "segments")]]
+  } else if( x$seg.type == "segmentation"){
+    if( is.null(nseg) ){
+      nseg <- x$Kopt.lavielle
+      message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
+    }
+    outputs = x$outputs[[paste(nseg, "segments")]]
+  }
+  map <- map_segm(data=x$data,output=outputs,interactive = interactive, x_col = x_col, html = html, scale=scale, UTMstring = UTMstring,width=width,height=height,order=order)
+
   return(map)
 }
 

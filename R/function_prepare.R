@@ -6,11 +6,8 @@
 #' @param data the data.frame with the different variable
 #' @param diag.var names of the variables on which statistics are calculated
 #' @param order.var names of the variable with which states are ordered
-#' @param type type of model either 'hmm' or 'picard'
-#' @param hmm.model the moveHMM::fitHMM output
-#' @param picard.param the param output of the segmentation
-#' @param picard.type either 'hybrid' or 'dynprog'
-#' @param picard.nseg number of segment chosen
+#' @param seg.type either 'hybrid' or 'dynprog'
+#' @param nseg number of segment chosen
 #' @return  a list which first element is a data.frame with states of the
 #'   different segments and which second element is a data.frame with mean and
 #'   variance of the different states
@@ -25,41 +22,13 @@
 # attributes(data$scaled_angle)<- NULL
 # plot_states(outputs,diag.var)
 
-stat_segm <- function(data, diag.var, order.var = NULL, model.type = 'hmm', hmm.model = NULL, picard.param = NULL, picard.type = NULL, picard.nseg){
-  if(model.type == 'hmm'){
-    df.segm <- prep_segm_HMM(data,hmm.model)
-  } else if (model.type == 'picard') {
-    df.segm <- prep_segm_picard(data,picard.param,picard.type,picard.nseg)
-  } else {
-    stop("formal argument type not recognized")
-  }
+stat_segm <- function(data, diag.var, order.var = NULL, param = NULL, seg.type = NULL, nseg){
+  df.segm <- prep_segm(data,param,nseg = nseg, seg.type = seg.type)
   data$indice <- 1:nrow(data)
   df.states <- calc_stat_states(data,df.segm,diag.var,order.var)
   return(list(df.segm,df.states))
 }
 
-#' Find segment and states for a HMM model
-#'
-#' \code{prep_segm_HMM} find the different segment and states of a given HMM
-#' model
-#' @param data the data.frame with the different variable
-#' @param hmm.model the moveHMM::fitHMM output
-#' @return  a data.frame with states of the different segments
-#'
-#' @examples
-#' prep_segm_HMM(data,hmm.model=mod1.hmm)
-
-prep_segm_HMM <- function(data,hmm.model){
-  cluster <- moveHMM::viterbi(hmm.model)
-  proba_states <- as.data.frame(moveHMM::stateProbs(hmm.model))
-  nstates <- dim(proba_states)[2]
-  colnames(proba_states) <- paste("state",1:nstates,sep="")
-  df.segm <- data.frame("begin"=1:(nrow(data)-1),
-                        "end"=2:(nrow(data)),
-                        "state"=cluster[1:(nrow(data)-1)])
-  df.segm <- cbind(df.segm,proba_states[1:(nrow(data)-1),])
-  return(df.segm)
-}
 
 #' Find segment and states for a Picard model
 #'
@@ -68,12 +37,10 @@ prep_segm_HMM <- function(data,hmm.model){
 #' @param data the data.frame with the different variable
 #' @param diag.var names of the variables on which statistics are calculated
 #' @param order.var names of the variable with which states are ordered
-#' @param type type of model either 'hmm' or 'picard'
-#' @param hmm.model the moveHMM::fitHMM output
-#' @param picard.param the param output of the segmentation
-#' @param picard.type either 'hybrid' or 'dynprog'
-#' @param picard.nseg number of segment chosen
-#' @return  a data.frame with states of the different segments
+#' @param param the param output of the segmentation
+#' @param seg.type either 'hybrid' or 'dynprog'
+#' @param nseg number of segment chosen
+#' @return a data.frame with states of the different segments
 #'
 #' @examples
 #' prep_segm_picard(data,picard.param,picard.type='hybrid',picard.nseg=NULL)
@@ -82,20 +49,24 @@ prep_segm_HMM <- function(data,hmm.model){
 # attributes(subdf2$scaled_angle)<- NULL
 # outputs <- segtools::stat_segm(subdf2,diag.var,order.var,model.type='picard',picard.param=param,picard.type='hybrid')
 
-prep_segm_picard <- function(data,picard.param,picard.type='hybrid',picard.nseg=NULL){
+prep_segm <- function(data,param,seg.type=NULL,nseg=NULL){
 
-  if(picard.type=="hybrid"){
-    df.segm <- as.data.frame(picard.param$rupt)
+  if(seg.type=="segclust"){
+    df.segm <- as.data.frame(param$rupt)
     colnames(df.segm) <- c("begin","end")
-    df.segm$state <- picard.param$cluster
-    tmp.tau <- as.data.frame(picard.param$tau)
+    df.segm$state <- param$cluster
+    tmp.tau <- as.data.frame(param$tau)
     nstates <- dim(tmp.tau)[2]
     colnames(tmp.tau) <- paste("state",1:nstates,sep="")
     df.segm <- cbind(df.segm,tmp.tau)
     return(df.segm)
   } else {
-    rupt = picard.param$t.est[picard.nseg,1:picard.nseg]
-    df.segm <- data.frame(begin=c(1,rupt[1:(picard.nseg-1)]),end=rupt,state=1:picard.nseg)
+    rupt = param$t.est[nseg,1:nseg]
+    if(nseg == 1) {
+      df.segm <- data.frame(begin=c(1,rupt[1:(nseg-1)]),end=rupt,state=1:nseg)
+    } else {
+      df.segm <- data.frame(begin=c(1,rupt[1:(nseg-1)]),end=rupt,state=1:nseg)
+    }
     return(df.segm)
   }
 }
@@ -122,7 +93,7 @@ calc_stat_states <- function(data,df.segm,diag.var,order.var=NULL)
 
   eval_str <- paste("dplyr::group_by(data,state) %>% dplyr::summarise(prop=n()/nrow(data),",paste("mu.",diag.var," = mean(",diag.var,",na.rm=T)",collapse=",",sep=""),",",paste("sd.",diag.var," = sd(",diag.var,",na.rm=T)",collapse=",",sep=""),") %>% as.data.frame()",sep="")
   df.states <- eval(parse(text=eval_str))
-  df.states$state_ordered  <- order(df.states[,paste("mu",order.var,sep=".")])
+  df.states$state_ordered  <- rank(df.states[,paste("mu",order.var,sep=".")])
   return(df.states)
 }
 
@@ -159,3 +130,18 @@ find_mu_sd <- function(df.states,diag.var){
 }
 
 
+#' Calculate BIC
+#'
+#' \code{BIC} calculates BIC given log-likelihood, number of segment and number of class
+#' @param likelihood log-likelihood
+#' @param ncluster number of cluster
+#' @param nseg number of segment
+#' @return a data.frame with BIC, number of cluster and number of segment
+#'
+#' @examples
+#' calc_stat_states(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+
+calc_BIC <- function(likelihood,ncluster,nseg,n){
+  BIC = likelihood - 0.5*(5*ncluster-1)*log(2*n) - 0.5 * nseg * log(2*n)
+  return(data.frame(BIC=BIC,ncluster=ncluster,nseg=nseg))
+}

@@ -10,11 +10,13 @@
 #' stat_segm(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
 #' @export
 
-map_segm <- function(data,output,interactive=F,x_col="expectTime",html=F,scale=100,UTMstring="+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",width=400,height=400){
+map_segm <- function(data,output,interactive=F,x_col="expectTime",html=F,scale=100,UTMstring="+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",width=400,height=400,order=NULL){
   # print("test")
-  df.segm <- output[[1]]
+  df.segm <- dplyr::left_join(output[[1]],output[[2]],by="state")
   data$indice <- 1:nrow(data)
-  data <- dplyr::mutate(data,state= df.segm[findInterval(indice,df.segm$begin,rightmost.closed = F,left.open = F),"state"])
+
+  data <- dplyr::mutate(data,state = df.segm[findInterval(indice,df.segm$begin,rightmost.closed = F,left.open = F),ifelse(order,"state_ordered","state")])
+
   data <- dplyr::mutate(data,x=x/scale,y=y/scale)
   if(!interactive){
     g <- ggplot2::ggplot(data,ggplot2::aes(x=x,y=y))+ggplot2::geom_path()+ggplot2::geom_point(ggplot2::aes(col=factor(state)))
