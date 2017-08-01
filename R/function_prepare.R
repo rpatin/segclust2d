@@ -63,7 +63,7 @@ prep_segm <- function(data,param,seg.type=NULL,nseg=NULL){
   } else {
     rupt = param$t.est[nseg,1:nseg]
     if(nseg == 1) {
-      df.segm <- data.frame(begin=c(1,rupt[1:(nseg-1)]),end=rupt,state=1:nseg)
+      df.segm <- data.frame(begin=c(1),end=rupt[1],state=1)
     } else {
       df.segm <- data.frame(begin=c(1,rupt[1:(nseg-1)]),end=rupt,state=1:nseg)
     }
@@ -93,7 +93,7 @@ calc_stat_states <- function(data,df.segm,diag.var,order.var=NULL)
 
   eval_str <- paste("dplyr::group_by(data,state) %>% dplyr::summarise(prop=n()/nrow(data),",paste("mu.",diag.var," = mean(",diag.var,",na.rm=T)",collapse=",",sep=""),",",paste("sd.",diag.var," = sd(",diag.var,",na.rm=T)",collapse=",",sep=""),") %>% as.data.frame()",sep="")
   df.states <- eval(parse(text=eval_str))
-  df.states$state_ordered  <- rank(df.states[,paste("mu",order.var,sep=".")])
+  df.states$state_ordered  <- rank(df.states[,paste("mu",order.var[1],sep=".")])
   return(df.states)
 }
 

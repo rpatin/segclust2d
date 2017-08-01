@@ -38,6 +38,13 @@ plot_segm <- function(data,output,separate=T,interactive=F,diag.var,x_col="expec
         ggplot2::facet_wrap(~variable,ncol=1,scales="free_y")+
         ggplot2::geom_rect(data=segmentation,ggplot2::aes_string(xmin="begin_date",xmax="end_date",ymin="mu-sd",ymax="mu+sd",fill=paste("factor(",state_color,")",sep="")),alpha=0.2)+
         ggplot2::geom_segment(data=segmentation,ggplot2::aes_string(x="begin_date",xend="end_date",y="mu",yend="mu",col=paste("factor(",state_color,")")))
+
+
+      g <-   ggplot2::ggplot(data.melt)+
+        ggplot2::geom_line(ggplot2::aes_string(x=x_col,y="value"))+
+        ggplot2::facet_wrap(~variable,ncol=1,scales="free_y")+
+        ggplot2::geom_rect(data=segmentation,ggplot2::aes_string(xmin="begin_date",xmax="end_date",ymin="mu-sd",ymax="mu+sd",fill=paste("factor(",state_color,")",sep="")),alpha=0.2)+
+        ggplot2::geom_segment(data=segmentation,ggplot2::aes_string(x="begin_date",xend="end_date",y="mu",yend="mu",col=paste("factor(",state_color,")")))
       return(g)
     }
     if(separate & interactive){

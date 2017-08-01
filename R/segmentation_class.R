@@ -32,7 +32,7 @@ print.segmentation <- function(x,max.level = 1){
 plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F, xcol="indice", html = F,order = NULL) {
   if (is.null(order)){
     if (x$type == "home-range") order <- F
-    if (x$type == "behaviour") order <- T
+    if (x$type == "behavior") order <- T
   }
   if( x$seg.type == "segclust"){
     if (is.null(nclass)){
@@ -44,6 +44,8 @@ plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F
       message(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
     }
     g <- plot_segm(data = x$data, output = x$outputs[[paste(nclass,"class -",nseg, "segments")]], separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html, order = order)
+
+
   } else if( x$seg.type == "segmentation"){
     if( is.null(nseg) ){
       nseg <- x$Kopt.lavielle
@@ -66,18 +68,26 @@ likelihood.segmentation <- function(x) {
 
   if( x$seg.type == "segclust"){
     likedat <- x$likelihood
-    g <- ggplot2::ggplot(dplyr::filter(likedat,nclass != 0,is.finite(likelihood)),ggplot2::aes(x=nseg,y=likelihood,col=factor(nclass)))+ggplot2::geom_point()+ggplot2::geom_line()+ggplot2::xlab("Number of segments")+ggplot2::ylab("log-Likelihood")+scale_color_discrete(name="Number of \nCluster")
+    # nseg.bic <- x$Kopt.lavielle
+    # tmpdf =  filter(li("nseg"=nseg.bic, "likelihood" = x$likelihood$likelihood[which(x$likelihood$nseg == nseg.bic)])
+    g <- ggplot2::ggplot(dplyr::filter(likedat,nclass != 0,is.finite(likelihood)),ggplot2::aes(x=nseg,y=likelihood,col=factor(nclass)))+
+      ggplot2::geom_point()+
+      ggplot2::geom_line()+
+      ggplot2::xlab("Number of segments")+
+      ggplot2::ylab("log-Likelihood")+
+      # ggplot2::geom_point(data = tmpdf,ggplot2::aes(x=nseg,y=likelihood,col = fact),size = 3)+
+      scale_color_discrete(name="Number of \nCluster")
 
   } else if( x$seg.type == "segmentation"){
     nseg.lav <- x$Kopt.lavielle
-    tmpdf =  data.frame("nseg"=range(x$likelihood$nseg),"likelihood"=range(x$likelihood$likelihood))
-    g <- ggplot2::ggplot(x$likelihood,ggplot2::aes(x=nseg,y=likelihood))+ggplot2::geom_point()+ggplot2::geom_line()+ggplot2::xlab("Number of segments")+ggplot2::ylab("log-Likelihood")+
-      scale_color_discrete(name="Number of \nCluster") +
-      geom_vline(xintercept = nseg.lav, linetype = 2)+
-      geom_line(data=tmpdf,aes(linetype="Lavielle's optimal\n number of segment"),alpha=0)+ scale_linetype_discrete(name=NULL)+
-      guides(linetype = guide_legend(override.aes = list(alpha = 1,fill=NA,shape=NA,linetype=2)))+
-      theme(legend.title=element_blank(),legend.position=c(.83,.1))
-  }
+    tmpdf =  data.frame("nseg"=nseg.lav, "likelihood" = x$likelihood$likelihood[which(x$likelihood$nseg == nseg.lav)])
+    g <- ggplot2::ggplot(x$likelihood,ggplot2::aes(x=nseg,y=likelihood))+
+      ggplot2::geom_point()+
+      ggplot2::geom_line()+
+      ggplot2::xlab("Number of segments")+ggplot2::ylab("log-Likelihood")+
+      ggplot2::scale_color_discrete(name="Number of \nCluster") +
+      ggplot2::geom_point(data = tmpdf,ggplot2::aes(x=nseg,y=likelihood),size = 3)
+    }
   return(g)
 }
 
@@ -126,7 +136,7 @@ get_BIC <- function(x) {
 stateplot <- function(x,nseg = NULL,nclass = NULL,order = NULL){
   if (is.null(order)){
     if (x$type == "home-range") order <- F
-    if (x$type == "behaviour") order <- T
+    if (x$type == "behavior") order <- T
   }
   if( x$seg.type == "segclust"){
     if (is.null(nclass)){
@@ -158,7 +168,7 @@ states <- function(x,nseg = NULL,nclass = NULL){
   if( x$seg.type == "segclust"){
     if (is.null(order)){
       if (x$type == "home-range") order <- F
-      if (x$type == "behaviour") order <- T
+      if (x$type == "behavior") order <- T
     }
     if (is.null(nclass)){
       nclass <- x$ncluster.BIC
@@ -261,7 +271,7 @@ segmap <-  function(x,interactive=F,nseg = NULL,nclass = NULL,xcol="expectTime",
 
   if (is.null(order)){
     if (x$type == "home-range") order <- F
-    if (x$type == "behaviour") order <- T
+    if (x$type == "behavior") order <- T
   }
   if( x$seg.type == "segclust"){
     if (is.null(nclass)){

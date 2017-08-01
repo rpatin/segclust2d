@@ -4,19 +4,18 @@
 \alias{chooseseg_lavielle}
 \title{Internal function for choosing optimal number of segment}
 \usage{
-chooseseg_lavielle(J.est, S = 0.75)
+chooseseg_lavielle(J, S = 0.75)
 }
 \arguments{
-\item{J.est}{data used for segmentation. Supported : data.frame, 2-columns matrix, move object, ltraj object}
-
 \item{S}{threshold for choosing the number. See adehabitatLT::chooseseg}
+
+\item{J.est}{data used for segmentation. Supported : data.frame, 2-columns matrix, move object, ltraj object}
 }
 \value{
 a list with optimal number of segment and full data.frame of the calculus
 }
 \description{
-Internal function for choosing optimal number of segment using lavielle method
-modified frome adehabitatLT::chooseseg. Method based on identifying breaks in the slope of the contrast
+Internal function for choosing optimal number of segment using Marc Lavielle's method. From Emilie Lebarbier. Method based on identifying breaks in the slope of the contrast.
 }
 \examples{
 segmentation(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
