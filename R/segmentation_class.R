@@ -52,6 +52,9 @@ plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F
       message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
     }
     g <- plot_segm(data = x$data, output = x$outputs[[paste(nseg, "segments")]], separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html, order = order)
+  } else if (x$seg.type == "HMM" | x$seg.type == "shiftfit" | x$seg.type == "depmixS4" ){
+    g <- plot_segm(data = x$data, output = x$outputs, separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html, order = order)
+
   }
   return(g)
 }
@@ -81,13 +84,17 @@ likelihood.segmentation <- function(x) {
   } else if( x$seg.type == "segmentation"){
     nseg.lav <- x$Kopt.lavielle
     tmpdf =  data.frame("nseg"=nseg.lav, "likelihood" = x$likelihood$likelihood[which(x$likelihood$nseg == nseg.lav)])
+    nudgeY = (max(x$likelihood$likelihood,na.rm=T)-min(x$likelihood$likelihood,na.rm=T))/20
+    nudgeX = (max(x$likelihood$nseg,na.rm=T)-min(x$likelihood$nseg,na.rm=T))/6
     g <- ggplot2::ggplot(x$likelihood,ggplot2::aes(x=nseg,y=likelihood))+
       ggplot2::geom_point()+
       ggplot2::geom_line()+
       ggplot2::xlab("Number of segments")+ggplot2::ylab("log-Likelihood")+
       ggplot2::scale_color_discrete(name="Number of \nCluster") +
-      ggplot2::geom_point(data = tmpdf,ggplot2::aes(x=nseg,y=likelihood),size = 3)
-    }
+      ggplot2::geom_point(data = tmpdf,ggplot2::aes(x=nseg,y=likelihood),size = 3)+
+      ggplot2::geom_text(data = tmpdf,ggplot2::aes(x=nseg,y=likelihood),label="Lavielle-selected optimum", nudge_x = nudgeX, nudge_y = -nudgeY  ,size = 3)
+
+  }
   return(g)
 }
 
@@ -112,7 +119,26 @@ BIC.segmentation <- function(x) {
 
   if( x$seg.type == "segclust"){
     likedat <- x$BIC
-    g <- ggplot2::ggplot(filter(likedat,is.finite(BIC)),ggplot2::aes(x=nseg,y=BIC,col=factor(ncluster)))+ggplot2::geom_point()+ggplot2::geom_line()+ggplot2::xlab("Number of segments")+ggplot2::ylab("BIC")+scale_color_discrete(name="Number of \nCluster")
+    ncluster.BIC = x$ncluster.BIC
+    Kopt.BIC =  x$Kopt.BIC[ncluster.BIC]
+    ClusterOpt <- data.frame(ncluster= ncluster.BIC,nseg=Kopt.BIC,BIC = dplyr::filter(likedat,ncluster == ncluster.BIC, nseg == Kopt.BIC )$BIC)
+
+    nudgeY = (max(likedat$BIC[is.finite(likedat$BIC)],na.rm=T)-min(likedat$BIC[is.finite(likedat$BIC)],na.rm=T))/20
+    nudgeX = (max(likedat$nseg,na.rm=T)-min(likedat$nseg,na.rm=T))/6
+
+    ncluster.BIC = 1:max(likedat$ncluster)
+    Kopt.BIC =  x$Kopt.BIC
+    SegOpt <- data.frame(ncluster= ncluster.BIC, nseg = Kopt.BIC)
+    SegOpt <- dplyr::left_join(SegOpt,likedat, by = c("ncluster", "nseg"))
+    g <- ggplot2::ggplot(dplyr::filter(likedat,is.finite(BIC)),ggplot2::aes(x=nseg,y=BIC,col=factor(ncluster)))+
+      ggplot2::geom_point()+
+      ggplot2::geom_line()+
+      ggplot2::xlab("Number of segments")+
+      ggplot2::ylab("BIC")+
+      ggplot2::geom_point(data=SegOpt,shape = 15,size=2)+
+      ggplot2::geom_point(data=ClusterOpt,shape = 19, size = 3.5)+
+      ggplot2::geom_text(data=ClusterOpt, size = 3,label="BIC-selected optimum", nudge_x = - nudgeX, nudge_y = nudgeY)+
+      ggplot2::scale_color_discrete(name="Number of \nCluster")
 
   } else if( x$seg.type == "segmentation"){
     stop("no BIC estimates for segmentation only algorithm")
@@ -156,6 +182,9 @@ stateplot <- function(x,nseg = NULL,nclass = NULL,order = NULL){
     }
     g <- plot_states(x$outputs[[paste(nseg, "segments")]],x$`Diagnostic variables`,order= order)
 
+  } else if( x$seg.type == "HMM" | x$seg.type == "shiftfit" | x$seg.type == "depmixS4" ){
+    g <- plot_states(x$outputs,x$`Diagnostic variables`,order= order)
+
   }
   return(g)
 }
@@ -186,6 +215,8 @@ states <- function(x,nseg = NULL,nclass = NULL){
       message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
     }
     return(x$outputs[[paste(nseg, "segments")]]$states)
+  } else if( x$seg.type == "HMM" | x$seg.type == "shiftfit" | x$seg.type == "depmixS4" ){
+    return(x$outputs$states)
   }
 }
 
@@ -214,6 +245,11 @@ segment <- function(x,nseg = NULL,nclass = NULL){
     }
     statesdf <- x$outputs[[paste(nseg, "segments")]]$states
     segmentdf <- x$outputs[[paste(nseg, "segments")]]$segments
+    totdf <- dplyr::left_join(segmentdf,statesdf, by = "state")
+    return(totdf)
+  } else if( x$seg.type == "HMM" | x$seg.type == "shiftfit" | x$seg.type == "depmixS4" ){
+    statesdf <- x$outputs$states
+    segmentdf <- x$outputs$segments
     totdf <- dplyr::left_join(segmentdf,statesdf, by = "state")
     return(totdf)
   }
@@ -246,6 +282,9 @@ augment.segmentation<- function(x,nseg = NULL,nclass=NULL,colname_state = "state
     }
     statesdf <- x$outputs[[paste(nseg, "segments")]]$states
     df.segm  <- segment(x,nseg=nseg)
+  } else if( x$seg.type == "HMM" | x$seg.type == "shiftfit" | x$seg.type == "depmixS4"){
+    statesdf <- x$outputs$states
+    df.segm  <- segment(x)
   }
   x$data$indice <- 1:nrow(x$data)
   evalstr  <- paste("data <- dplyr::mutate(x$data,",colname_state,"= df.segm[findInterval(indice,df.segm$begin,rightmost.closed = F,left.open = F),\"state\"])",sep="")
@@ -289,6 +328,8 @@ segmap <-  function(x,interactive=F,nseg = NULL,nclass = NULL,xcol="expectTime",
       message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
     }
     outputs = x$outputs[[paste(nseg, "segments")]]
+  }  else if( x$seg.type == "HMM" | x$seg.type == "shiftfit" | x$seg.type == "depmixS4" ){
+    outputs = x$outputs
   }
   map <- map_segm(data=x$data,output=outputs,interactive = interactive, x_col = x_col, html = html, scale=scale, UTMstring = UTMstring,width=width,height=height,order=order)
 
