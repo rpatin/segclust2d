@@ -283,7 +283,7 @@ augment.segmentation<- function(x,nseg = NULL,nclass=NULL,colname_state = "state
     statesdf <- x$outputs[[paste(nseg, "segments")]]$states
     df.segm  <- segment(x,nseg=nseg)
   } else if( x$seg.type == "HMM" | x$seg.type == "shiftfit" | x$seg.type == "depmixS4"){
-    statesdf <- x$outputs$states
+    statesdf <- states(x)
     df.segm  <- segment(x)
   }
   x$data$indice <- 1:nrow(x$data)
