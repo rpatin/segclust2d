@@ -178,7 +178,7 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
       })
       names(outputs) <- paste(P,"class -",P:Kmax, "segments")
       likelihood = data.frame(nseg=1:Kmax,likelihood = c(res$Linc),nclass=P)
-      tmpBIC <- calc_BIC(likelihood$likelihood,ncluster = P, nseg = 1:Kmax, n = dim(x)[2])
+      tmpBIC <- calc_BIC(likelihood$likelihood,ncluster = P, nseg = 1:Kmax, n = dim(x)[1])
       param <- list(res$param)
       names(param) <- paste(P,"class")
       segmented$likelihood <- rbind(segmented$likelihood,likelihood)
