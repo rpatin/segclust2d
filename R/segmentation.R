@@ -141,8 +141,13 @@ segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var 
     names(out) <- c("segments","states")
     return(out)
   })
+
   names(outputs) <- paste(1:Kmax, "segments")
   output_lavielle <- chooseseg_lavielle(res.DynProg$J.est,S=S)
+  stationarity = test_stationarity(dat,outputs,Kmax)
+  seg_var = test_var(dat,outputs,Kmax)
+  seg_mean = test_mean(dat,outputs,Kmax)
+
   segmented <- list("data" = x,
                     "type" = type,
                     "seg.type" = "segmentation",
@@ -154,7 +159,10 @@ segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var 
                     "param"= list("lmin"=lmin,
                                   "Kmax"=Kmax),
                     "Kopt.lavielle" = output_lavielle["Kopt"][[1]],
-                    "df.lavielle" = output_lavielle["lavielle"][[1]])
+                    "df.lavielle" = output_lavielle["lavielle"][[1]],
+                    "stationarity.test" = stationarity,
+                    "var.test" = seg_var,
+                    "mean.test" = seg_mean)
   class(segmented) <- "segmentation"
   return(segmented)
 }

@@ -29,7 +29,7 @@ print.segmentation <- function(x,max.level = 1){
 #' @rdname segmentation-class
 #' @export
 
-plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F, xcol="indice", html = F,order = NULL) {
+plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F, xcol="indice", html = F,order = NULL, var = F, mean = F, stationarity = F) {
   if (is.null(order)){
     if (x$type == "home-range") order <- F
     if (x$type == "behavior") order <- T
@@ -51,7 +51,26 @@ plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F
       nseg <- x$Kopt.lavielle
       message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
     }
-    g <- plot_segm(data = x$data, output = x$outputs[[paste(nseg, "segments")]], separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html, order = order)
+
+    vararg <-  NULL
+    meanarg <-  NULL
+    stationarityarg <-  NULL
+
+    if(var) vararg <- x$var.test[[paste(nseg, "segments")]]
+    if(mean) meanarg <- x$mean.test[[paste(nseg, "segments")]]
+    if(stationarity) stationarityarg <-  x$stationarity.test[[paste(nseg, "segments")]]
+
+    g <- plot_segm(data = x$data,
+                   output = x$outputs[[paste(nseg, "segments")]],
+                   separate = T,
+                   interactive=interactive,
+                   diag.var = x$`Diagnostic variables`,
+                   x_col = xcol,
+                   html = html,
+                   order = order,
+                   var = vararg,
+                   mean = meanarg,
+                   stationarity = stationarityarg)
   } else if (x$seg.type == "HMM" | x$seg.type == "shiftfit" | x$seg.type == "depmixS4" ){
     g <- plot_segm(data = x$data, output = x$outputs, separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html, order = order)
 
@@ -138,7 +157,7 @@ BIC.segmentation <- function(x) {
       ggplot2::geom_point(data=SegOpt,shape = 15,size=2)+
       ggplot2::geom_point(data=ClusterOpt,shape = 19, size = 3.5)+
       ggplot2::geom_text(data=ClusterOpt, size = 3,label="BIC-selected optimum", nudge_x = - nudgeX, nudge_y = nudgeY)+
-      ggplot2::scale_color_discrete(name="Number of \nCluster")
+      ggplot2::scale_color_discrete(name="Number of \nClusters")
 
   } else if( x$seg.type == "segmentation"){
     stop("no BIC estimates for segmentation only algorithm")
