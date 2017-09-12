@@ -110,6 +110,7 @@ calc_stat_states <- function(data,df.segm,diag.var,order.var=NULL)
 #'
 #' @examples
 #' calc_stat_states(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+#' @export
 
 find_mu_sd <- function(df.states,diag.var){
   if(is.null(df.states$model)) df.states$model <- 'model'
@@ -140,6 +141,7 @@ find_mu_sd <- function(df.states,diag.var){
 #'
 #' @examples
 #' calc_stat_states(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+#' @export
 
 calc_BIC <- function(likelihood,ncluster,nseg,n){
   BIC = likelihood - 0.5*(5*ncluster-1)*log(2*n) - 0.5 * nseg * log(2*n)
