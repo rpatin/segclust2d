@@ -50,7 +50,7 @@ plot_segm <- function(data,output,separate=T,interactive=F,diag.var,x_col="expec
 
       if(!is.null(stationarity)){
         colnames(stationarity) <- c("seg",diag.var,"stat_tot")
-        stationarity.melt <- reshape2::melt(stationarity,measure.var = diag.var) %>% dplyr::filter(value == "stationary") %>% mutate(variable = as.factor(variable))
+        stationarity.melt <- reshape2::melt(stationarity,measure.var = diag.var) %>% dplyr::filter(value == "stationary")
 
         if(nrow(stationarity.melt) >0 ){
           df.label <- dplyr::select(stationarity.melt, seg, variable)
@@ -59,9 +59,9 @@ plot_segm <- function(data,output,separate=T,interactive=F,diag.var,x_col="expec
       }
 
       if(!is.null(mean)){
-        samemean.x <- which(mean$x == "Same Mean",arr.ind = T) %>% data.frame() %>% mutate(label.mean = paste("m",row,col,sep="")) %>% reshape2::melt(measure.var = c("row","col"),value.name="seg") %>% mutate(variable = "x")
-        samemean.y <- which(mean$y == "Same Mean",arr.ind = T) %>% data.frame() %>% mutate(label.mean = paste("m",row,col,sep="")) %>% reshape2::melt(measure.var = c("row","col"),value.name="seg") %>% mutate(variable = "y")
-        samemean <- rbind(samemean.x,samemean.y) %>% dplyr::group_by(seg,variable) %>% dplyr::summarise(label.mean = paste(label.mean,collapse = "-")) %>% mutate(variable = as.factor(variable))
+        samemean.x <- which(mean$x == "Same Mean",arr.ind = T) %>% data.frame() %>% mutate(label.mean = paste("m",row,col,sep="")) %>% reshape2::melt(measure.var = c("row","col"),value.name="seg") %>% mutate(variable = diag.var[1])
+        samemean.y <- which(mean$y == "Same Mean",arr.ind = T) %>% data.frame() %>% mutate(label.mean = paste("m",row,col,sep="")) %>% reshape2::melt(measure.var = c("row","col"),value.name="seg") %>% mutate(variable = diag.var[2])
+        samemean <- rbind(samemean.x,samemean.y) %>% dplyr::group_by(seg,variable) %>% dplyr::summarise(label.mean = paste(label.mean,collapse = "-"))
         if(nrow(samemean) > 0 ){
           if(nrow(df.label) > 0){
             df.label <- dplyr::full_join(df.label, samemean, by = c("variable","seg"))
@@ -69,17 +69,13 @@ plot_segm <- function(data,output,separate=T,interactive=F,diag.var,x_col="expec
             df.label <- dplyr::select(samemean, seg, variable, label.mean)
             df.label$label.stat = ""
           }
-        } else {
-          df.label$label.mean = ""
         }
-      } else {
-        df.label$label.mean = ""
       }
 
       if(!is.null(var)){
-        samevar.x <- which(var$x == "Same Variance",arr.ind = T) %>% data.frame() %>% mutate(label.var = paste("v",row,col,sep="")) %>% reshape2::melt(measure.var = c("row","col"),value.name="seg") %>% mutate(variable = "x")
-        samevar.y <- which(var$y == "Same Variance",arr.ind = T) %>% data.frame() %>% mutate(label.var = paste("v",row,col,sep="")) %>% reshape2::melt(measure.var = c("row","col"),value.name="seg") %>% mutate(variable = "y")
-        samevar <- rbind(samevar.x,samevar.y) %>% dplyr::group_by(seg,variable) %>% dplyr::summarise(label.var = paste(label.var,collapse = "-")) %>% mutate(variable = as.factor(variable))
+        samevar.x <- which(var$x == "Same Variance",arr.ind = T) %>% data.frame() %>% mutate(label.var = paste("v",row,col,sep="")) %>% reshape2::melt(measure.var = c("row","col"),value.name="seg") %>% mutate(variable = diag.var[1])
+        samevar.y <- which(var$y == "Same Variance",arr.ind = T) %>% data.frame() %>% mutate(label.var = paste("v",row,col,sep="")) %>% reshape2::melt(measure.var = c("row","col"),value.name="seg") %>% mutate(variable = diag.var[2])
+        samevar <- rbind(samevar.x,samevar.y) %>% dplyr::group_by(seg,variable) %>% dplyr::summarise(label.var = paste(label.var,collapse = "-"))
         if(nrow(samevar) > 0 ){
           if(nrow(df.label) > 0){
             df.label <- dplyr::full_join(df.label, samevar, by = c("variable","seg"))
@@ -88,26 +84,31 @@ plot_segm <- function(data,output,separate=T,interactive=F,diag.var,x_col="expec
             df.label$label.stat = ""
             df.label$label.mean = ""
           }
-        } else {
-          df.label$label.var = ""
         }
-      } else {
-        df.label$label.var = ""
       }
 
       if(nrow(df.label) > 0){
+        if(is.null(df.label$label.mean)) df.label$label.mean <- ''
+        if(is.null(df.label$label.var)) df.label$label.var <- ''
         df.label$label.stat[is.na(df.label$label.stat)] <- ''
         df.label$label.mean[is.na(df.label$label.mean)] <- ''
         df.label$label.var[is.na(df.label$label.var)] <- ''
         df.label$label <- mapply(function(x,y,z){paste(x,y,z,collapse=" ")},df.label$label.stat,df.label$label.mean,df.label$label.var)
         range_x <- diff(range(data[,diag.var[1]]))/10
         range_y <- diff(range(data[,diag.var[2]]))/10
-        segmentation <- mutate(segmentation,variable = factor(variable))
+        # segmentation <- mutate(segmentation,variable = factor(variable))
         df.label.plot <- dplyr::left_join(df.label,segmentation,by = c("variable"="variable", "seg"="state")) %>% mutate(mean_date = (begin_date+end_date)/2)
         df.label.plot.x <- dplyr::filter(df.label.plot,variable == diag.var[1])
         df.label.plot.y <- dplyr::filter(df.label.plot,variable == diag.var[2])
-        g <- g + geom_text(data = df.label.plot.x, aes(label = label,x = mean_date, y = mu+sd, col = factor(seg)),nudge_x = 0, nudge_y = range_x)
-        g <- g + geom_text(data = df.label.plot.y, aes(label = label,x = mean_date, y = mu+sd, col = factor(seg)),nudge_x = 0, nudge_y = range_y)
+        g <- g +
+          ggplot2::geom_text(data = df.label.plot.x, ggplot2::aes(label = label.stat,x = mean_date, y = mu+sd, col = factor(seg)),nudge_x = 0, nudge_y = range_x) +
+          ggplot2::geom_text(data = df.label.plot.x, ggplot2::aes(label = label.mean,x = mean_date, y = mu+sd, col = factor(seg)),nudge_x = 0, nudge_y = 2 * range_x) +
+          ggplot2::geom_text(data = df.label.plot.x, ggplot2::aes(label = label.var,x = mean_date, y = mu-sd, col = factor(seg)),nudge_x = 0, nudge_y = - range_x)
+
+        g <- g +
+          ggplot2::geom_text(data = df.label.plot.y, ggplot2::aes(label = label.stat,x = mean_date, y = mu+sd, col = factor(seg)),nudge_x = 0, nudge_y = range_y) +
+          ggplot2::geom_text(data = df.label.plot.y, ggplot2::aes(label = label.mean,x = mean_date, y = mu+sd, col = factor(seg)),nudge_x = 0, nudge_y = 2 * range_y) +
+          ggplot2::geom_text(data = df.label.plot.y, ggplot2::aes(label = label.var,x = mean_date, y = mu-sd, col = factor(seg)),nudge_x = 0, nudge_y = - range_y)
 
       }
 

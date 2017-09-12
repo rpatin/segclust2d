@@ -103,7 +103,7 @@ test_mean <- function(dat,outputs,Kmax){
 
         tx <- t.test(serie_x1, serie_x2, var.equal = F,
                      alternative = c("two.sided"))$p.value <= 0.05
-        ty <-  t.test(serie_x1, serie_x2, var.equal = F,
+        ty <-  t.test(serie_y1, serie_y2, var.equal = F,
                       alternative = c("two.sided"))$p.value <= 0.05
         tboth <- ifelse(tx | ty,"Different Means","Same Mean")
         tx = ifelse(tx,"Different Means","Same Mean")
@@ -114,7 +114,7 @@ test_mean <- function(dat,outputs,Kmax){
       }
     }
     segment_mean[[paste(nseg,'segments')]] <- list("x" = tmpx,
-                                                  "y" = tmpy,
+                                                   "y" = tmpy,
                                                   "both"= tmpboth)
   }
   return(segment_mean)
