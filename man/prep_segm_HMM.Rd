@@ -9,4 +9,3 @@ prep_segm_HMM(data, hmm.model)
 \description{
 \code{prep_segm_HMM}
 }
-

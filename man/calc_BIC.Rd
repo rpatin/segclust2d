@@ -22,4 +22,3 @@ a data.frame with BIC, number of cluster and number of segment
 \examples{
 calc_stat_states(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
 }
-

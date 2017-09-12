@@ -5,7 +5,8 @@
 \title{Plot segmentation on time-serie}
 \usage{
 plot_segm(data, output, separate = T, interactive = F, diag.var,
-  x_col = "expectTime", html = F, order = F)
+  x_col = "expectTime", html = F, order = F, stationarity = NULL,
+  mean = NULL, var = NULL)
 }
 \arguments{
 \item{data}{the data.frame with the different variable}
@@ -23,4 +24,3 @@ a graph
 \examples{
 stat_segm(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
 }
-

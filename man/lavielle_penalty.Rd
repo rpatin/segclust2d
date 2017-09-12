@@ -9,4 +9,3 @@ lavielle_penalty(x, ...)
 \description{
 Generic function for lavielle_penalty
 }
-

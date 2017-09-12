@@ -19,4 +19,3 @@ a list with J.est a vector with Kmax value, the Kth is the minimum contrast for 
 DynProg computes the change points given a cost matrix matD 
 and a maximum number of segments Kmax
 }
-

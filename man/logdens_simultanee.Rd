@@ -17,4 +17,3 @@ the value of the log density
 \description{
 logdens_simultanee calculates Gaussian log-densities for a bivariate signal under a mixture model with P components
 }
-

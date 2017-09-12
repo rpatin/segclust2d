@@ -16,4 +16,3 @@ initialisePhi is the constructor for a set of parameters for a segclust model
 P number of classes
 val the value ti be used for tinitiliastation default is -Inf
 }
-

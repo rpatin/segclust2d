@@ -9,4 +9,3 @@ stat_segm_depmixS4(data, depmixS4.model = NULL, diag.var, order.var = NULL)
 \description{
 \code{stat_segm_depmixS4}
 }
-

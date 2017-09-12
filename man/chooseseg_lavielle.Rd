@@ -20,4 +20,3 @@ Internal function for choosing optimal number of segment using Marc Lavielle's m
 \examples{
 segmentation(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
 }
-

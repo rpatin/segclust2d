@@ -9,4 +9,3 @@ prep_segm_shiftfit(data, shiftfit.model)
 \description{
 \code{prep_segm_shiftfit}
 }
-

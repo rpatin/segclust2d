@@ -17,4 +17,3 @@ a list with tau a K*P matrix, tau kj is the posterior probability for segment k 
 \description{
 Estep_simultanee computes posterior probabilities and incomplete-data  log-likelihood for mixture models
 }
-

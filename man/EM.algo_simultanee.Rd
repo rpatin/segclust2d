@@ -19,4 +19,3 @@ a list with  phi, the MLE, tau =(taukj) the probability for segment k to belong 
 \description{
 EM.algo_simultanee caculates the MLE of phi for given change-point instants
 }
-

@@ -15,4 +15,3 @@ the matric containing the semgments
 \description{
 ruptAsMat is an internal function to transform a vector ginvig the change point to matrix 2 columns matrix in whiech each line gives the beginning and the end of a segment
 }
-

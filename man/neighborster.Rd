@@ -23,4 +23,3 @@ smoothin likelihood
 \description{
 neighbors tests whether neighbors of point k,P can  be used to re-initialize the EM algorithm and to improve the log-likelihood.
 }
-

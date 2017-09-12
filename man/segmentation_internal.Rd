@@ -12,4 +12,3 @@ segmentation_internal(x, seg.var = NULL, diag.var = NULL,
 \description{
 Internal segmentation function
 }
-

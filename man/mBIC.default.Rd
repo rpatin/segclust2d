@@ -9,4 +9,3 @@
 \description{
 Default function for mBIC
 }
-

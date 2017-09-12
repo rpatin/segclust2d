@@ -21,4 +21,3 @@ no value
 \description{
 bisig_plot draws the plots of the bivaraite signal on the same plot (scale free)
 }
-

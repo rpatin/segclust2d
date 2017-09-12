@@ -9,4 +9,3 @@ prepare_HMM(data, hmm.model = NULL, diag.var, order.var = diag.var[1])
 \description{
 \code{prepare_HMM}
 }
-

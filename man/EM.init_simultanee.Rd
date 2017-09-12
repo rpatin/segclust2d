@@ -14,4 +14,3 @@ EM.init_simultanee(x, rupt, K, P)
 \description{
 EM.init_simultanee proposes an inial value for the EM algorithm  based on a hierarchical clustering  algorithm (ascending)
 }
-

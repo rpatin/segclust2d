@@ -9,4 +9,3 @@ BIC(x, ...)
 \description{
 Generic function for BIC
 }
-

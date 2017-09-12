@@ -21,4 +21,3 @@ a matrix  G(i,j), the mixture density for segment between points (i+1) to j
 \description{
 Gmixt_simultanee calculates the cost matrix for a segmentation/clustering model
 }
-

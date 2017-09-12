@@ -31,4 +31,3 @@ Actually implementation exists for \code{moveHMM} and \code{segTraj} methods.
 \examples{
 stat_segm(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
 }
-

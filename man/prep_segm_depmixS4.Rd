@@ -9,4 +9,3 @@ prep_segm_depmixS4(depmixS4.model)
 \description{
 \code{prep_segm_depmixS4}
 }
-

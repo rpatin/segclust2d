@@ -17,4 +17,3 @@ the mBic criterion for each number of change points K
 \description{
 mBic computes the modified Bic criterion
 }
-

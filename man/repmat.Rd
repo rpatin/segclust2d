@@ -19,4 +19,3 @@ a matrix wth n repeats of a in lines et m in columns
 \description{
 repmap repeats a matrix
 }
-

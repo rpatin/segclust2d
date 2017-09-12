@@ -2,8 +2,8 @@
 % Please edit documentation in R/segmentation.R
 \name{segmentation}
 \alias{segmentation}
-\alias{segmentation.Move}
 \alias{segmentation.data.frame}
+\alias{segmentation.Move}
 \alias{segmentation.ltraj}
 \title{Segmentation of movement data - Generic function}
 \usage{
@@ -58,4 +58,3 @@ Segmentation function for ltraj objects
 \examples{
 segmentation(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
 }
-

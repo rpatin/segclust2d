@@ -9,4 +9,3 @@ stat_segm_HMM(data, hmm.model = NULL, diag.var, order.var = NULL)
 \description{
 \code{stat_segm_HMM}
 }
-

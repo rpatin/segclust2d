@@ -10,4 +10,3 @@ prepare_shiftfit(data, shiftfit.model = NULL, diag.var,
 \description{
 \code{prepare_shiftfit}
 }
-

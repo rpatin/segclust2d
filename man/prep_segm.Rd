@@ -29,4 +29,3 @@ model
 \examples{
 prep_segm_picard(data,picard.param,picard.type='hybrid',picard.nseg=NULL)
 }
-

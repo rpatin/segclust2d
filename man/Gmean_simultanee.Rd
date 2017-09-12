@@ -17,4 +17,3 @@ the cost matrix G(i,j) which contains the variance of the data between point (i+
 \description{
 Gmean_simultanee  calculates the cost matrix for a segmentation model with changes in the mean and same variance for all signals
 }
-

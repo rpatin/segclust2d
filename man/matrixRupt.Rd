@@ -17,4 +17,3 @@ the matrix of change point
 \description{
 matrixRupt transforms a vector of change point into a data.frame with start and end of every segment
 }
-

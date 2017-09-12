@@ -2,8 +2,8 @@
 % Please edit documentation in R/segclust.R
 \name{segclust}
 \alias{segclust}
-\alias{segclust.Move}
 \alias{segclust.data.frame}
+\alias{segclust.Move}
 \alias{segclust.ltraj}
 \title{Segmentation/Clustering of movement data - Generic function}
 \usage{
@@ -60,4 +60,3 @@ Segmentation/Clustering function for ltraj objects
 \examples{
 segmentation(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
 }
-

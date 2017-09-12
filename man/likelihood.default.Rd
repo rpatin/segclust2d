@@ -9,4 +9,3 @@
 \description{
 Default function for likelihood
 }
-

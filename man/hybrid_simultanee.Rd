@@ -43,4 +43,3 @@ Kopt=5
 param <- res$param[[Kopt]]
 bisig_plot(x = x, rupt = param$rupt, mu=param$phi$mu )
 }
-

@@ -9,4 +9,3 @@ augment(x, ...)
 \description{
 Generic function for augment
 }
-

@@ -10,4 +10,3 @@ prepare_depmixS4(data, depmixS4.model = NULL, diag.var,
 \description{
 \code{prepare_depmixS4}
 }
-

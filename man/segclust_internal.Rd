@@ -12,4 +12,3 @@ segclust_internal(x, seg.var = NULL, diag.var = NULL, order.var = NULL,
 \description{
 Internal segmentation/clustering function
 }
-

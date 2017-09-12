@@ -9,4 +9,3 @@ stat_segm_shiftfit(data, shiftfit.model = NULL, diag.var, order.var = NULL)
 \description{
 \code{stat_segm_shiftfit}
 }
-
