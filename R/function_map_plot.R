@@ -8,6 +8,7 @@
 #'
 #' @examples
 #' stat_segm(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+#' @importFrom magrittr "%>%"
 #' @export
 
 map_segm <- function(data,output,interactive=F,x_col="expectTime",html=F,scale=100,UTMstring="+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",width=400,height=400,order=NULL){
