@@ -145,8 +145,8 @@ BIC.segmentation <- function(x) {
     nudgeY = (max(likedat$BIC[is.finite(likedat$BIC)],na.rm=T)-min(likedat$BIC[is.finite(likedat$BIC)],na.rm=T))/20
     nudgeX = (max(likedat$nseg,na.rm=T)-min(likedat$nseg,na.rm=T))/6
 
-    ncluster.BIC = 1:max(likedat$ncluster)
-    Kopt.BIC =  x$Kopt.BIC
+    ncluster.BIC = 2:max(likedat$ncluster)
+    Kopt.BIC =  x$Kopt.BIC[-1]
     SegOpt <- data.frame(ncluster= ncluster.BIC, nseg = Kopt.BIC)
     SegOpt <- dplyr::left_join(SegOpt,likedat, by = c("ncluster", "nseg"))
     g <- ggplot2::ggplot(dplyr::filter(likedat,is.finite(BIC)),ggplot2::aes(x=nseg,y=BIC,col=factor(ncluster)))+
@@ -325,7 +325,7 @@ augment.segmentation<- function(x,nseg = NULL,nclass=NULL,colname_state = "state
 #' @rdname segmentation-class
 #' @export
 
-segmap <-  function(x,interactive=F,nseg = NULL,nclass = NULL,xcol="expectTime",html=F,scale=100,UTMstring="+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",width=400,height=400,order = NULL){
+segmap <-  function(x,interactive=F,nseg = NULL,nclass = NULL,xcol="expectTime",html=F,scale=100,UTMstring="+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",width=400,height=400,order = NULL, pointsize = 1, linesize = 0.5){
 
   if (is.null(order)){
     if (x$type == "home-range") order <- F
@@ -350,7 +350,7 @@ segmap <-  function(x,interactive=F,nseg = NULL,nclass = NULL,xcol="expectTime",
   }  else if( x$seg.type == "HMM" | x$seg.type == "shiftfit" | x$seg.type == "depmixS4" ){
     outputs = x$outputs
   }
-  map <- map_segm(data=x$data,output=outputs,interactive = interactive, x_col = x_col, html = html, scale=scale, UTMstring = UTMstring,width=width,height=height,order=order)
+  map <- map_segm(data=x$data,output=outputs,interactive = interactive, x_col = x_col, html = html, scale=scale, UTMstring = UTMstring,width=width,height=height,order=order,pointsize = pointsize, linesize = linesize)
 
   return(map)
 }

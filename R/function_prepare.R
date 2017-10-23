@@ -65,7 +65,7 @@ prep_segm <- function(data,param,seg.type=NULL,nseg=NULL){
     if(nseg == 1) {
       df.segm <- data.frame(begin=c(1),end=rupt[1],state=1)
     } else {
-      df.segm <- data.frame(begin=c(1,rupt[1:(nseg-1)]),end=rupt,state=1:nseg)
+      df.segm <- data.frame(begin=c(1,rupt[1:(nseg-1)]+1),end=rupt,state=1:nseg)
     }
     return(df.segm)
   }

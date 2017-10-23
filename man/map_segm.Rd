@@ -7,7 +7,8 @@
 map_segm(data, output, interactive = F, x_col = "expectTime", html = F,
   scale = 100,
   UTMstring = "+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",
-  width = 400, height = 400, order = NULL)
+  width = 400, height = 400, order = NULL, pointsize = 1,
+  linesize = 0.5)
 }
 \arguments{
 \item{data}{the data.frame with the different variable}

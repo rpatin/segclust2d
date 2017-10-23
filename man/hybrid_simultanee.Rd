@@ -5,7 +5,7 @@
 \title{\code{hybrid_simultanee} performs a simultaneous seg - clustering for bivariate signals.}
 \usage{
 hybrid_simultanee(x, P, Kmax, lmin = 3, sameSigma = TRUE,
-  sameVar.init = FALSE, eps = 1e-06)
+  sameVar.init = FALSE, eps = 1e-06, lissage = F)
 }
 \arguments{
 \item{x}{the two-dimensionnal signal, one line per dimension}
@@ -19,16 +19,16 @@ a list with Linc, the incomplete loglikelihood =Linc,param=paramtau posterior pr
 }
 \description{
 It is an algorithm which combines dynamic programming
-and the EM algorithm to calculate the MLE of phi and T, which 
+and the EM algorithm to calculate the MLE of phi and T, which
 are the mixture parameters and the change point instants.
 this algorithm is run for a given number of clusters,
 and estimates the parameters for a segmentation/clustering
 model with P clusters and 1:Kmax segments
 }
 \examples{
-K  <- 5; rupt <- sample(1:20, K+1, replace=TRUE); rupt <- cumsum(rupt); 
+K  <- 5; rupt <- sample(1:20, K+1, replace=TRUE); rupt <- cumsum(rupt);
 n <- max(rupt)
-muSim <- matrix(rnorm(2*K+2,  mean=20, sd=5), nrow=2) 
+muSim <- matrix(rnorm(2*K+2,  mean=20, sd=5), nrow=2)
 muSim <- apply(muSim,1, cumsum)
 muSim <- t(muSim)
 sdSim <- matrix(sqrt(1/rgamma(2*K+2, shape = 10, rate = 10)), nrow=2)

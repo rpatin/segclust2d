@@ -30,7 +30,7 @@ segclust <- function (x, ...) {
 #' @rdname segclust
 #' @export
 
-segclust.data.frame <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type = "home-range", scale.variable = F, seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"),S=0.75,sameSigma = F){
+segclust.data.frame <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type = "home-range", scale.variable = F, seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"),S=0.75,sameSigma = F,lissage=F){
 
   if(type == "home-range"){
     dat <- t(x[,coord.names])
@@ -50,7 +50,7 @@ segclust.data.frame <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type 
     stop("type must be either home-range or behavior")
   }
 
-  segmented <- segclust_internal(x, seg.var = seg.var, diag.var = diag.var, order.var = order.var, scale.variable = scale.variable, Kmax = Kmax, ncluster = ncluster, lmin = lmin, dat=dat,data.type = "data.frame",S=S,type=type,sameSigma = sameSigma)
+  segmented <- segclust_internal(x, seg.var = seg.var, diag.var = diag.var, order.var = order.var, scale.variable = scale.variable, Kmax = Kmax, ncluster = ncluster, lmin = lmin, dat=dat,data.type = "data.frame", S=S, type=type, sameSigma = sameSigma, lissage=lissage)
   return(segmented)
 }
 
@@ -124,7 +124,7 @@ segclust.ltraj <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type = "ho
 
 #' Internal segmentation/clustering function
 
-segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = scale.variable, Kmax = NULL, ncluster = NULL, lmin = NULL, dat=NULL, data.type = NULL,S=NULL,type=NULL,sameSigma = NULL){
+segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = scale.variable, Kmax = NULL, ncluster = NULL, lmin = NULL, dat=NULL, data.type = NULL,S=NULL,type=NULL,sameSigma = NULL,lissage=F){
 
   if(scale.variable) {
     dat[1,]<- scale(dat[1,])
@@ -170,7 +170,7 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
 
   for(P in ncluster){
       # res <- segTraj::hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma)
-      res <- hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma)
+      res <- hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma,lissage=lissage)
       outputs <- lapply(P:Kmax,function(k){
         out <- stat_segm(x, diag.var, order.var, param = res$param[[k]], seg.type = 'segclust')
         names(out) <- c("segments","states")

@@ -11,7 +11,7 @@
 #' @importFrom magrittr "%>%"
 #' @export
 
-map_segm <- function(data,output,interactive=F,x_col="expectTime",html=F,scale=100,UTMstring="+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",width=400,height=400,order=NULL){
+map_segm <- function(data,output,interactive=F,x_col="expectTime",html=F,scale=100,UTMstring="+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",width=400,height=400,order=NULL,pointsize = 1, linesize = 0.5){
   # print("test")
   df.segm <- dplyr::left_join(output[[1]],output[[2]],by="state")
   data$indice <- 1:nrow(data)
@@ -20,7 +20,9 @@ map_segm <- function(data,output,interactive=F,x_col="expectTime",html=F,scale=1
 
   data <- dplyr::mutate(data,x=x/scale,y=y/scale)
   if(!interactive){
-    g <- ggplot2::ggplot(data,ggplot2::aes(x=x,y=y))+ggplot2::geom_path()+ggplot2::geom_point(ggplot2::aes(col=factor(state)))
+    g <- ggplot2::ggplot(data,ggplot2::aes(x=x,y=y))+
+      ggplot2::geom_path(size = linesize)+
+      ggplot2::geom_point(ggplot2::aes(col=factor(state)),size = pointsize)
     return(g)
   } else {
     # coordinates(data) <- c("x","y")
