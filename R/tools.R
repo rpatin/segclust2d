@@ -7,14 +7,15 @@ subsample <- function(x,subsample_over){
 
   if( x_nrow > subsample_over){
     subsample_by <- ceiling(x_nrow/subsample_over)
-    warning(paste("Number of data > ",subsample_over,", subsampling by ",subsample_by,".",sep=""))
+    warning(paste("Number of data > ",subsample_over,", subsampling by ",subsample_by,". Adjusting also lmin.",sep=""))
     keep <- (x_ind %% subsample_by) == 1
     subsample_ind <- ifelse(keep,(x_ind %/% subsample_by)+1,NA)
     x$subsample_ind <- subsample_ind
   } else {
+    subsample_by <- 1
     x$subsample_ind <- x_ind
   }
-  x
+  list(x = x, by = subsample_by)
 }
 
 #' Internal function for subsampling

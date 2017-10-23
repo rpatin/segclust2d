@@ -28,7 +28,7 @@ segmentation <- function (x, ...) {
 #' @rdname segmentation
 #' @export
 
-segmentation.data.frame <- function(x, Kmax = 10, lmin = Kmax/2, type = "home-range", scale.variable = F, seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"),S=0.75,sameSigma = F, subsample_over = 10000){
+segmentation.data.frame <- function(x, Kmax, lmin, type = "home-range", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
 
   if(type == "home-range"){
     dat <- t(x[,coord.names])
@@ -48,7 +48,7 @@ segmentation.data.frame <- function(x, Kmax = 10, lmin = Kmax/2, type = "home-ra
     stop("type must be either home-range or behavior")
   }
 
-  segmented <- segmentation_internal(x, seg.var = seg.var, diag.var = diag.var, order.var = order.var, scale.variable = scale.variable, Kmax = Kmax, lmin = lmin, dat=dat,data.type = "data.frame",S=S,type=type,sameSigma = sameSigma, subsample_over = subsample_over)
+  segmented <- segmentation_internal(x, seg.var = seg.var, diag.var = diag.var, order.var = order.var,  Kmax = Kmax, lmin = lmin, dat=dat, type=type, ...)
   return(segmented)
 }
 
@@ -57,7 +57,7 @@ segmentation.data.frame <- function(x, Kmax = 10, lmin = Kmax/2, type = "home-ra
 #' @rdname segmentation
 #' @export
 
-segmentation.Move <- function(x, Kmax = 10, lmin = Kmax/2, type = "home-range", scale.variable = F, seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("coords.x1","coords.x2"),S=0.75,sameSigma = F, subsample_over = 10000){
+segmentation.Move <- function(x, Kmax, lmin, type = "home-range", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("coords.x1","coords.x2"), ...){
 
   if(type == "home-range"){
     dat <- t(coordinates(datamove))
@@ -81,7 +81,7 @@ segmentation.Move <- function(x, Kmax = 10, lmin = Kmax/2, type = "home-range", 
     stop("type must be either home-range or behavior")
   }
 
-  segmented <- segmentation_internal(x.df, seg.var = seg.var, diag.var = diag.var, order.var = order.var, scale.variable = scale.variable, Kmax = Kmax, lmin = lmin, dat=dat,data.type = "move",S=S,type=type,sameSigma = sameSigma, subsample_over = subsample_over)
+  segmented <- segmentation_internal(x.df, seg.var = seg.var, diag.var = diag.var, order.var = order.var, Kmax = Kmax, lmin = lmin, dat=dat, type=type, ...)
   return(segmented)
 }
 
@@ -89,7 +89,7 @@ segmentation.Move <- function(x, Kmax = 10, lmin = Kmax/2, type = "home-range", 
 #' @rdname segmentation
 #' @export
 
-segmentation.ltraj <- function(x, Kmax = 10, lmin = Kmax/2, type = "home-range", scale.variable = F, seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"),S=0.75,sameSigma = F, subsample_over = 10000){
+segmentation.ltraj <- function(x, Kmax, lmin, type = "home-range", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
 
   if(type == "home-range"){
     tmp <- x[[1]]
@@ -115,24 +115,38 @@ segmentation.ltraj <- function(x, Kmax = 10, lmin = Kmax/2, type = "home-range",
     stop("type must be either home-range or behavior")
   }
 
-  segmented <- segmentation_internal(x.df, seg.var = seg.var, diag.var = diag.var, order.var = order.var, scale.variable = scale.variable, Kmax = Kmax, lmin = lmin, dat=dat,data.type = "move",S=S,type=type,sameSigma = sameSigma, subsample_over = subsample_over)
+  segmented <- segmentation_internal(x.df, seg.var = seg.var, diag.var = diag.var, order.var = order.var, Kmax = Kmax, lmin = lmin, dat=dat,type=type, ..)
   return(segmented)
 }
 
 
 #' Internal segmentation function
 
-segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = scale.variable, Kmax = NULL, lmin = NULL, dat=NULL, data.type = NULL,S=NULL,type=NULL,sameSigma = NULL, subsample_over = 10000){
+segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = NULL, Kmax, lmin = NULL, dat=NULL, S=0.75, type=NULL, sameSigma = F, subsample_over = 10000){
+
+
 
   x_nrow <- nrow(x)
-  x <- subsample(x,subsample_over)
-
+  if(missing(Kmax)){
+    Kmax = floor(x_nrow/lmin)
+    message(paste("Unspecified Kmax, taking maximum possible value : Kmax = ",Kmax,". Think about reducing Kmax if running is too slow"))
+  }
+  tmp <- subsample(x,subsample_over)
+  x <- tmp$x
+  subsample_by <- tmp$by
   dat <- dat[,!is.na(x$subsample_ind)]
+
+  if(missing(scale.variable)){
+    warning("Rescaling variables")
+    scale.variable <- T
+  }
+
   if(scale.variable) {
     dat[1,]<- scale(dat[1,])
     dat[2,]<- scale(dat[2,])
   }
-
+  lmin <- max(floor(lmin/subsample_by),2)
+  Kmax <- min(Kmax, floor( x_nrow / ( lmin*subsample_by ) ) )
   CostLoc <- Gmean_simultanee(dat, lmin = lmin,sameVar = sameSigma)
   res.DynProg <- DynProg(CostLoc, Kmax)
 

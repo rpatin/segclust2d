@@ -38,10 +38,10 @@ plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F
     if (is.null(nclass)){
       nclass <- x$ncluster.BIC
       nseg <- x$Kopt.BIC[nclass]
-      message(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
+      warnings(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
     } else if (is.null(nseg)) {
       nseg <- x$Kopt.BIC[nclass]
-      message(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
+      warnings(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
     }
     g <- plot_segm(data = x$data, output = x$outputs[[paste(nclass,"class -",nseg, "segments")]], separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html, order = order)
 
@@ -49,7 +49,7 @@ plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F
   } else if( x$seg.type == "segmentation"){
     if( is.null(nseg) ){
       nseg <- x$Kopt.lavielle
-      message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
+      warnings(paste("Lavielle-selected number of segment : ",nseg,sep=""))
     }
 
     vararg <-  NULL
@@ -187,17 +187,17 @@ stateplot <- function(x,nseg = NULL,nclass = NULL,order = NULL){
     if (is.null(nclass)){
       nclass <- x$ncluster.BIC
       nseg <- x$Kopt.BIC[nclass]
-      message(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
+      warnings(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
     } else if (is.null(nseg)) {
       nseg <- x$Kopt.BIC[nclass]
-      message(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
+      warnings(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
     }
     g <- plot_states(x$outputs[[paste(nclass,"class -",nseg, "segments")]],x$`Diagnostic variables`,order= order)
 
   } else if( x$seg.type == "segmentation"){
     if( is.null(nseg) ){
       nseg <- x$Kopt.lavielle
-      message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
+      warnings(paste("Lavielle-selected number of segment : ",nseg,sep=""))
     }
     g <- plot_states(x$outputs[[paste(nseg, "segments")]],x$`Diagnostic variables`,order= order)
 
@@ -221,17 +221,17 @@ states <- function(x,nseg = NULL,nclass = NULL){
     if (is.null(nclass)){
       nclass <- x$ncluster.BIC
       nseg <- x$Kopt.BIC[nclass]
-      message(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
+      warnings(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
     } else if (is.null(nseg)) {
       nseg <- x$Kopt.BIC[nclass]
-      message(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
+      warnings(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
     }
     return(x$outputs[[paste(nclass,"class -",nseg, "segments")]]$states)
 
   } else if( x$seg.type == "segmentation"){
     if( is.null(nseg) ){
       nseg <- x$Kopt.lavielle
-      message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
+      warnings(paste("Lavielle-selected number of segment : ",nseg,sep=""))
     }
     return(x$outputs[[paste(nseg, "segments")]]$states)
   } else if( x$seg.type == "HMM" | x$seg.type == "shiftfit" | x$seg.type == "depmixS4" ){
@@ -248,10 +248,10 @@ segment <- function(x,nseg = NULL,nclass = NULL){
     if (is.null(nclass)){
       nclass <- x$ncluster.BIC
       nseg <- x$Kopt.BIC[nclass]
-      message(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
+      warnings(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
     } else if (is.null(nseg)) {
       nseg <- x$Kopt.BIC[nclass]
-      message(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
+      warnings(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
     }
     statesdf <- x$outputs[[paste(nclass,"class -",nseg, "segments")]]$states
     segmentdf <- x$outputs[[paste(nclass,"class -",nseg, "segments")]]$segments
@@ -260,7 +260,7 @@ segment <- function(x,nseg = NULL,nclass = NULL){
   } else if( x$seg.type == "segmentation"){
     if( is.null(nseg) ){
       nseg <- x$Kopt.lavielle
-      message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
+      warnings(paste("Lavielle-selected number of segment : ",nseg,sep=""))
     }
     statesdf <- x$outputs[[paste(nseg, "segments")]]$states
     segmentdf <- x$outputs[[paste(nseg, "segments")]]$segments
@@ -286,10 +286,10 @@ augment.segmentation<- function(x,nseg = NULL,nclass=NULL,colname_state = "state
     if (is.null(nclass)){
       nclass <- x$ncluster.BIC
       nseg <- x$Kopt.BIC[nclass]
-      message(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
+      warnings(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
     } else if (is.null(nseg)) {
       nseg <- x$Kopt.BIC[nclass]
-      message(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
+      warnings(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
     }
     statesdf <- x$outputs[[paste(nclass,"class -",nseg, "segments")]]$states
 
@@ -297,7 +297,7 @@ augment.segmentation<- function(x,nseg = NULL,nclass=NULL,colname_state = "state
   } else if( x$seg.type == "segmentation"){
     if( is.null(nseg) ){
       nseg <- x$Kopt.lavielle
-      message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
+      warnings(paste("Lavielle-selected number of segment : ",nseg,sep=""))
     }
     statesdf <- x$outputs[[paste(nseg, "segments")]]$states
     df.segm  <- segment(x,nseg=nseg)
@@ -335,16 +335,16 @@ segmap <-  function(x,interactive=F,nseg = NULL,nclass = NULL,xcol="expectTime",
     if (is.null(nclass)){
       nclass <- x$ncluster.BIC
       nseg <- x$Kopt.BIC[nclass]
-      message(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
+      warnings(paste("BIC-selected number of class : ",nclass," class.\nBIC-selected number of segment : ",nseg,sep=""))
     } else if (is.null(nseg)) {
       nseg <- x$Kopt.BIC[nclass]
-      message(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
+      warnings(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
     }
     outputs = x$outputs[[paste(nclass,"class -",nseg, "segments")]]
   } else if( x$seg.type == "segmentation"){
     if( is.null(nseg) ){
       nseg <- x$Kopt.lavielle
-      message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
+      warnings(paste("Lavielle-selected number of segment : ",nseg,sep=""))
     }
     outputs = x$outputs[[paste(nseg, "segments")]]
   }  else if( x$seg.type == "HMM" | x$seg.type == "shiftfit" | x$seg.type == "depmixS4" ){

@@ -5,7 +5,7 @@ test_that("Test of segmentation", {
   data <- datalist[["data"]]
   true_data_seg <- datalist[["true_data_seg"]]
   test_seg <- segmentation(data,Kmax = 10,lmin=5,scale.variable = T,type = "home-range",seg.var = c("x","y"))
-  # test_seg <- segmentation(data,Kmax = 10,lmin=5,scale.variable = T,type = "home-range",seg.var = c("x","y"),subsample_over = 100)
+  test_seg <- segmentation(data,Kmax = 10,lmin=5,scale.variable = T,type = "home-range",seg.var = c("x","y"),subsample_over = 100)
   plot(test_seg)
   test_res <- augment(test_seg)$state
   expect_equal(test_res, true_data_seg)
