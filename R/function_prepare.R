@@ -23,9 +23,14 @@
 # plot_states(outputs,diag.var)
 
 stat_segm <- function(data, diag.var, order.var = NULL, param = NULL, seg.type = NULL, nseg){
-  df.segm <- prep_segm(data,param,nseg = nseg, seg.type = seg.type)
-  data$indice <- 1:nrow(data)
-  df.states <- calc_stat_states(data,df.segm,diag.var,order.var)
+  subdata <- data[!is.na(data$subsample_ind),]
+  df.segm <- prep_segm(subdata,param,nseg = nseg, seg.type = seg.type)
+
+  subdata$indice <- 1:nrow(subdata)
+  df.states <- calc_stat_states(subdata,df.segm,diag.var,order.var)
+  df.segm <- subsample_rename(df.segm,data,"begin")
+  df.segm <- subsample_rename(df.segm,data,"end")
+
   return(list(df.segm,df.states))
 }
 

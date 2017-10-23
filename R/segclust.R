@@ -30,7 +30,7 @@ segclust <- function (x, ...) {
 #' @rdname segclust
 #' @export
 
-segclust.data.frame <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type = "home-range", scale.variable = F, seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"),S=0.75,sameSigma = F,lissage=F){
+segclust.data.frame <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type = "home-range", scale.variable = F, seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"),S=0.75,sameSigma = F,lissage=F, subsample_over = 1000){
 
   if(type == "home-range"){
     dat <- t(x[,coord.names])
@@ -50,7 +50,7 @@ segclust.data.frame <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type 
     stop("type must be either home-range or behavior")
   }
 
-  segmented <- segclust_internal(x, seg.var = seg.var, diag.var = diag.var, order.var = order.var, scale.variable = scale.variable, Kmax = Kmax, ncluster = ncluster, lmin = lmin, dat=dat,data.type = "data.frame", S=S, type=type, sameSigma = sameSigma, lissage=lissage)
+  segmented <- segclust_internal(x, seg.var = seg.var, diag.var = diag.var, order.var = order.var, scale.variable = scale.variable, Kmax = Kmax, ncluster = ncluster, lmin = lmin, dat=dat,data.type = "data.frame", S=S, type=type, sameSigma = sameSigma, lissage=lissage, subsample_over = subsample_over)
   return(segmented)
 }
 
@@ -59,7 +59,7 @@ segclust.data.frame <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type 
 #' @export
 
 
-segclust.Move <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type = "home-range", scale.variable = F, seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"),S=0.75,sameSigma = F){
+segclust.Move <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type = "home-range", scale.variable = F, seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"),S=0.75,sameSigma = F, subsample_over = 1000){
 
   if(type == "home-range"){
     dat <- t(coordinates(x))
@@ -83,7 +83,7 @@ segclust.Move <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type = "hom
     stop("type must be either home-range or behavior")
   }
 
-  segmented <- segclust_internal(x.df, seg.var = seg.var, diag.var = diag.var, order.var = order.var, scale.variable = scale.variable, Kmax = Kmax, ncluster = ncluster, lmin = lmin, dat=dat,data.type = "data.frame",S=S,type=type,sameSigma = sameSigma)
+  segmented <- segclust_internal(x.df, seg.var = seg.var, diag.var = diag.var, order.var = order.var, scale.variable = scale.variable, Kmax = Kmax, ncluster = ncluster, lmin = lmin, dat=dat,data.type = "data.frame",S=S,type=type,sameSigma = sameSigma, subsample_over = subsample_over)
   return(segmented)
 }
 
@@ -92,7 +92,7 @@ segclust.Move <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type = "hom
 #' @export
 
 
-segclust.ltraj <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type = "home-range", scale.variable = F, seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"),S=0.75,sameSigma = F){
+segclust.ltraj <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type = "home-range", scale.variable = F, seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"),S=0.75,sameSigma = F, subsample_over = 1000){
 
   if(type == "home-range"){
     tmp <- x[[1]]
@@ -118,19 +118,23 @@ segclust.ltraj <- function(x, Kmax = 10, lmin = Kmax/2, ncluster = 2, type = "ho
     stop("type must be either home-range or behavior")
   }
 
-  segmented <- segclust_internal(x.df, seg.var = seg.var, diag.var = diag.var, order.var = order.var, scale.variable = scale.variable, Kmax = Kmax, ncluster = ncluster, lmin = lmin, dat=dat,data.type = "data.frame",S=S,type=type,sameSigma = sameSigma)
+  segmented <- segclust_internal(x.df, seg.var = seg.var, diag.var = diag.var, order.var = order.var, scale.variable = scale.variable, Kmax = Kmax, ncluster = ncluster, lmin = lmin, dat=dat,data.type = "data.frame",S=S,type=type,sameSigma = sameSigma, subsample_over = subsample_over)
   return(segmented)
 }
 
 #' Internal segmentation/clustering function
 
-segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = scale.variable, Kmax = NULL, ncluster = NULL, lmin = NULL, dat=NULL, data.type = NULL,S=NULL,type=NULL,sameSigma = NULL,lissage=F){
+segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = scale.variable, Kmax = NULL, ncluster = NULL, lmin = NULL, dat=NULL, data.type = NULL,S=NULL,type=NULL,sameSigma = NULL,lissage=F, subsample_over = 1000){
 
+
+  x_nrow <- nrow(x)
+  x <- subsample(x,subsample_over)
+
+  dat <- dat[,!is.na(x$subsample_ind)]
   if(scale.variable) {
     dat[1,]<- scale(dat[1,])
     dat[2,]<- scale(dat[2,])
   }
-
 
   segmented <- list("data" = x,
                     "type" = type,
