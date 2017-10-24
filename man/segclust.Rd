@@ -9,20 +9,17 @@
 \usage{
 segclust(x, ...)
 
-\method{segclust}{data.frame}(x, Kmax = 10, lmin = Kmax/2, ncluster = 2,
-  type = "home-range", scale.variable = F, seg.var = NULL,
-  diag.var = seg.var, order.var = seg.var[1], coord.names = c("x", "y"),
-  S = 0.75, sameSigma = F)
+\method{segclust}{data.frame}(x, Kmax, lmin, ncluster, type = "home-range",
+  seg.var = NULL, diag.var = seg.var, order.var = seg.var[1],
+  coord.names = c("x", "y"), ...)
 
-\method{segclust}{Move}(x, Kmax = 10, lmin = Kmax/2, ncluster = 2,
-  type = "home-range", scale.variable = F, seg.var = NULL,
-  diag.var = seg.var, order.var = seg.var[1], coord.names = c("x", "y"),
-  S = 0.75, sameSigma = F)
+\method{segclust}{Move}(x, Kmax, lmin, ncluster, type = "home-range",
+  seg.var = NULL, diag.var = seg.var, order.var = seg.var[1],
+  coord.names = c("x", "y"), ...)
 
-\method{segclust}{ltraj}(x, Kmax = 10, lmin = Kmax/2, ncluster = 2,
-  type = "home-range", scale.variable = F, seg.var = NULL,
-  diag.var = seg.var, order.var = seg.var[1], coord.names = c("x", "y"),
-  S = 0.75, sameSigma = F)
+\method{segclust}{ltraj}(x, Kmax, lmin, ncluster, type = "home-range",
+  seg.var = NULL, diag.var = seg.var, order.var = seg.var[1],
+  coord.names = c("x", "y"), ...)
 }
 \arguments{
 \item{x}{data used for segmentation. Supported : data.frame, 2-columns matrix, move object, ltraj object}
@@ -35,8 +32,6 @@ segclust(x, ...)
 
 \item{type}{type of segmentation. Either "home-range" or "behavior"}
 
-\item{scale.variable}{for behavioral segmentation : whether variables need to be scaled for segmentation}
-
 \item{seg.var}{for behavioral segmentation : names of the variables used for segmentation (either one or two names)}
 
 \item{diag.var}{for behavioral segmentation : names of the variables on which statistics are calculated}
@@ -44,6 +39,8 @@ segclust(x, ...)
 \item{order.var}{for behavioral segmentation : names of the variable with which states are ordered}
 
 \item{coord.names}{for home-range segmentation and data.frame, names of coordinates. Default x and y. Not needed for move and ltraj objects}
+
+\item{scale.variable}{for behavioral segmentation : whether variables need to be scaled for segmentation}
 }
 \value{
 a \code{\link{segmentation-class}} object

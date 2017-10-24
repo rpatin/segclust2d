@@ -32,8 +32,10 @@
 #' Kopt=5
 #' param <- res$param[[Kopt]]
 #' bisig_plot(x = x, rupt = param$rupt, mu=param$phi$mu )
+#' @useDynLib segtools
+#' @importFrom Rcpp sourceCpp
 
-hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALSE,eps=1e-6,lissage=F){
+hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALSE,eps=1e-6,lissage=F,pureR = F){
 
   Linc  = matrix(-Inf,nrow=Kmax,ncol=1)
   n     = dim(x)[2]
@@ -76,7 +78,11 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
         j          = j+1
         #cat(j)
         phi.temp   = phi
-        G          = Gmixt_simultanee(x,lmin=lmin,phi.temp)
+        if(pureR){
+          G          = Gmixt_simultanee(x,lmin=lmin,phi.temp)
+        } else {
+          G          = Gmixt_simultanee_cpp(x,lmin=lmin,phi.temp)
+        }
         out.DP     = DynProg(G,K)
         t.est      = out.DP$t.est
 

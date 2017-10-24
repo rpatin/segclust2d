@@ -5,9 +5,9 @@
 \title{Internal segmentation function}
 \usage{
 segmentation_internal(x, seg.var = NULL, diag.var = NULL,
-  order.var = NULL, scale.variable = scale.variable, Kmax = NULL,
-  lmin = NULL, dat = NULL, data.type = NULL, S = NULL, type = NULL,
-  sameSigma = NULL)
+  order.var = NULL, scale.variable = NULL, Kmax, lmin = NULL,
+  dat = NULL, S = 0.75, type = NULL, sameSigma = F,
+  subsample_over = 10000)
 }
 \description{
 Internal segmentation function

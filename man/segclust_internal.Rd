@@ -5,9 +5,9 @@
 \title{Internal segmentation/clustering function}
 \usage{
 segclust_internal(x, seg.var = NULL, diag.var = NULL, order.var = NULL,
-  scale.variable = scale.variable, Kmax = NULL, ncluster = NULL,
-  lmin = NULL, dat = NULL, data.type = NULL, S = NULL, type = NULL,
-  sameSigma = NULL)
+  scale.variable, Kmax, ncluster = NULL, lmin = NULL, dat = NULL,
+  S = 0.75, type = NULL, sameSigma = F, lissage = F,
+  subsample_over = 1000)
 }
 \description{
 Internal segmentation/clustering function

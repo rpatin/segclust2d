@@ -16,7 +16,7 @@ test_that("Test of segmentation/clustering", {
   datalist = test_data()
   data <- datalist[["data"]]
   true_data_segclust <- datalist[["true_data_segclust"]]
-  test_segclust <- segclust(data,Kmax = 10,lmin=5,ncluster = 2:3,scale.variable = T,type = "behavior",seg.var = c("x","y"),subsample_over = 100)
+  test_segclust <- segclust(data,Kmax = 10,lmin=5,ncluster = 3,scale.variable = T,type = "behavior",seg.var = c("x","y"),subsample_over = 150)
   test_res <- augment(test_segclust)$state
   expect_equal(test_res, true_data_segclust)
 })

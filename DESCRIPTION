@@ -23,8 +23,13 @@ Imports:
     dplyr (>= 0.5.0),
     plyr (>= 1.8.4),
     reshape2 (>= 1.4.1),
+    magrittr,
+    Rcpp
 Suggests:
     knitr,
     rmarkdown,
     testthat
 VignetteBuilder: knitr
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo

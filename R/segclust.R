@@ -121,7 +121,7 @@ segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "home-range", seg.var
 
 #' Internal segmentation/clustering function
 
-segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable, Kmax, ncluster = NULL, lmin = NULL, dat=NULL, S=0.75, type=NULL, sameSigma = F,lissage=F, subsample_over = 1000){
+segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable, Kmax, ncluster = NULL, lmin = NULL, dat=NULL, S=0.75, type=NULL, sameSigma = F,lissage=F, subsample_over = 1000, ...){
 
   if(missing(Kmax)){
     Kmax = floor(dim(dat)[2]/lmin)
@@ -146,6 +146,12 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
 
 
   lmin <- floor(lmin/subsample_by)
+  if(subsample_by > 1){
+    warning(paste("Adjusting lmin to subsampling. New lmin divided by",subsample_by,"and set to",lmin,"."))
+  }
+  if(lmin < 1){
+    stop("lmin should be > 1")
+  }
 
   segmented <- list("data" = x,
                     "type" = type,
@@ -185,7 +191,7 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
 
   for(P in ncluster){
     # res <- segTraj::hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma)
-    res <- hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma,lissage=lissage)
+    res <- hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma,lissage=lissage, ...)
     outputs <- lapply(P:Kmax,function(k){
       out <- stat_segm(x, diag.var, order.var, param = res$param[[k]], seg.type = 'segclust')
       names(out) <- c("segments","states")
