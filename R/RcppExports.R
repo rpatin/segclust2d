@@ -5,6 +5,10 @@ arma_repmat <- function(A, n, m) {
     .Call('_segtools_arma_repmat', PACKAGE = 'segtools', A, n, m)
 }
 
+arma_repmat_transpose_divide <- function(x, y, n, m) {
+    .Call('_segtools_arma_repmat_transpose_divide', PACKAGE = 'segtools', x, y, n, m)
+}
+
 sweep_row_plus <- function(dkp, wk) {
     .Call('_segtools_sweep_row_plus', PACKAGE = 'segtools', dkp, wk)
 }
@@ -31,5 +35,9 @@ apply_col_max <- function(A) {
 
 apply_col_sum <- function(A) {
     .Call('_segtools_apply_col_sum', PACKAGE = 'segtools', A)
+}
+
+Gmixt_algo_cpp <- function(zi, lgi, P, mvec, wk, svec, prop) {
+    .Call('_segtools_Gmixt_algo_cpp', PACKAGE = 'segtools', zi, lgi, P, mvec, wk, svec, prop)
 }
 

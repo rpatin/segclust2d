@@ -35,7 +35,7 @@
 #' @useDynLib segtools
 #' @importFrom Rcpp sourceCpp
 
-hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALSE,eps=1e-6,lissage=F,pureR = F){
+hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALSE,eps=1e-6,lissage=T,pureR = F){
 
   Linc  = matrix(-Inf,nrow=Kmax,ncol=1)
   n     = dim(x)[2]
@@ -205,7 +205,7 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
         #    kvfinitebis.liste=kvfinitebis
         #  }
         #  out.neighbors  = neighborsbis(kvfinitebis.liste,x, L=Linc,k=k,param=param,P=P,lmin=lmin, eps,sameSigma)
-        out.neighbors  = neighborsbis(a,x, L=Linc,k=k,param=param,P=P,lmin=lmin, eps,sameSigma)
+        out.neighbors  = neighborsbis(a,x, L=Linc,k=k,param=param,P=P,lmin=lmin, eps,sameSigma, pureR = pureR)
 
         param          = out.neighbors$param
         Linc           = out.neighbors$L

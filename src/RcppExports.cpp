@@ -19,91 +19,123 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// arma_repmat_transpose_divide
+arma::mat arma_repmat_transpose_divide(arma::vec x, arma::vec y, int n, int m);
+RcppExport SEXP _segtools_arma_repmat_transpose_divide(SEXP xSEXP, SEXP ySEXP, SEXP nSEXP, SEXP mSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    rcpp_result_gen = Rcpp::wrap(arma_repmat_transpose_divide(x, y, n, m));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sweep_row_plus
-Rcpp::NumericMatrix sweep_row_plus(Rcpp::NumericMatrix dkp, Rcpp:: NumericVector wk);
+arma::mat sweep_row_plus(arma::mat dkp, arma::vec wk);
 RcppExport SEXP _segtools_sweep_row_plus(SEXP dkpSEXP, SEXP wkSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type dkp(dkpSEXP);
-    Rcpp::traits::input_parameter< Rcpp:: NumericVector >::type wk(wkSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type dkp(dkpSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type wk(wkSEXP);
     rcpp_result_gen = Rcpp::wrap(sweep_row_plus(dkp, wk));
     return rcpp_result_gen;
 END_RCPP
 }
 // sweep_col_divide
-Rcpp::NumericMatrix sweep_col_divide(Rcpp::NumericMatrix A, Rcpp:: NumericVector s);
+arma::mat sweep_col_divide(arma::mat A, arma::vec s);
 RcppExport SEXP _segtools_sweep_col_divide(SEXP ASEXP, SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
-    Rcpp::traits::input_parameter< Rcpp:: NumericVector >::type s(sSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type s(sSEXP);
     rcpp_result_gen = Rcpp::wrap(sweep_col_divide(A, s));
     return rcpp_result_gen;
 END_RCPP
 }
 // sweep_col_plus
-Rcpp::NumericMatrix sweep_col_plus(Rcpp::NumericMatrix A, Rcpp::NumericVector s);
+arma::mat sweep_col_plus(arma::mat A, arma::vec s);
 RcppExport SEXP _segtools_sweep_col_plus(SEXP ASEXP, SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type s(sSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type s(sSEXP);
     rcpp_result_gen = Rcpp::wrap(sweep_col_plus(A, s));
     return rcpp_result_gen;
 END_RCPP
 }
 // sweep_row_times
-Rcpp::NumericMatrix sweep_row_times(Rcpp::NumericMatrix A, Rcpp::NumericVector s);
+arma::mat sweep_row_times(arma::mat A, arma::vec s);
 RcppExport SEXP _segtools_sweep_row_times(SEXP ASEXP, SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type s(sSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type s(sSEXP);
     rcpp_result_gen = Rcpp::wrap(sweep_row_times(A, s));
     return rcpp_result_gen;
 END_RCPP
 }
 // sweep_row_times2
-Rcpp::NumericMatrix sweep_row_times2(Rcpp::NumericMatrix A, Rcpp::NumericVector s);
+arma::mat sweep_row_times2(arma::mat A, arma::vec s);
 RcppExport SEXP _segtools_sweep_row_times2(SEXP ASEXP, SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type s(sSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type s(sSEXP);
     rcpp_result_gen = Rcpp::wrap(sweep_row_times2(A, s));
     return rcpp_result_gen;
 END_RCPP
 }
 // apply_col_max
-Rcpp::NumericVector apply_col_max(Rcpp::NumericMatrix A);
+arma::rowvec apply_col_max(arma::mat A);
 RcppExport SEXP _segtools_apply_col_max(SEXP ASEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
     rcpp_result_gen = Rcpp::wrap(apply_col_max(A));
     return rcpp_result_gen;
 END_RCPP
 }
 // apply_col_sum
-Rcpp::NumericVector apply_col_sum(Rcpp::NumericMatrix A);
+arma::rowvec apply_col_sum(arma::mat A);
 RcppExport SEXP _segtools_apply_col_sum(SEXP ASEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
     rcpp_result_gen = Rcpp::wrap(apply_col_sum(A));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Gmixt_algo_cpp
+arma::mat Gmixt_algo_cpp(arma::vec zi, arma::vec lgi, int P, arma::vec mvec, arma::vec wk, arma::vec svec, arma::vec prop);
+RcppExport SEXP _segtools_Gmixt_algo_cpp(SEXP ziSEXP, SEXP lgiSEXP, SEXP PSEXP, SEXP mvecSEXP, SEXP wkSEXP, SEXP svecSEXP, SEXP propSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type zi(ziSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type lgi(lgiSEXP);
+    Rcpp::traits::input_parameter< int >::type P(PSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type mvec(mvecSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type wk(wkSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type svec(svecSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type prop(propSEXP);
+    rcpp_result_gen = Rcpp::wrap(Gmixt_algo_cpp(zi, lgi, P, mvec, wk, svec, prop));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_segtools_arma_repmat", (DL_FUNC) &_segtools_arma_repmat, 3},
+    {"_segtools_arma_repmat_transpose_divide", (DL_FUNC) &_segtools_arma_repmat_transpose_divide, 4},
     {"_segtools_sweep_row_plus", (DL_FUNC) &_segtools_sweep_row_plus, 2},
     {"_segtools_sweep_col_divide", (DL_FUNC) &_segtools_sweep_col_divide, 2},
     {"_segtools_sweep_col_plus", (DL_FUNC) &_segtools_sweep_col_plus, 2},
@@ -111,6 +143,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_segtools_sweep_row_times2", (DL_FUNC) &_segtools_sweep_row_times2, 2},
     {"_segtools_apply_col_max", (DL_FUNC) &_segtools_apply_col_max, 1},
     {"_segtools_apply_col_sum", (DL_FUNC) &_segtools_apply_col_sum, 1},
+    {"_segtools_Gmixt_algo_cpp", (DL_FUNC) &_segtools_Gmixt_algo_cpp, 7},
     {NULL, NULL, 0}
 };
 

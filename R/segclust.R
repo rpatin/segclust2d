@@ -121,7 +121,7 @@ segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "home-range", seg.var
 
 #' Internal segmentation/clustering function
 
-segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable, Kmax, ncluster = NULL, lmin = NULL, dat=NULL, S=0.75, type=NULL, sameSigma = F,lissage=F, subsample_over = 1000, ...){
+segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable, Kmax, ncluster = NULL, lmin = NULL, dat=NULL, S=0.75, type=NULL, sameSigma = F, subsample_over = 1000, ...){
 
   if(missing(Kmax)){
     Kmax = floor(dim(dat)[2]/lmin)
@@ -191,7 +191,7 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
 
   for(P in ncluster){
     # res <- segTraj::hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma)
-    res <- hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma,lissage=lissage, ...)
+    res <- hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma, ...)
     outputs <- lapply(P:Kmax,function(k){
       out <- stat_segm(x, diag.var, order.var, param = res$param[[k]], seg.type = 'segclust')
       names(out) <- c("segments","states")

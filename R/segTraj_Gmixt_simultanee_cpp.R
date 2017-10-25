@@ -1,6 +1,6 @@
-# Gmixt_simultanee_cpp
+# Gmixt_simultanee
 #'
-#' Gmixt_simultanee calculates the cost matrix for a segmentation/clustering model, using Rcpp functions for limiting calculations
+#' Gmixt_simultanee calculates the cost matrix for a segmentation/clustering model
 #' @param Don the bivariate  signal
 #' @param lmin the minimum size for a segment
 #' @param phi  the  parameters of the mixture
@@ -38,7 +38,7 @@ Gmixt_simultanee_cpp <- function(Don,lmin,phi){
     wk  <- (z2i/lg-(zi/lg)^2)
     #  old # dkp <- (sweep(repmat(t(zi/lg),P,1), MARGIN = 1, STATS = m[signal,]))^2
     ##  very old # Aold    = (wkold+dkpold)/repmat(s[signal,]^2,1,n-lmin+1)+ log(2*pi*repmat(s[signal,]^2,1,n-lmin+1))
-    tmp_repmat <- arma_repmat(t(zi/lg),P,1)
+    tmp_repmat <- arma_repmat_transpose_divide(zi,lg,P,1)
     dkp <- (sweep_col_plus(tmp_repmat,-m[signal,]))^2
 
     # A <- sweep(dkp, MARGIN = 2, STATS = wk, FUN = '+')
@@ -73,35 +73,8 @@ Gmixt_simultanee_cpp <- function(Don,lmin,phi){
       lgi = lmin:(n-i+1)
       wk = (z2i)/(lgi)-(zi/(lgi))^2
       # dkp <- (sweep(repmat(t(zi/lgi),P,1), MARGIN = 1, STATS = m[signal,]))^2
-      tmp_repmat <- arma_repmat(t(zi/lgi),P,1)
-      dkp <- (sweep_col_plus(tmp_repmat,-m[signal,]))^2
 
-      # A <- sweep(dkp, MARGIN = 2, STATS = wk, FUN = '+')
-      A <- sweep_row_plus(dkp,wk)
-
-      # A <- sweep(A, MARGIN = 1, STATS = s[signal,]^2, FUN = '/')
-      A <- sweep_col_divide(A,s[signal,]^2)
-
-      # A <- sweep(A, MARGIN = 1, STATS = log(2*pi*s[signal,]^2), FUN = '+')
-      A <- sweep_col_plus(A,log(2*pi*s[signal,]^2))
-
-      # A <- -0.5*sweep(A, MARGIN = 2, STATS = lgi, FUN = '*')
-      A <- -0.5*sweep_row_times(A,lgi)
-
-      # A <- sweep(A, MARGIN = 1, STATS = log(prop), FUN='+')
-      A <- sweep_col_plus(A, log(prop))
-
-      # A_max = apply(A,2,max)
-      A_max <- apply_col_max(A)
-
-      # Aprov     = exp(sweep(A, MARGIN = 2, STATS = A_max, FUN = '-'))
-      Aprov <- exp(sweep_row_plus(A, -A_max))
-
-
-      # G[[signal]][i,(i+lmin-1):n] =  -log(apply(Aprov,2,sum)) - A_max
-
-      A_sum <- apply_col_sum(Aprov)
-      G[[signal]][i,(i+lmin-1):n] = -log(A_sum) - A_max
+      G[[signal]][i,(i+lmin-1):n] =  Gmixt_algo_cpp(zi, lgi, P, m[signal,], wk, s[signal,], prop)
       ## problem if i=n-lmin+1
       ## Aprov[,(i+lmin-1):n] is a vector, and apply can't be used
       ## this case is postponed at the end of the loop
