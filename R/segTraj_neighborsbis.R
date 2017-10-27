@@ -20,10 +20,11 @@ neighborsbis <- function (kv.hull,x, L,k,param,P,lmin, eps,sameSigma=TRUE, pureR
       phi1                     = param[[K1]]$phi
       if(pureR){
         G = Gmixt_simultanee(x,lmin,phi1) ## computes the cost matrix
+        out.DP     = DynProg(G,k) ## produces the best segmentation with the given cost matrix in k segment
       } else {
-        G = Gmixt_simultanee_cpp(x,lmin,phi1) ## computes the cost matrix
+        G = Gmixt_simultanee_fullcpp(x, lmin=lmin, phi1$prop, phi1$mu, phi1$sigma)
+        out.DP     = wrap_dynprog_cpp(G,k)
       }
-      out.DP     = DynProg(G,k) ## produces the best segmentation with the given cost matrix in k segment
       t.est      = out.DP$t.est
       J.est      = out.DP$J.est
       rupt1      = matrix(ncol=2,c(c(1,t.est[k,1:(k-1)]+1),t.est[k,]))

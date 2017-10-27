@@ -80,10 +80,12 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
         phi.temp   = phi
         if(pureR){
           G          = Gmixt_simultanee(x,lmin=lmin,phi.temp)
+          out.DP     = DynProg(G,K)
         } else {
-          G          = Gmixt_simultanee_cpp(x,lmin=lmin,phi.temp)
+          G          = Gmixt_simultanee_fullcpp(x, lmin=lmin, phi.temp$prop, phi.temp$mu, phi.temp$sigma)
+          out.DP     = wrap_dynprog_cpp(G,K)
         }
-        out.DP     = DynProg(G,K)
+        # if(K == 8) browser()
         t.est      = out.DP$t.est
 
         #      G          = Gmixt_simultaneeF(x,lmin=2,phi.temp,P)

@@ -6,112 +6,15 @@
 
 using namespace Rcpp;
 
-// arma_repmat
-arma::mat arma_repmat(arma::mat A, int n, int m);
-RcppExport SEXP _segtools_arma_repmat(SEXP ASEXP, SEXP nSEXP, SEXP mSEXP) {
+// DynProg_algo_cpp
+List DynProg_algo_cpp(arma::mat matD, int Kmax);
+RcppExport SEXP _segtools_DynProg_algo_cpp(SEXP matDSEXP, SEXP KmaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< int >::type m(mSEXP);
-    rcpp_result_gen = Rcpp::wrap(arma_repmat(A, n, m));
-    return rcpp_result_gen;
-END_RCPP
-}
-// arma_repmat_transpose_divide
-arma::mat arma_repmat_transpose_divide(arma::vec x, arma::vec y, int n, int m);
-RcppExport SEXP _segtools_arma_repmat_transpose_divide(SEXP xSEXP, SEXP ySEXP, SEXP nSEXP, SEXP mSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::vec >::type x(xSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< int >::type m(mSEXP);
-    rcpp_result_gen = Rcpp::wrap(arma_repmat_transpose_divide(x, y, n, m));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sweep_row_plus
-arma::mat sweep_row_plus(arma::mat dkp, arma::vec wk);
-RcppExport SEXP _segtools_sweep_row_plus(SEXP dkpSEXP, SEXP wkSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type dkp(dkpSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type wk(wkSEXP);
-    rcpp_result_gen = Rcpp::wrap(sweep_row_plus(dkp, wk));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sweep_col_divide
-arma::mat sweep_col_divide(arma::mat A, arma::vec s);
-RcppExport SEXP _segtools_sweep_col_divide(SEXP ASEXP, SEXP sSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type s(sSEXP);
-    rcpp_result_gen = Rcpp::wrap(sweep_col_divide(A, s));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sweep_col_plus
-arma::mat sweep_col_plus(arma::mat A, arma::vec s);
-RcppExport SEXP _segtools_sweep_col_plus(SEXP ASEXP, SEXP sSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type s(sSEXP);
-    rcpp_result_gen = Rcpp::wrap(sweep_col_plus(A, s));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sweep_row_times
-arma::mat sweep_row_times(arma::mat A, arma::vec s);
-RcppExport SEXP _segtools_sweep_row_times(SEXP ASEXP, SEXP sSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type s(sSEXP);
-    rcpp_result_gen = Rcpp::wrap(sweep_row_times(A, s));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sweep_row_times2
-arma::mat sweep_row_times2(arma::mat A, arma::vec s);
-RcppExport SEXP _segtools_sweep_row_times2(SEXP ASEXP, SEXP sSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type s(sSEXP);
-    rcpp_result_gen = Rcpp::wrap(sweep_row_times2(A, s));
-    return rcpp_result_gen;
-END_RCPP
-}
-// apply_col_max
-arma::rowvec apply_col_max(arma::mat A);
-RcppExport SEXP _segtools_apply_col_max(SEXP ASEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
-    rcpp_result_gen = Rcpp::wrap(apply_col_max(A));
-    return rcpp_result_gen;
-END_RCPP
-}
-// apply_col_sum
-arma::rowvec apply_col_sum(arma::mat A);
-RcppExport SEXP _segtools_apply_col_sum(SEXP ASEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
-    rcpp_result_gen = Rcpp::wrap(apply_col_sum(A));
+    Rcpp::traits::input_parameter< arma::mat >::type matD(matDSEXP);
+    Rcpp::traits::input_parameter< int >::type Kmax(KmaxSEXP);
+    rcpp_result_gen = Rcpp::wrap(DynProg_algo_cpp(matD, Kmax));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -132,18 +35,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Gmixt_simultanee_fullcpp
+arma::mat Gmixt_simultanee_fullcpp(arma::mat Don, int lmin, arma::rowvec prop, arma::mat mu, arma::mat s);
+RcppExport SEXP _segtools_Gmixt_simultanee_fullcpp(SEXP DonSEXP, SEXP lminSEXP, SEXP propSEXP, SEXP muSEXP, SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type Don(DonSEXP);
+    Rcpp::traits::input_parameter< int >::type lmin(lminSEXP);
+    Rcpp::traits::input_parameter< arma::rowvec >::type prop(propSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type s(sSEXP);
+    rcpp_result_gen = Rcpp::wrap(Gmixt_simultanee_fullcpp(Don, lmin, prop, mu, s));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_segtools_arma_repmat", (DL_FUNC) &_segtools_arma_repmat, 3},
-    {"_segtools_arma_repmat_transpose_divide", (DL_FUNC) &_segtools_arma_repmat_transpose_divide, 4},
-    {"_segtools_sweep_row_plus", (DL_FUNC) &_segtools_sweep_row_plus, 2},
-    {"_segtools_sweep_col_divide", (DL_FUNC) &_segtools_sweep_col_divide, 2},
-    {"_segtools_sweep_col_plus", (DL_FUNC) &_segtools_sweep_col_plus, 2},
-    {"_segtools_sweep_row_times", (DL_FUNC) &_segtools_sweep_row_times, 2},
-    {"_segtools_sweep_row_times2", (DL_FUNC) &_segtools_sweep_row_times2, 2},
-    {"_segtools_apply_col_max", (DL_FUNC) &_segtools_apply_col_max, 1},
-    {"_segtools_apply_col_sum", (DL_FUNC) &_segtools_apply_col_sum, 1},
+    {"_segtools_DynProg_algo_cpp", (DL_FUNC) &_segtools_DynProg_algo_cpp, 2},
     {"_segtools_Gmixt_algo_cpp", (DL_FUNC) &_segtools_Gmixt_algo_cpp, 7},
+    {"_segtools_Gmixt_simultanee_fullcpp", (DL_FUNC) &_segtools_Gmixt_simultanee_fullcpp, 5},
     {NULL, NULL, 0}
 };
 
