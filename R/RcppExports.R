@@ -5,6 +5,18 @@ DynProg_algo_cpp <- function(matD, Kmax) {
     .Call('_segtools_DynProg_algo_cpp', PACKAGE = 'segtools', matD, Kmax)
 }
 
+logdens_simultanee_cpp <- function(xk, mu, sigma, prop) {
+    .Call('_segtools_logdens_simultanee_cpp', PACKAGE = 'segtools', xk, mu, sigma, prop)
+}
+
+apply_rowSums <- function(rupt, x) {
+    .Call('_segtools_apply_rowSums', PACKAGE = 'segtools', rupt, x)
+}
+
+colsums_sapply <- function(i, rupt, x, mu, tau) {
+    .Call('_segtools_colsums_sapply', PACKAGE = 'segtools', i, rupt, x, mu, tau)
+}
+
 Gmixt_algo_cpp <- function(zi, lgi, P, mvec, wk, svec, prop) {
     .Call('_segtools_Gmixt_algo_cpp', PACKAGE = 'segtools', zi, lgi, P, mvec, wk, svec, prop)
 }

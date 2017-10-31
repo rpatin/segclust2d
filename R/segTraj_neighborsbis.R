@@ -28,7 +28,11 @@ neighborsbis <- function (kv.hull,x, L,k,param,P,lmin, eps,sameSigma=TRUE, pureR
       t.est      = out.DP$t.est
       J.est      = out.DP$J.est
       rupt1      = matrix(ncol=2,c(c(1,t.est[k,1:(k-1)]+1),t.est[k,]))
-      out.EM1    = EM.algo_simultanee(x = x,rupt = rupt1,P = P,phi = phi1, eps,sameSigma)
+      if(pureR){
+        out.EM1 = EM.algo_simultanee(x = x,rupt = rupt1,P = P,phi = phi1, eps,sameSigma)
+      } else {
+        out.EM1 = EM.algo_simultanee_Cpp(x = x,rupt = rupt1,P = P,phi = phi1, eps,sameSigma)
+      }
     } #end else
    if (out.EM1$lvinc>L[k])
      {

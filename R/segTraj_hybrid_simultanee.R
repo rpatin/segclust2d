@@ -67,7 +67,11 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
       th     = out$t.est[K,1:K]
       rupt   = matrix(ncol=2,c(c(1,th[1:(K-1)]+1),th))
       phi    = EM.init_simultanee(x,rupt,K,P)
-      out.EM = EM.algo_simultanee(x,rupt,P,phi, eps,sameSigma)
+      if(pureR){
+        out.EM = EM.algo_simultanee(x,rupt,P,phi, eps,sameSigma)
+      } else {
+        out.EM = EM.algo_simultanee_Cpp(x,rupt,P,phi, eps,sameSigma)
+      }
       phi    = out.EM$phi
       tau    = out.EM$tau
       #  bisig_plot(x, rupt = rupt)
@@ -94,7 +98,12 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
         #      J.est      = out.DP$J.est
 
         rupt       = ruptAsMat(t.est[K,])
-        out.EM     = EM.algo_simultanee(x,rupt,P,phi.temp, eps,sameSigma)
+
+        if(pureR){
+          out.EM = EM.algo_simultanee(x,rupt,P,phi.temp, eps,sameSigma)
+        } else {
+          out.EM = EM.algo_simultanee_Cpp(x,rupt,P,phi.temp, eps,sameSigma)
+        }
         phi        = out.EM$phi
         tau        = out.EM$tau
         empty      = out.EM$empty
