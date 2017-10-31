@@ -10,6 +10,8 @@ Estep_simultanee(logdensity, phi, eps = 1e-09)
 \item{logdensity}{is a  K*P matrix containing the conditinal log-densities for each segment}
 
 \item{phi}{a list containing the parameters of the mixture}
+
+\item{eps}{eps}
 }
 \value{
 a list with tau a K*P matrix, tau kj is the posterior probability for segment k to belong to classe j and lvinc, the incomplete log vrais P(X=x)

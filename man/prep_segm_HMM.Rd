@@ -6,6 +6,11 @@
 \usage{
 prep_segm_HMM(data, hmm.model)
 }
+\arguments{
+\item{data}{data}
+
+\item{hmm.model}{hmm.model}
+}
 \description{
 \code{prep_segm_HMM}
 }

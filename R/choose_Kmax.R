@@ -2,8 +2,8 @@
 #'
 #' Internal function for choosing optimal number of segment using Marc Lavielle's method. From Emilie Lebarbier. Method based on identifying breaks in the slope of the contrast.
 
-#' @param J.est data used for segmentation. Supported : data.frame, 2-columns matrix, move object, ltraj object
-#' @param S threshold for choosing the number. See adehabitatLT::chooseseg
+#' @param J likelihood for each number of segment
+#' @param S threshold for choosing the number of segment. See adehabitatLT::chooseseg
 #' @return  a list with optimal number of segment and full data.frame of the calculus
 #'
 #' @examples

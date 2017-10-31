@@ -1,6 +1,11 @@
 #' Prepare depmixS4 output for proper plots
 #'
 #' \code{prepare_depmixS4}
+#'
+#' @param data data
+#' @param hmm.model hmm.model
+#' @param diag.var diag.var
+#' @param order.var order.var
 #' @export
 
 prepare_depmixS4 <- function(data, depmixS4.model = NULL, diag.var, order.var = diag.var[1]){
@@ -22,6 +27,8 @@ prepare_depmixS4 <- function(data, depmixS4.model = NULL, diag.var, order.var = 
 #' Get segment statistic for HMM model
 #'
 #' \code{stat_segm_depmixS4}
+#'
+#' @inheritParams prepare_depmixS4
 
 stat_segm_depmixS4 <- function(data, depmixS4.model = NULL, diag.var, order.var = NULL){
   df.segm <- prep_segm_depmixS4(depmixS4.model)
@@ -33,6 +40,7 @@ stat_segm_depmixS4 <- function(data, depmixS4.model = NULL, diag.var, order.var 
 #' Internal function for HMM
 #'
 #' \code{prep_segm_depmixS4}
+#' @inheritParams prepare_depmixS4
 #' @export
 
 prep_segm_depmixS4 <- function(depmixS4.model){

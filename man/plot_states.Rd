@@ -11,7 +11,9 @@ plot_states(outputs, diag.var, position_width = 0.3, order = F)
 
 \item{position_width}{width between different model if several models are compared}
 
-\item{data}{the data.frame with the different variable}
+\item{order}{should cluster be ordered}
+
+\item{output}{outputs of the segmentation  or segclust algorithm for one number of segment}
 }
 \value{
 a graph

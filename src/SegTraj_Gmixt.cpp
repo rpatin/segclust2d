@@ -1,15 +1,29 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
-
-// [[Rcpp::export]]
 using namespace Rcpp;
 using namespace arma;
+
+//' arma_repmat
+//'
+//' C++ Armadillo version for repmat function. Repeat a matrix in bloc.
+//'
+//' @param A matrix
+//' @param n number of repetition in line
+//' @param m number of repetition in column
+// [[Rcpp::export]]
 
 arma::mat arma_repmat(arma::mat A, int n, int m){
   return arma::repmat(A,n,m);
 }
 
+//' Gmixt_algo_cpp
+//'
+//' Internal C++ algorithm for computing the cost matrix.
+//'
+//' @param A matrix
+//' @param n number of repetition in line
+//' @param m number of repetition in column
 // [[Rcpp::export]]
 
 arma::mat Gmixt_algo_cpp(arma::vec zi, arma::vec lgi,
@@ -35,6 +49,15 @@ arma::mat Gmixt_algo_cpp(arma::vec zi, arma::vec lgi,
 }
 
 
+//' Gmixt_simultanee_fullcpp
+//'
+//' C++ function replacing \link{Gmixt_simultanee}
+//'
+//' @param Don Bivariate Signal
+//' @param lmin minimum length of segments
+//' @param prop mixture parameters
+//' @param mu mean parameters
+//' @param s standard deviation paramaters
 // [[Rcpp::export]]
 
 arma::mat Gmixt_simultanee_fullcpp(arma::mat Don,int lmin, arma::rowvec prop, arma::mat mu, arma::mat s){

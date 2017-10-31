@@ -6,12 +6,12 @@
 #' @param seg.var for behavioral segmentation : names of the variables used for segmentation (either one or two names)
 #' @param diag.var for behavioral segmentation : names of the variables on which statistics are calculated
 #' @param order.var for behavioral segmentation : names of the variable with which states are ordered
-#' @param scale.variable for behavioral segmentation : whether variables need to be scaled for segmentation
 #' @param Kmax maximum number of segments. Default to 10.
 #' @param lmin minimum size of segments. Default to length of time series/Kmax/2.
-#' @inheritParams segmentation.data.frame
-#' @inheritParams segmentation.move
-#' @inheritParams segmentation.ltraj
+#' @param ... additional parameters
+#' @inheritParams segclust.data.frame
+#' @inheritParams segclust.Move
+#' @inheritParams segclust.ltraj
 #' @return  a \code{\link{segmentation-class}} object
 #'
 #' @examples
@@ -27,6 +27,7 @@ segclust <- function (x, ...) {
 #' Segmentation/Clustering function for data.frame
 #' @param coord.names for home-range segmentation and data.frame, names of coordinates. Default x and y. Not needed for move and ltraj objects
 #' @param ncluster number or list of cluster to be chosen.
+#' @param scale.variable for behavioral segmentation : whether variables need to be scaled for segmentation
 #' @rdname segclust
 #' @export
 
@@ -59,8 +60,12 @@ segclust.data.frame <- function(x, Kmax, lmin, ncluster, type = "home-range", se
 
 
 segclust.Move <- function(x, Kmax, lmin, ncluster, type = "home-range", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
+  if(requireNamespace("move", quietly = TRUE))
+    stop("move package required for calling segclust on a Move object.")
   if(type == "home-range"){
-    dat <- t(coordinates(x))
+    if(requireNamespace("sp", quietly = TRUE))
+      stop("sp package required for calling segclust (home-range) on a Move object.")
+    dat <- t(sp::coordinates(x))
     seg.var = coord.names
     diag.var = coord.names
     order.var = coord.names[1]
@@ -120,6 +125,7 @@ segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "home-range", seg.var
 }
 
 #' Internal segmentation/clustering function
+#' @inheritParams segclust
 
 segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable, Kmax, ncluster = NULL, lmin = NULL, dat=NULL, S=0.75, type=NULL, sameSigma = F, subsample_over = 1000, ...){
 

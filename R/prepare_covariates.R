@@ -14,7 +14,7 @@
 #' @examples
 #' calc_dist(df,coord.names = c("x","y"), smoothed = T)
 #' @export
-#' @author Rémi Patin, \email{remi.patin@normale.fr}
+#' @author Remi Patin
 
 
 add_covariates <- function(x, coord.names = c("x","y"), smoothed = F, timecol = "dateTime", units = "hour", radius = NULL){
@@ -53,7 +53,7 @@ add_covariates <- function(x, coord.names = c("x","y"), smoothed = F, timecol = 
 #' @examples
 #' calc_dist(df,coord.names = c("x","y"), smoothed = T)
 #' @export
-#' @author Rémi Patin, \email{remi.patin@normale.fr}
+#' @author Remi Patin
 
 
 calc_dist <- function(x, coord.names = c("x","y"), smoothed = F){
@@ -77,7 +77,7 @@ calc_dist <- function(x, coord.names = c("x","y"), smoothed = F){
 #' @examples
 #' calc_speed(df,coord.names = c("x","y"), timecol = "dateTime", smoothed = T)
 #' @export
-#' @author Rémi Patin, \email{remi.patin@normale.fr}
+#' @author Remi Patin
 
 
 calc_speed <- function(x, coord.names = c("x","y"), timecol = "dateTime", smoothed = F, units = "hour"){
@@ -103,7 +103,7 @@ calc_speed <- function(x, coord.names = c("x","y"), timecol = "dateTime", smooth
 #' @examples
 #' calc_speed(df,coord.names = c("x","y"), timecol = "dateTime", smoothed = T)
 #' @export
-#' @author Rémi Patin, \email{remi.patin@normale.fr}, Simon Benhamou.
+#' @author Remi Patin, Simon Benhamou.
 
 
 spatial_angle <- function(df, coord.names = c("x","y"), radius = NULL){

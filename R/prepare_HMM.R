@@ -1,6 +1,10 @@
 #' Prepare HMM output for proper comparison plots
 #'
 #' \code{prepare_HMM}
+#' @param data data
+#' @param hmm.model hmm.model
+#' @param diag.var diag.var
+#' @param order.var order.var
 #' @export
 
 prepare_HMM <- function(data, hmm.model = NULL, diag.var, order.var = diag.var[1]){
@@ -21,6 +25,7 @@ prepare_HMM <- function(data, hmm.model = NULL, diag.var, order.var = diag.var[1
 #' Get segment statistic for HMM model
 #'
 #' \code{stat_segm_HMM}
+#' @inheritParams prepare_HMM
 
 stat_segm_HMM <- function(data, hmm.model = NULL, diag.var, order.var = NULL){
   df.segm <- prep_segm_HMM(data,hmm.model)
@@ -33,6 +38,7 @@ stat_segm_HMM <- function(data, hmm.model = NULL, diag.var, order.var = NULL){
 #'
 #' \code{prep_segm_HMM}
 #' @export
+#' @inheritParams prepare_HMM
 
 prep_segm_HMM <- function(data,hmm.model){
   cluster <- moveHMM::viterbi(hmm.model)

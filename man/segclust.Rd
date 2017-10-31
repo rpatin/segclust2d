@@ -24,6 +24,8 @@ segclust(x, ...)
 \arguments{
 \item{x}{data used for segmentation. Supported : data.frame, 2-columns matrix, move object, ltraj object}
 
+\item{...}{additional parameters}
+
 \item{Kmax}{maximum number of segments. Default to 10.}
 
 \item{lmin}{minimum size of segments. Default to length of time series/Kmax/2.}

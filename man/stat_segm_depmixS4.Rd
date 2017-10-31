@@ -6,6 +6,13 @@
 \usage{
 stat_segm_depmixS4(data, depmixS4.model = NULL, diag.var, order.var = NULL)
 }
+\arguments{
+\item{data}{data}
+
+\item{diag.var}{diag.var}
+
+\item{order.var}{order.var}
+}
 \description{
 \code{stat_segm_depmixS4}
 }

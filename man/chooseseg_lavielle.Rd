@@ -7,9 +7,9 @@
 chooseseg_lavielle(J, S = 0.75)
 }
 \arguments{
-\item{S}{threshold for choosing the number. See adehabitatLT::chooseseg}
+\item{J}{likelihood for each number of segment}
 
-\item{J.est}{data used for segmentation. Supported : data.frame, 2-columns matrix, move object, ltraj object}
+\item{S}{threshold for choosing the number of segment. See adehabitatLT::chooseseg}
 }
 \value{
 a list with optimal number of segment and full data.frame of the calculus

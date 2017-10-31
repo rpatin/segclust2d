@@ -59,6 +59,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// arma_repmat
+arma::mat arma_repmat(arma::mat A, int n, int m);
+RcppExport SEXP _segtools_arma_repmat(SEXP ASEXP, SEXP nSEXP, SEXP mSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    rcpp_result_gen = Rcpp::wrap(arma_repmat(A, n, m));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Gmixt_algo_cpp
 arma::mat Gmixt_algo_cpp(arma::vec zi, arma::vec lgi, int P, arma::vec mvec, arma::vec wk, arma::vec svec, arma::vec prop);
 RcppExport SEXP _segtools_Gmixt_algo_cpp(SEXP ziSEXP, SEXP lgiSEXP, SEXP PSEXP, SEXP mvecSEXP, SEXP wkSEXP, SEXP svecSEXP, SEXP propSEXP) {
@@ -97,6 +110,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_segtools_logdens_simultanee_cpp", (DL_FUNC) &_segtools_logdens_simultanee_cpp, 4},
     {"_segtools_apply_rowSums", (DL_FUNC) &_segtools_apply_rowSums, 2},
     {"_segtools_colsums_sapply", (DL_FUNC) &_segtools_colsums_sapply, 5},
+    {"_segtools_arma_repmat", (DL_FUNC) &_segtools_arma_repmat, 3},
     {"_segtools_Gmixt_algo_cpp", (DL_FUNC) &_segtools_Gmixt_algo_cpp, 7},
     {"_segtools_Gmixt_simultanee_fullcpp", (DL_FUNC) &_segtools_Gmixt_simultanee_fullcpp, 5},
     {NULL, NULL, 0}

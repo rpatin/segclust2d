@@ -11,7 +11,12 @@
 #' @param x the two-dimensionnal signal, one line per dimension
 #' @param P the number of classes
 #' @param Kmax the maximal number of segments
-#'
+#' @param lmin minimum length of segment
+#' @param sameSigma should segment have the same variance
+#' @param sameVar.init sameVar.init
+#' @param eps eps
+#' @param lissage should likelihood be smoothed
+#' @param pureR should algorithm run in full R or use Rcpp speed improvements
 #' @export
 #' @return  a list with Linc, the incomplete loglikelihood =Linc,param=paramtau posterior probability
 #

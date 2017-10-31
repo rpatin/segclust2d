@@ -5,7 +5,7 @@
 \title{\code{hybrid_simultanee} performs a simultaneous seg - clustering for bivariate signals.}
 \usage{
 hybrid_simultanee(x, P, Kmax, lmin = 3, sameSigma = TRUE,
-  sameVar.init = FALSE, eps = 1e-06, lissage = F)
+  sameVar.init = FALSE, eps = 1e-06, lissage = T, pureR = F)
 }
 \arguments{
 \item{x}{the two-dimensionnal signal, one line per dimension}
@@ -13,6 +13,18 @@ hybrid_simultanee(x, P, Kmax, lmin = 3, sameSigma = TRUE,
 \item{P}{the number of classes}
 
 \item{Kmax}{the maximal number of segments}
+
+\item{lmin}{minimum length of segment}
+
+\item{sameSigma}{should segment have the same variance}
+
+\item{sameVar.init}{sameVar.init}
+
+\item{eps}{eps}
+
+\item{lissage}{should likelihood be smoothed}
+
+\item{pureR}{should algorithm run in full R or use Rcpp speed improvements}
 }
 \value{
 a list with Linc, the incomplete loglikelihood =Linc,param=paramtau posterior probability

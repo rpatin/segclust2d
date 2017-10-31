@@ -6,6 +6,15 @@
 \usage{
 prepare_HMM(data, hmm.model = NULL, diag.var, order.var = diag.var[1])
 }
+\arguments{
+\item{data}{data}
+
+\item{hmm.model}{hmm.model}
+
+\item{diag.var}{diag.var}
+
+\item{order.var}{order.var}
+}
 \description{
 \code{prepare_HMM}
 }

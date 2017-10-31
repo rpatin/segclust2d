@@ -2,6 +2,7 @@
 #' Estep_simultanee computes posterior probabilities and incomplete-data  log-likelihood for mixture models
 #' @param logdensity is a  K*P matrix containing the conditinal log-densities for each segment
 #' @param phi   a list containing the parameters of the mixture
+#' @param eps eps
 #' @return a list with tau a K*P matrix, tau kj is the posterior probability for segment k to belong to classe j and lvinc, the incomplete log vrais P(X=x)
 
 Estep_simultanee <- function (logdensity,phi, eps=1e-9){

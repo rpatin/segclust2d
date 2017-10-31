@@ -2,17 +2,18 @@
 % Please edit documentation in R/segTraj_initialisePhi.R
 \name{initialisePhi}
 \alias{initialisePhi}
-\title{initialisePhi is the constructor for a set of parameters for a segclust model
-P number of classes
-val the value ti be used for tinitiliastation default is -Inf}
+\title{initialisePhi is the constructor for a set of parameters for a segclust model}
 \usage{
 initialisePhi(P, val = -Inf)
 }
+\arguments{
+\item{P}{number of classes}
+
+\item{val}{the value used for initilisation default is -Inf}
+}
 \value{
-a set of paraemter phi
+a set of parameter phi
 }
 \description{
 initialisePhi is the constructor for a set of parameters for a segclust model
-P number of classes
-val the value ti be used for tinitiliastation default is -Inf
 }

@@ -10,6 +10,8 @@ Gmean_simultanee(Don, lmin, sameVar = FALSE)
 \item{Don}{the bivariate signal}
 
 \item{lmin}{minimum size for a segment, default value is 2}
+
+\item{sameVar}{TRUE if segments have the same variance}
 }
 \value{
 the cost matrix G(i,j) which contains the variance of the data between point (i+1) to point j

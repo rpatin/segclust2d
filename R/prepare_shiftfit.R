@@ -1,8 +1,11 @@
 #' Prepare shiftfit output for proper comparison plots
 #'
 #' \code{prepare_shiftfit}
+#' @param data data
+#' @param shiftfit.model shiftfit.model
+#' @param diag.var diag.var
+#' @param order.var order.var
 #' @export
-
 prepare_shiftfit <- function(data, shiftfit.model = NULL, diag.var, order.var = diag.var[1]){
   outputsshift <- stat_segm_shiftfit(data = data, shiftfit.model = shiftfit.model, diag.var = diag.var, order.var = order.var)
   names(outputsshift) <- c("segments","states")
@@ -18,9 +21,10 @@ prepare_shiftfit <- function(data, shiftfit.model = NULL, diag.var, order.var = 
   return(segmented)
 }
 
-#' Get segment statistic for HMM model
+#' Get segment statistic for shiftfit model
 #'
 #' \code{stat_segm_shiftfit}
+#' @inheritParams prepare_shiftfit
 
 stat_segm_shiftfit <- function(data, shiftfit.model = NULL, diag.var, order.var = NULL){
   df.segm <- prep_segm_shiftfit(data,shiftfit.model)
@@ -32,6 +36,7 @@ stat_segm_shiftfit <- function(data, shiftfit.model = NULL, diag.var, order.var 
 #' Internal function for HMM
 #'
 #' \code{prep_segm_shiftfit}
+#' @inheritParams prepare_shiftfit
 #' @export
 
 prep_segm_shiftfit <- function(data,shiftfit.model){

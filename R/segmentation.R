@@ -10,7 +10,7 @@
 #' @param Kmax maximum number of segments. Default to 10.
 #' @param lmin minimum size of segments. Default to length of time series/Kmax/2.
 #' @inheritParams segmentation.data.frame
-#' @inheritParams segmentation.move
+#' @inheritParams segmentation.Move
 #' @inheritParams segmentation.ltraj
 #' @return  a \code{\link{segmentation-class}} object
 #'
@@ -59,8 +59,13 @@ segmentation.data.frame <- function(x, Kmax, lmin, type = "home-range", seg.var 
 
 segmentation.Move <- function(x, Kmax, lmin, type = "home-range", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("coords.x1","coords.x2"), ...){
 
+  if(requireNamespace("move", quietly = TRUE))
+    stop("move package required for calling segmentation on a Move object.")
+
   if(type == "home-range"){
-    dat <- t(coordinates(datamove))
+    if(requireNamespace("sp", quietly = TRUE))
+      stop("sp package required for calling segmentation (home-range) on a Move object.")
+    dat <- t(sp::coordinates(datamove))
     seg.var = coord.names
     diag.var = coord.names
     order.var = coord.names[1]
@@ -115,7 +120,7 @@ segmentation.ltraj <- function(x, Kmax, lmin, type = "home-range", seg.var = NUL
     stop("type must be either home-range or behavior")
   }
 
-  segmented <- segmentation_internal(x.df, seg.var = seg.var, diag.var = diag.var, order.var = order.var, Kmax = Kmax, lmin = lmin, dat=dat,type=type, ..)
+  segmented <- segmentation_internal(x.df, seg.var = seg.var, diag.var = diag.var, order.var = order.var, Kmax = Kmax, lmin = lmin, dat=dat,type=type, ...)
   return(segmented)
 }
 

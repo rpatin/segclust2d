@@ -5,6 +5,11 @@
 #' @param k the points of interest
 #' @param P the number of class
 #' @param lmin minimal size of the segment to be implemented
+#' @param kv.hull convex hull of likelihood
+#' @param param param outputs of segmentation
+#' @param eps eps
+#' @param sameSigma should segments have same variance ?
+#' @param pureR should algorithm use only R functions or benefit from Rcpp faster algorithm
 #' @return smoothin likelihood
 #'
 neighborsbis <- function (kv.hull,x, L,k,param,P,lmin, eps,sameSigma=TRUE, pureR = F) {

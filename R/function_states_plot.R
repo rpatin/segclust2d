@@ -1,9 +1,10 @@
 #' Plot states statistics
 #'
 #' \code{plot_states} plot states statistics
-#' @param data the data.frame with the different variable
 #' @param diag.var names of the variables on which statistics are calculated
 #' @param position_width width between different model if several models are compared
+#' @param output outputs of the segmentation  or segclust algorithm for one number of segment
+#' @param order should cluster be ordered
 #' @return a graph
 #'
 #' @examples
@@ -18,11 +19,21 @@ plot_states <- function(outputs,diag.var, position_width=0.3,order = F){
   mu.list <- find_mu_sd(df.states,diag.var)
 
   if(class(mu.list)== 'data.frame'){
-    g <- ggplot(data=mu.list,aes_string(x=state_variable,y="mu"))+geom_point()+facet_wrap(~variable,scale="free")+geom_errorbar(aes(ymin=mu-sd,ymax=mu+sd),width=0.1)+xlab("State")+ylab("Distribution (mean +/- sd)")
+    g <- ggplot2::ggplot(data=mu.list, ggplot2::aes_string(x=state_variable,y="mu"))+
+      ggplot2::geom_point()+
+      ggplot2::facet_wrap(~variable,scale="free")+
+      ggplot2::geom_errorbar(ggplot2::aes(ymin=mu-sd,ymax=mu+sd),width=0.1)+
+      ggplot2::xlab("State")+
+      ggplot2::ylab("Distribution (mean +/- sd)")
   } else {
     mu.merged <- do.call("rbind",mu.list)
 
-    g <- ggplot(data=mu.merged,aes_string(x=state_variable,y="mu",col="model"))+geom_point(position=position_dodge(width=position_width))+facet_wrap(~variable,scale="free")+geom_errorbar(aes(ymin=mu-sd,ymax=mu+sd),width=0.1,position=position_dodge(width=position_width))+xlab("State")+ylab("Distribution (mean +/- sd)")
+    g <- ggplot2::ggplot(data=mu.merged, ggplot2::aes_string(x=state_variable,y="mu",col="model"))+
+      ggplot2::geom_point(position = ggplot2::position_dodge(width=position_width))+
+      ggplot2::facet_wrap(~variable,scale="free")+
+      ggplot2::geom_errorbar(ggplot2::aes(ymin=mu-sd,ymax=mu+sd),width=0.1,position=ggplot2::position_dodge(width=position_width))+
+      xlab("State")+
+      ylab("Distribution (mean +/- sd)")
 
   }
   return(g)

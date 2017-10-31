@@ -2,8 +2,14 @@
 #'
 #' \code{plot_segm} plot segmented traject on a map.
 #' @param data the data.frame with the different variable
-#' @param diag.var names of the variables on which statistics are calculated
-#' @param position_width width between different model if several models are compared
+#' @param output outputs of the segmentation  or segclust algorithm for one number of segment
+#' @param interactive should graph be interactive through leaflet ?
+#' @param html should the graph be incorporated in a markdown file through htmltools::tagList()
+#' @param order should cluster be ordered
+#' @param pointsize size of points
+#' @param height height
+#' @param width width
+#' @param linesize size of lines
 #' @return a graph
 #'
 #' @examples
@@ -11,7 +17,9 @@
 #' @importFrom magrittr "%>%"
 #' @export
 
-map_segm <- function(data,output,interactive=F,x_col="expectTime",html=F,scale=100,UTMstring="+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",width=400,height=400,order=NULL,pointsize = 1, linesize = 0.5){
+map_segm <- function(data,output,interactive=F,html=F, scale=100,
+                     UTMstring="+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",
+                     width=400,height=400,order=NULL,pointsize = 1, linesize = 0.5){
   # print("test")
   df.segm <- dplyr::left_join(output[[1]],output[[2]],by="state")
   data$indice <- 1:nrow(data)

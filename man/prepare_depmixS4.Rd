@@ -7,6 +7,15 @@
 prepare_depmixS4(data, depmixS4.model = NULL, diag.var,
   order.var = diag.var[1])
 }
+\arguments{
+\item{data}{data}
+
+\item{diag.var}{diag.var}
+
+\item{order.var}{order.var}
+
+\item{hmm.model}{hmm.model}
+}
 \description{
 \code{prepare_depmixS4}
 }

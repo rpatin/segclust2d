@@ -6,6 +6,9 @@
 \usage{
 augment(x, ...)
 }
+\arguments{
+\item{x}{object to be augmented}
+}
 \description{
-Generic function for augment
+see broom::augment for more informations
 }

@@ -109,8 +109,6 @@ calc_stat_states <- function(data,df.segm,diag.var,order.var=NULL)
 #' and variance of the different states.
 #' @param df.states a list of data.frame
 #' @param diag.var names of the variables on which statistics are calculated
-#' @param order.var names of the variable with which states are ordered
-#' @param df.segm output of prep_segm function
 #' @return  a data.frame with mean and variance of the different states
 #'
 #' @examples

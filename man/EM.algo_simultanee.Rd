@@ -7,11 +7,17 @@
 EM.algo_simultanee(x, rupt, P, phi, eps = 1e-06, sameSigma = FALSE)
 }
 \arguments{
+\item{x}{bivariate signal}
+
 \item{rupt}{ahe sequence of change points}
 
 \item{P}{number of clusters}
 
 \item{phi}{starting value for the  parameter}
+
+\item{eps}{eps}
+
+\item{sameSigma}{TRUE if segments have the same variance}
 }
 \value{
 a list with  phi, the MLE, tau =(taukj) the probability for segment k to belong to classe,lvinc = lvinc,empty = empty,dv = dv

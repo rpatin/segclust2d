@@ -28,5 +28,5 @@ vector of distance
 calc_speed(df,coord.names = c("x","y"), timecol = "dateTime", smoothed = T)
 }
 \author{
-Rémi Patin, \email{remi.patin@normale.fr}
+Rémi Patin
 }

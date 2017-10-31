@@ -4,6 +4,14 @@
 using namespace Rcpp;
 using namespace arma;
 
+//' DynProg_algo_cpp
+//'
+//' This function finds the best segmentation given a Cost Matrix using a
+//' dynamic programming algorithm. C++ implementation of \link{DynProg}
+//'
+//' @param matD Cost Matrix
+//' @param x An integer vector
+//' @export
 // [[Rcpp::export]]
 
 List DynProg_algo_cpp(arma::mat matD, int Kmax) {

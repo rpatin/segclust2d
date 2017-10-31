@@ -2,9 +2,18 @@
 % Please edit documentation in R/prepare_shiftfit.R
 \name{stat_segm_shiftfit}
 \alias{stat_segm_shiftfit}
-\title{Get segment statistic for HMM model}
+\title{Get segment statistic for shiftfit model}
 \usage{
 stat_segm_shiftfit(data, shiftfit.model = NULL, diag.var, order.var = NULL)
+}
+\arguments{
+\item{data}{data}
+
+\item{shiftfit.model}{shiftfit.model}
+
+\item{diag.var}{diag.var}
+
+\item{order.var}{order.var}
 }
 \description{
 \code{stat_segm_shiftfit}

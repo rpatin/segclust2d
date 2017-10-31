@@ -23,5 +23,5 @@ vector of distance
 calc_dist(df,coord.names = c("x","y"), smoothed = T)
 }
 \author{
-Rémi Patin, \email{remi.patin@normale.fr}
+Rémi Patin
 }

@@ -6,8 +6,28 @@
 \usage{
 segclust_internal(x, seg.var = NULL, diag.var = NULL, order.var = NULL,
   scale.variable, Kmax, ncluster = NULL, lmin = NULL, dat = NULL,
-  S = 0.75, type = NULL, sameSigma = F, lissage = F,
-  subsample_over = 1000)
+  S = 0.75, type = NULL, sameSigma = F, subsample_over = 1000, ...)
+}
+\arguments{
+\item{x}{data used for segmentation. Supported : data.frame, 2-columns matrix, move object, ltraj object}
+
+\item{seg.var}{for behavioral segmentation : names of the variables used for segmentation (either one or two names)}
+
+\item{diag.var}{for behavioral segmentation : names of the variables on which statistics are calculated}
+
+\item{order.var}{for behavioral segmentation : names of the variable with which states are ordered}
+
+\item{scale.variable}{for behavioral segmentation : whether variables need to be scaled for segmentation}
+
+\item{Kmax}{maximum number of segments. Default to 10.}
+
+\item{ncluster}{number or list of cluster to be chosen.}
+
+\item{lmin}{minimum size of segments. Default to length of time series/Kmax/2.}
+
+\item{type}{type of segmentation. Either "home-range" or "behavior"}
+
+\item{...}{additional parameters}
 }
 \description{
 Internal segmentation/clustering function

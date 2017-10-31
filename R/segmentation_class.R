@@ -13,7 +13,7 @@ NULL
 #' @export
 
 
-print.segmentation <- function(x,max.level = 1){
+print.segmentation <- function(x,max.level = 1, ...){
   str(x,max.level = max.level)
 }
 
@@ -29,7 +29,7 @@ print.segmentation <- function(x,max.level = 1){
 #' @rdname segmentation-class
 #' @export
 
-plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F, xcol="indice", html = F,order = NULL, var = F, mean = F, stationarity = F) {
+plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F, xcol="indice", html = F,order = NULL, var = F, mean = F, stationarity = F, ...) {
   if (is.null(order)){
     if (x$type == "home-range") order <- F
     if (x$type == "behavior") order <- T
@@ -81,12 +81,21 @@ plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F
 
 
 
-#' \code{likelihood.segmentation} plot likelihood estimates of a \code{segmentation} object
+#' \code{likelihood.segmentation} deprecated function for plotting likelihood estimates of \code{segmentation} object. Now use \link{plot_likelihood}.
+#' @rdname segmentation-class
+#' @export
+
+likelihood.segmentation <- function(x, ...) {
+  .Deprecated("plot_likelihood")
+  plot_likelihood(x)
+}
+
+#' \code{plot_likelihood} plot likelihood estimates of a \code{segmentation} object
 #' - works only for picard segmentation.
 #' @rdname segmentation-class
 #' @export
 
-likelihood.segmentation <- function(x) {
+plot_likelihood <- function(x) {
 
   if( x$seg.type == "segclust"){
     likedat <- x$likelihood
@@ -117,24 +126,33 @@ likelihood.segmentation <- function(x) {
   return(g)
 }
 
-
-#' \code{getlikelihood} returns likelihood estimates of a \code{segmentation} object
+#' \code{get_likelihood} returns likelihood estimates of a \code{segmentation} object. Deprecated, now use \link{logLik.segmentation}.
 #' @rdname segmentation-class
 #' @export
 
 get_likelihood <- function(x) {
+  .Deprecated("logLik.segmentation")
+  return(x$likelihood)
+}
+
+
+#' \code{logLik.segmentation} returns log-likelihood estimates of a \code{segmentation} object
+#' @rdname segmentation-class
+#' @export
+
+logLik.segmentation <- function(object, ...) {
   return(x$likelihood)
 }
 
 
 
 
-#' \code{BIC.segmentation} plot BIC estimates of a \code{segmentation} object
+#' \code{plot_BIC} plot BIC estimates of a \code{segmentation} object
 #' - works only for segclust algorithm.
 #' @rdname segmentation-class
 #' @export
 
-BIC.segmentation <- function(x) {
+plot_BIC <- function(x) {
 
   if( x$seg.type == "segclust"){
     likedat <- x$BIC
@@ -166,11 +184,12 @@ BIC.segmentation <- function(x) {
 }
 
 
-#' \code{getlikelihood} returns likelihood estimates of a \code{segmentation} object
+#' \code{BIC} returns BIC estimates of a \code{segmentation} object when
+#' segmentation/clustering has been run.
 #' @rdname segmentation-class
 #' @export
 
-get_BIC <- function(x) {
+BIC.segmentation <- function(x, ...) {
   return(x$BIC)
 }
 
@@ -279,7 +298,7 @@ segment <- function(x,nseg = NULL,nclass = NULL){
 #' @rdname segmentation-class
 #' @export
 
-augment.segmentation<- function(x,nseg = NULL,nclass=NULL,colname_state = "state"){
+augment.segmentation<- function(x,nseg = NULL,nclass=NULL,colname_state = "state", ...){
   if(any(colnames(x$data) == colname_state)) stop(paste(colname_state,"already exists as column names of the data.frame. Cannot erase"))
 
   if( x$seg.type == "segclust"){
@@ -325,7 +344,8 @@ augment.segmentation<- function(x,nseg = NULL,nclass=NULL,colname_state = "state
 #' @rdname segmentation-class
 #' @export
 
-segmap <-  function(x,interactive=F,nseg = NULL,nclass = NULL,xcol="expectTime",html=F,scale=100,UTMstring="+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",width=400,height=400,order = NULL, pointsize = 1, linesize = 0.5){
+segmap <-  function(x, interactive=F, nseg = NULL, nclass = NULL, xcol="expectTime", html=F,
+                    scale=100, width=400, height=400, order = NULL, pointsize = 1, linesize = 0.5 , ...){
 
   if (is.null(order)){
     if (x$type == "home-range") order <- F

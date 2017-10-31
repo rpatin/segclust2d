@@ -6,6 +6,15 @@
 \usage{
 stat_segm_HMM(data, hmm.model = NULL, diag.var, order.var = NULL)
 }
+\arguments{
+\item{data}{data}
+
+\item{hmm.model}{hmm.model}
+
+\item{diag.var}{diag.var}
+
+\item{order.var}{order.var}
+}
 \description{
 \code{stat_segm_HMM}
 }

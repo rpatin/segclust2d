@@ -4,8 +4,7 @@
 \alias{map_segm}
 \title{Plot map of segmentation}
 \usage{
-map_segm(data, output, interactive = F, x_col = "expectTime", html = F,
-  scale = 100,
+map_segm(data, output, interactive = F, html = F, scale = 100,
   UTMstring = "+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",
   width = 400, height = 400, order = NULL, pointsize = 1,
   linesize = 0.5)
@@ -13,9 +12,21 @@ map_segm(data, output, interactive = F, x_col = "expectTime", html = F,
 \arguments{
 \item{data}{the data.frame with the different variable}
 
-\item{diag.var}{names of the variables on which statistics are calculated}
+\item{output}{outputs of the segmentation  or segclust algorithm for one number of segment}
 
-\item{position_width}{width between different model if several models are compared}
+\item{interactive}{should graph be interactive through leaflet ?}
+
+\item{html}{should the graph be incorporated in a markdown file through htmltools::tagList()}
+
+\item{width}{width}
+
+\item{height}{height}
+
+\item{order}{should cluster be ordered}
+
+\item{pointsize}{size of points}
+
+\item{linesize}{size of lines}
 }
 \value{
 a graph

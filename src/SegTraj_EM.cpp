@@ -4,6 +4,14 @@
 using namespace Rcpp;
 using namespace arma;
 
+//' logdens_simultanee_cpp
+//'
+//' Calculate logdensity of a bivariate signal
+//'
+//' @rdname logdens_simultanee
+//' @param mu mean parameter for each signal
+//' @param sigma standard deviation parameter for each signal
+//' @param prop mixture parameter
 // [[Rcpp::export]]
 
 NumericVector logdens_simultanee_cpp(arma::mat xk, arma::mat mu, arma::mat sigma, arma::vec prop) {
@@ -33,6 +41,12 @@ NumericVector logdens_simultanee_cpp(arma::mat xk, arma::mat mu, arma::mat sigma
   return wrap(tmp);
 }
 
+//' apply_rowSums
+//'
+//' Internal function for Expectation-Maximization (EM) algorithm.
+//'
+//' @param rupt current estimated breaks in signal
+//' @param x bivariate signal
 // [[Rcpp::export]]
 
 arma::mat apply_rowSums(arma::mat rupt, arma::mat x){
@@ -47,8 +61,16 @@ arma::mat apply_rowSums(arma::mat rupt, arma::mat x){
   return final;
 }
 
-// Yk = apply(rupt,1,FUN=function(y) rowSums(x[,y[1]:y[2]]))
 
+//' colsums_sapply
+//'
+//' Internal function for Expectation-Maximization (EM) algorithm.
+//'
+//' @param rupt current estimated breaks in signal
+//' @param x bivariate signal
+//' @param mu mean parameter for each signal
+//' @param tau tau
+//' @param i number of signal
 // [[Rcpp::export]]
 
 

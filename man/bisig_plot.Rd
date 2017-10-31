@@ -14,6 +14,8 @@ bisig_plot(x, rupt = NULL, mu = NULL, pop = NULL, merge.seg = FALSE)
 \item{mu}{optionnal the mean of each class of segment,}
 
 \item{pop}{optionnal the cluster to whom each segment belongs to,}
+
+\item{merge.seg}{should segment be merged ?}
 }
 \value{
 no value

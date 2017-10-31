@@ -7,6 +7,15 @@
 prepare_shiftfit(data, shiftfit.model = NULL, diag.var,
   order.var = diag.var[1])
 }
+\arguments{
+\item{data}{data}
+
+\item{shiftfit.model}{shiftfit.model}
+
+\item{diag.var}{diag.var}
+
+\item{order.var}{order.var}
+}
 \description{
 \code{prepare_shiftfit}
 }

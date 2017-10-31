@@ -2,20 +2,14 @@
 % Please edit documentation in R/SegTraj_EM_cpp.R
 \name{EM.algo_simultanee_Cpp}
 \alias{EM.algo_simultanee_Cpp}
-\title{EM.algo_simultanee caculates the MLE of phi for given change-point instants}
+\title{EM.algo_simultanee caculates the MLE of phi for given change-point instants
+ and for a fixed number of clusters
+ @rdname EM.algo_simultanee}
 \usage{
 EM.algo_simultanee_Cpp(x, rupt, P, phi, eps = 1e-06, sameSigma = FALSE)
 }
-\arguments{
-\item{rupt}{ahe sequence of change points}
-
-\item{P}{number of clusters}
-
-\item{phi}{starting value for the  parameter}
-}
-\value{
-a list with  phi, the MLE, tau =(taukj) the probability for segment k to belong to classe,lvinc = lvinc,empty = empty,dv = dv
-}
 \description{
 EM.algo_simultanee caculates the MLE of phi for given change-point instants
+ and for a fixed number of clusters
+ @rdname EM.algo_simultanee
 }

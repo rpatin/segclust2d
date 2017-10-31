@@ -5,15 +5,20 @@
 \title{Plot segmentation on time-serie}
 \usage{
 plot_segm(data, output, separate = T, interactive = F, diag.var,
-  x_col = "expectTime", html = F, order = F, stationarity = NULL,
-  mean = NULL, var = NULL)
+  x_col = "expectTime", html = F, order = F)
 }
 \arguments{
 \item{data}{the data.frame with the different variable}
 
+\item{output}{outputs of the segmentation  or segclust algorithm for one number of segment}
+
+\item{interactive}{should graph be interactive through leaflet ?}
+
 \item{diag.var}{names of the variables on which statistics are calculated}
 
-\item{position_width}{width between different model if several models are compared}
+\item{html}{should the graph be incorporated in a markdown file through htmltools::tagList()}
+
+\item{order}{should cluster be ordered}
 }
 \value{
 a graph

@@ -15,7 +15,7 @@ Gmixt_simultanee(Don, lmin, phi)
 }
 \value{
 a matrix  G(i,j), the mixture density for segment between points (i+1) to j
-        = deqn{\sum_{p=1}^P \log (\pi_p f(y^{ij};\theta_p))}
+        = \deqn{\sum_{p=1}^P \log (\pi_p f(y^{ij};\theta_p))}{ \sum{p=1 -> P} log( \pi{p} f( y{ij} ; \theta{p} ) ) }
          Rq: this density if factorized in order to avoid numerical zeros in the log
 }
 \description{

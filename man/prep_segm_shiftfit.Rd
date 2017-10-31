@@ -6,6 +6,11 @@
 \usage{
 prep_segm_shiftfit(data, shiftfit.model)
 }
+\arguments{
+\item{data}{data}
+
+\item{shiftfit.model}{shiftfit.model}
+}
 \description{
 \code{prep_segm_shiftfit}
 }
