@@ -9,6 +9,8 @@ stat_segm_depmixS4(data, depmixS4.model = NULL, diag.var, order.var = NULL)
 \arguments{
 \item{data}{data}
 
+\item{depmixS4.model}{depmixS4.model}
+
 \item{diag.var}{diag.var}
 
 \item{order.var}{order.var}

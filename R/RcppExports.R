@@ -7,10 +7,10 @@
 #' dynamic programming algorithm. C++ implementation of \link{DynProg}
 #'
 #' @param matD Cost Matrix
-#' @param x An integer vector
+#' @param Kmax number of segments
 #' @export
 DynProg_algo_cpp <- function(matD, Kmax) {
-    .Call('_segtools_DynProg_algo_cpp', PACKAGE = 'segtools', matD, Kmax)
+    .Call(`_segtools_DynProg_algo_cpp`, matD, Kmax)
 }
 
 #' logdens_simultanee_cpp
@@ -22,7 +22,7 @@ DynProg_algo_cpp <- function(matD, Kmax) {
 #' @param sigma standard deviation parameter for each signal
 #' @param prop mixture parameter
 logdens_simultanee_cpp <- function(xk, mu, sigma, prop) {
-    .Call('_segtools_logdens_simultanee_cpp', PACKAGE = 'segtools', xk, mu, sigma, prop)
+    .Call(`_segtools_logdens_simultanee_cpp`, xk, mu, sigma, prop)
 }
 
 #' apply_rowSums
@@ -32,7 +32,7 @@ logdens_simultanee_cpp <- function(xk, mu, sigma, prop) {
 #' @param rupt current estimated breaks in signal
 #' @param x bivariate signal
 apply_rowSums <- function(rupt, x) {
-    .Call('_segtools_apply_rowSums', PACKAGE = 'segtools', rupt, x)
+    .Call(`_segtools_apply_rowSums`, rupt, x)
 }
 
 #' colsums_sapply
@@ -45,7 +45,7 @@ apply_rowSums <- function(rupt, x) {
 #' @param tau tau
 #' @param i number of signal
 colsums_sapply <- function(i, rupt, x, mu, tau) {
-    .Call('_segtools_colsums_sapply', PACKAGE = 'segtools', i, rupt, x, mu, tau)
+    .Call(`_segtools_colsums_sapply`, i, rupt, x, mu, tau)
 }
 
 #' arma_repmat
@@ -56,18 +56,22 @@ colsums_sapply <- function(i, rupt, x, mu, tau) {
 #' @param n number of repetition in line
 #' @param m number of repetition in column
 arma_repmat <- function(A, n, m) {
-    .Call('_segtools_arma_repmat', PACKAGE = 'segtools', A, n, m)
+    .Call(`_segtools_arma_repmat`, A, n, m)
 }
 
 #' Gmixt_algo_cpp
 #'
 #' Internal C++ algorithm for computing the cost matrix.
 #'
-#' @param A matrix
-#' @param n number of repetition in line
-#' @param m number of repetition in column
+#' @param zi vector of observations
+#' @param lgi vector of indices
+#' @param P number of class
+#' @param mvec vector of means for each class
+#' @param wk temporary vector for calculations
+#' @param svec vector of standard deviations for each class
+#' @param prop mixture vector
 Gmixt_algo_cpp <- function(zi, lgi, P, mvec, wk, svec, prop) {
-    .Call('_segtools_Gmixt_algo_cpp', PACKAGE = 'segtools', zi, lgi, P, mvec, wk, svec, prop)
+    .Call(`_segtools_Gmixt_algo_cpp`, zi, lgi, P, mvec, wk, svec, prop)
 }
 
 #' Gmixt_simultanee_fullcpp
@@ -80,6 +84,6 @@ Gmixt_algo_cpp <- function(zi, lgi, P, mvec, wk, svec, prop) {
 #' @param mu mean parameters
 #' @param s standard deviation paramaters
 Gmixt_simultanee_fullcpp <- function(Don, lmin, prop, mu, s) {
-    .Call('_segtools_Gmixt_simultanee_fullcpp', PACKAGE = 'segtools', Don, lmin, prop, mu, s)
+    .Call(`_segtools_Gmixt_simultanee_fullcpp`, Don, lmin, prop, mu, s)
 }
 

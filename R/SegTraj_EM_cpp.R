@@ -1,7 +1,13 @@
 # EM.algo_simultanee C++
 #' EM.algo_simultanee caculates the MLE of phi for given change-point instants
 #'  and for a fixed number of clusters
-#'  @rdname EM.algo_simultanee
+#' @param rupt ahe sequence of change points
+#' @param P   number of clusters
+#' @param phi starting value for the  parameter
+#' @param x bivariate signal
+#' @param eps eps
+#' @param sameSigma TRUE if segments have the same variance
+#' @return a list with  phi, the MLE, tau =(taukj) the probability for segment k to belong to classe,lvinc = lvinc,empty = empty,dv = dv
 #' @export
 
 EM.algo_simultanee_Cpp <- function(x,rupt,P,phi, eps=1e-6,sameSigma=FALSE){
@@ -58,6 +64,7 @@ EM.algo_simultanee_Cpp <- function(x,rupt,P,phi, eps=1e-6,sameSigma=FALSE){
 #' @param rupt the rupture dataframe
 #' @param phi the parameters of the mixture
 #' @param tau the K*P matrix containing posterior probabilities of membership to clusters
+#' @param sameSigma whether segments have the same variance
 #' @return phi the updated value of the pramaeters
 
 Mstep_simultanee_cpp <- function (x,rupt,tau,phi,sameSigma=TRUE) {

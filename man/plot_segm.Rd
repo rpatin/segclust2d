@@ -4,8 +4,8 @@
 \alias{plot_segm}
 \title{Plot segmentation on time-serie}
 \usage{
-plot_segm(data, output, separate = T, interactive = F, diag.var,
-  x_col = "expectTime", html = F, order = F)
+plot_segm(data, output, interactive = F, diag.var, x_col = "expectTime",
+  html = F, order = F)
 }
 \arguments{
 \item{data}{the data.frame with the different variable}
@@ -15,6 +15,8 @@ plot_segm(data, output, separate = T, interactive = F, diag.var,
 \item{interactive}{should graph be interactive through leaflet ?}
 
 \item{diag.var}{names of the variables on which statistics are calculated}
+
+\item{x_col}{column name for time}
 
 \item{html}{should the graph be incorporated in a markdown file through htmltools::tagList()}
 
@@ -27,5 +29,6 @@ a graph
 \code{plot_segm} plot segmented time serie.
 }
 \examples{
-stat_segm(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+\dontrun{stat_segm(data,diag.var=c("dist","angle"), order.var='dist',
+type='hmm',hmm.model=mod1.hmm)}
 }

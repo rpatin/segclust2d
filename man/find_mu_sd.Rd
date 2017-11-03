@@ -19,5 +19,6 @@ a data.frame with mean and variance of the different states
 and variance of the different states.
 }
 \examples{
-calc_stat_states(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+\dontrun{calc_stat_states(data, diag.var=c("dist","angle"),
+order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 }

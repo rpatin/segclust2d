@@ -1,9 +1,12 @@
-# DynProg RCpp
+#' DynProg RCpp
 #' DynProg computes the change points given a cost matrix matD
 #' and a maximum number of segments Kmax
-#' @param matD the cost Matrix os size n x n
-#' @param Kmax the maximal number of segments
-#' @return a list with J.est a vector with Kmax value, the Kth is the minimum contrast for a model with K segments (-J.est is the log-likelihood) and with  t.test a matrix, line K are the coordinates of the change points for a model with K segments
+#' @param G the cost Matrix os size n x n
+#' @param K the number of segments considered
+#' @return a list with J.est a vector with Kmax value, the Kth is the minimum
+#'   contrast for a model with K segments (-J.est is the log-likelihood) and
+#'   with  t.test a matrix, line K are the coordinates of the change points for
+#'   a model with K segments
 #' @export
 #'
 wrap_dynprog_cpp <- function(G,K){

@@ -4,33 +4,34 @@
 #'   \code{\link{segmentation}}
 #' @param nseg number of segment chosen
 #' @param nclass number of classes chosen
+#' @param ... additional arguments
 #' @name segmentation-class
 NULL
 
 #' \code{print.segmentation} prints object of \code{segmentation} class
-#'
+#' @param max.level argument to be passed to utils::str()
 #' @rdname segmentation-class
 #' @export
 
 
 print.segmentation <- function(x,max.level = 1, ...){
-  str(x,max.level = max.level)
+  utils::str(x,max.level = max.level)
 }
 
 
 #' \code{plot.segmentation} plot object of \code{segmentation} class
 #' - wrapper for \code{\link{plot_segm}}
-#' @param separate whether plots should be merged into one graph with several
-#'   axis or not (not working yet)
 #' @param interactive whether plot are interactive (dygraphs/leaflet) or not (ggplot2)
 #' @param xcol column for x axis. can be POSIXct
-#' @param html whether htmltools::tagList should be applied on the returned
+#' @param html whether htmltools::tagList should be applied on the returned object
 #'   object for integrating in html pages
 #' @rdname segmentation-class
+#' @inheritParams plot_segm
 #' @export
 
-plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F, xcol="indice", html = F,order = NULL, var = F, mean = F, stationarity = F, ...) {
-  if (is.null(order)){
+plot.segmentation <- function(x,nseg=NULL,nclass=NULL, interactive=F, xcol="indice", order, ...) {
+
+  if (missing(order)){
     if (x$type == "home-range") order <- F
     if (x$type == "behavior") order <- T
   }
@@ -43,7 +44,7 @@ plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F
       nseg <- x$Kopt.BIC[nclass]
       warnings(paste("User-specified number of class :",nclass,"\nBIC-selected number of segment : ",nseg,sep=""))
     }
-    g <- plot_segm(data = x$data, output = x$outputs[[paste(nclass,"class -",nseg, "segments")]], separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html, order = order)
+    g <- plot_segm(data = x$data, output = x$outputs[[paste(nclass,"class -",nseg, "segments")]], interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol,  order = order, ...)
 
 
   } else if( x$seg.type == "segmentation"){
@@ -52,27 +53,14 @@ plot.segmentation <- function(x,nseg=NULL,nclass=NULL, separate=T, interactive=F
       warnings(paste("Lavielle-selected number of segment : ",nseg,sep=""))
     }
 
-    vararg <-  NULL
-    meanarg <-  NULL
-    stationarityarg <-  NULL
-
-    if(var) vararg <- x$var.test[[paste(nseg, "segments")]]
-    if(mean) meanarg <- x$mean.test[[paste(nseg, "segments")]]
-    if(stationarity) stationarityarg <-  x$stationarity.test[[paste(nseg, "segments")]]
-
     g <- plot_segm(data = x$data,
                    output = x$outputs[[paste(nseg, "segments")]],
-                   separate = T,
                    interactive=interactive,
                    diag.var = x$`Diagnostic variables`,
                    x_col = xcol,
-                   html = html,
-                   order = order,
-                   var = vararg,
-                   mean = meanarg,
-                   stationarity = stationarityarg)
+                   order = order, ...)
   } else if (x$seg.type == "HMM" | x$seg.type == "shiftfit" | x$seg.type == "depmixS4" ){
-    g <- plot_segm(data = x$data, output = x$outputs, separate = T, interactive=interactive, diag.var = x$`Diagnostic variables`,x_col = xcol, html = html, order = order)
+    g <- plot_segm(data = x$data, output = x$outputs, diag.var = x$`Diagnostic variables`,x_col = xcol, order = order, ...)
 
   }
   return(g)
@@ -101,26 +89,27 @@ plot_likelihood <- function(x) {
     likedat <- x$likelihood
     # nseg.bic <- x$Kopt.lavielle
     # tmpdf =  filter(li("nseg"=nseg.bic, "likelihood" = x$likelihood$likelihood[which(x$likelihood$nseg == nseg.bic)])
-    g <- ggplot2::ggplot(dplyr::filter(likedat,nclass != 0,is.finite(likelihood)),ggplot2::aes(x=nseg,y=likelihood,col=factor(nclass)))+
+    g <- ggplot2::ggplot(likedat[(likedat$nclass != 0) & is.finite(likedat$likelihood), ],ggplot2::aes_string(x="nseg",y="likelihood",col="factor(nclass)"))+
       ggplot2::geom_point()+
       ggplot2::geom_line()+
       ggplot2::xlab("Number of segments")+
       ggplot2::ylab("log-Likelihood")+
       # ggplot2::geom_point(data = tmpdf,ggplot2::aes(x=nseg,y=likelihood,col = fact),size = 3)+
-      scale_color_discrete(name="Number of \nCluster")
+      ggplot2::scale_color_discrete(name="Number of \nCluster")
 
   } else if( x$seg.type == "segmentation"){
     nseg.lav <- x$Kopt.lavielle
     tmpdf =  data.frame("nseg"=nseg.lav, "likelihood" = x$likelihood$likelihood[which(x$likelihood$nseg == nseg.lav)])
     nudgeY = (max(x$likelihood$likelihood,na.rm=T)-min(x$likelihood$likelihood,na.rm=T))/20
     nudgeX = (max(x$likelihood$nseg,na.rm=T)-min(x$likelihood$nseg,na.rm=T))/6
-    g <- ggplot2::ggplot(x$likelihood,ggplot2::aes(x=nseg,y=likelihood))+
+    g <- ggplot2::ggplot(x$likelihood,ggplot2::aes_string(x="nseg",y="likelihood"))+
       ggplot2::geom_point()+
       ggplot2::geom_line()+
-      ggplot2::xlab("Number of segments")+ggplot2::ylab("log-Likelihood")+
+      ggplot2::xlab("Number of segments")+
+      ggplot2::ylab("log-Likelihood")+
       ggplot2::scale_color_discrete(name="Number of \nCluster") +
-      ggplot2::geom_point(data = tmpdf,ggplot2::aes(x=nseg,y=likelihood),size = 3)+
-      ggplot2::geom_text(data = tmpdf,ggplot2::aes(x=nseg,y=likelihood),label="Lavielle-selected optimum", nudge_x = nudgeX, nudge_y = -nudgeY  ,size = 3)
+      ggplot2::geom_point(data = tmpdf, ggplot2::aes_string(x="nseg", y="likelihood"), size = 3)+
+      ggplot2::geom_text(data = tmpdf,  ggplot2::aes_string(x="nseg", y="likelihood"), label="Lavielle-selected optimum", nudge_x = nudgeX, nudge_y = -nudgeY  ,size = 3)
 
   }
   return(g)
@@ -141,7 +130,7 @@ get_likelihood <- function(x) {
 #' @export
 
 logLik.segmentation <- function(object, ...) {
-  return(x$likelihood)
+  return(object$likelihood)
 }
 
 
@@ -158,7 +147,7 @@ plot_BIC <- function(x) {
     likedat <- x$BIC
     ncluster.BIC = x$ncluster.BIC
     Kopt.BIC =  x$Kopt.BIC[ncluster.BIC]
-    ClusterOpt <- data.frame(ncluster= ncluster.BIC,nseg=Kopt.BIC,BIC = dplyr::filter(likedat,ncluster == ncluster.BIC, nseg == Kopt.BIC )$BIC)
+    ClusterOpt <- data.frame("ncluster" = ncluster.BIC, "nseg" =Kopt.BIC,"BIC" = likedat[(likedat$ncluster == ncluster.BIC) & (likedat$nseg == Kopt.BIC), ]$BIC)
 
     nudgeY = (max(likedat$BIC[is.finite(likedat$BIC)],na.rm=T)-min(likedat$BIC[is.finite(likedat$BIC)],na.rm=T))/20
     nudgeX = (max(likedat$nseg,na.rm=T)-min(likedat$nseg,na.rm=T))/6
@@ -167,11 +156,11 @@ plot_BIC <- function(x) {
     Kopt.BIC =  x$Kopt.BIC[-1]
     SegOpt <- data.frame(ncluster= ncluster.BIC, nseg = Kopt.BIC)
     SegOpt <- dplyr::left_join(SegOpt,likedat, by = c("ncluster", "nseg"))
-    g <- ggplot2::ggplot(dplyr::filter(likedat,is.finite(BIC)),ggplot2::aes(x=nseg,y=BIC,col=factor(ncluster)))+
+    g <- ggplot2::ggplot(likedat[is.finite(likedat$BIC), ], ggplot2::aes_string(x="nseg",y="BIC",col="factor(ncluster)"))+
       ggplot2::geom_point()+
       ggplot2::geom_line()+
       ggplot2::xlab("Number of segments")+
-      ggplot2::ylab("BIC")+
+      ggplot2::ylab("BIC penalized log-Likelihood")+
       ggplot2::geom_point(data=SegOpt,shape = 15,size=2)+
       ggplot2::geom_point(data=ClusterOpt,shape = 19, size = 3.5)+
       ggplot2::geom_text(data=ClusterOpt, size = 3,label="BIC-selected optimum", nudge_x = - nudgeX, nudge_y = nudgeY)+
@@ -186,11 +175,13 @@ plot_BIC <- function(x) {
 
 #' \code{BIC} returns BIC estimates of a \code{segmentation} object when
 #' segmentation/clustering has been run.
+#' @param object a segmentation-class object, created by segclust.
 #' @rdname segmentation-class
+#' @importFrom stats BIC
 #' @export
 
-BIC.segmentation <- function(x, ...) {
-  return(x$BIC)
+BIC.segmentation <- function(object, ...) {
+  return(object$BIC)
 }
 
 #' \code{stateplot} plot state distribution of a \code{segmentation} object
@@ -325,8 +316,8 @@ augment.segmentation<- function(x,nseg = NULL,nclass=NULL,colname_state = "state
     df.segm  <- segment(x)
   }
   x$data$indice <- 1:nrow(x$data)
-  evalstr  <- paste("data <- dplyr::mutate(x$data,",colname_state,"= df.segm[findInterval(indice,df.segm$begin,rightmost.closed = F,left.open = F),\"state\"])",sep="")
-  eval(parse(text=evalstr))
+  data <- x$data
+  data[,colname_state] <- df.segm[findInterval(data$indice,df.segm$begin,rightmost.closed = F,left.open = F),"state"]
   totdf <- dplyr::left_join(data,statesdf, by = "state")
 
   return(totdf)
@@ -336,15 +327,15 @@ augment.segmentation<- function(x,nseg = NULL,nclass=NULL,colname_state = "state
 
 
 #' \code{segmap} create maps with object of \code{segmentation} class
-#' @param UTMstring projection string for the coordinates.
 #' @param width for leaflet map
 #' @param height for leaflet map
 #' @param scale for dividing coordinates so that it works with leaflet
 #'   (interpreting latitude/longitude)
 #' @rdname segmentation-class
+#' @inheritParams map_segm
 #' @export
 
-segmap <-  function(x, interactive=F, nseg = NULL, nclass = NULL, xcol="expectTime", html=F,
+segmap <-  function(x, interactive=F, nseg = NULL, nclass = NULL, html=F,
                     scale=100, width=400, height=400, order = NULL, pointsize = 1, linesize = 0.5 , ...){
 
   if (is.null(order)){
@@ -370,7 +361,7 @@ segmap <-  function(x, interactive=F, nseg = NULL, nclass = NULL, xcol="expectTi
   }  else if( x$seg.type == "HMM" | x$seg.type == "shiftfit" | x$seg.type == "depmixS4" ){
     outputs = x$outputs
   }
-  map <- map_segm(data=x$data,output=outputs,interactive = interactive, x_col = x_col, html = html, scale=scale, UTMstring = UTMstring,width=width,height=height,order=order,pointsize = pointsize, linesize = linesize)
+  map <- map_segm(data=x$data,output=outputs,interactive = interactive, html = html, scale=scale,width=width,height=height,order=order,pointsize = pointsize, linesize = linesize, ...)
 
   return(map)
 }

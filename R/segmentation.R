@@ -6,16 +6,17 @@
 #' @param seg.var for behavioral segmentation : names of the variables used for segmentation (either one or two names)
 #' @param diag.var for behavioral segmentation : names of the variables on which statistics are calculated
 #' @param order.var for behavioral segmentation : names of the variable with which states are ordered
-#' @param scale.variable for behavioral segmentation : whether variables need to be scaled for segmentation
 #' @param Kmax maximum number of segments. Default to 10.
 #' @param lmin minimum size of segments. Default to length of time series/Kmax/2.
+#' @param ... additional parameters
 #' @inheritParams segmentation.data.frame
 #' @inheritParams segmentation.Move
 #' @inheritParams segmentation.ltraj
 #' @return  a \code{\link{segmentation-class}} object
 #'
 #' @examples
-#' segmentation(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+#' \dontrun{segmentation(data, diag.var=c("dist","angle"),
+#' order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 #' @export
 
 segmentation <- function (x, ...) {
@@ -65,7 +66,7 @@ segmentation.Move <- function(x, Kmax, lmin, type = "home-range", seg.var = NULL
   if(type == "home-range"){
     if(requireNamespace("sp", quietly = TRUE))
       stop("sp package required for calling segmentation (home-range) on a Move object.")
-    dat <- t(sp::coordinates(datamove))
+    dat <- t(sp::coordinates(x))
     seg.var = coord.names
     diag.var = coord.names
     order.var = coord.names[1]
@@ -126,6 +127,14 @@ segmentation.ltraj <- function(x, Kmax, lmin, type = "home-range", seg.var = NUL
 
 
 #' Internal segmentation function
+#' @param x data.frame with observations
+#' @param dat bivariate data (one signal per row)
+#' @param sameSigma does segments have same variance ?
+#' @param scale.variable should variables be standardized ? (reduced and centered)
+#' @param subsample_over over which size should subsampling begin (depending on
+#'   speed and memory limitations)
+#' @inheritParams segmentation
+#' @inheritParams chooseseg_lavielle
 
 segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = NULL, Kmax, lmin = NULL, dat=NULL, S=0.75, type=NULL, sameSigma = F, subsample_over = 10000){
 

@@ -24,6 +24,8 @@ segmentation(x, ...)
 \arguments{
 \item{x}{data used for segmentation. Supported : data.frame, 2-columns matrix, move object, ltraj object}
 
+\item{...}{additional parameters}
+
 \item{Kmax}{maximum number of segments. Default to 10.}
 
 \item{lmin}{minimum size of segments. Default to length of time series/Kmax/2.}
@@ -37,8 +39,6 @@ segmentation(x, ...)
 \item{order.var}{for behavioral segmentation : names of the variable with which states are ordered}
 
 \item{coord.names}{for home-range segmentation and data.frame, names of coordinates. Default x and y. Not needed for move and ltraj objects}
-
-\item{scale.variable}{for behavioral segmentation : whether variables need to be scaled for segmentation}
 }
 \value{
 a \code{\link{segmentation-class}} object
@@ -53,5 +53,6 @@ Segmentation function for move objects
 Segmentation function for ltraj objects
 }
 \examples{
-segmentation(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+\dontrun{segmentation(data, diag.var=c("dist","angle"),
+order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 }

@@ -2,35 +2,41 @@
 #'
 #' \code{plot_segm} plot segmented traject on a map.
 #' @param data the data.frame with the different variable
-#' @param output outputs of the segmentation  or segclust algorithm for one number of segment
+#' @param output outputs of the segmentation  or segclust algorithm for one
+#'   number of segment
 #' @param interactive should graph be interactive through leaflet ?
-#' @param html should the graph be incorporated in a markdown file through htmltools::tagList()
+#' @param html should the graph be incorporated in a markdown file through
+#'   htmltools::tagList()
 #' @param order should cluster be ordered
 #' @param pointsize size of points
 #' @param height height
 #' @param width width
 #' @param linesize size of lines
+#' @param scale scaling paremeters to represent data with leaflet
+#' @param UTMstring projection of the coordinates
 #' @return a graph
 #'
 #' @examples
-#' stat_segm(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+#' \dontrun{stat_segm(data, diag.var=c("dist","angle"),
+#' order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 #' @importFrom magrittr "%>%"
 #' @export
 
 map_segm <- function(data,output,interactive=F,html=F, scale=100,
-                     UTMstring="+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",
+                     UTMstring="+proj=longlat +datum=WGS84 +no_defs",
                      width=400,height=400,order=NULL,pointsize = 1, linesize = 0.5){
   # print("test")
   df.segm <- dplyr::left_join(output[[1]],output[[2]],by="state")
   data$indice <- 1:nrow(data)
 
-  data <- dplyr::mutate(data,state = df.segm[findInterval(indice,df.segm$begin,rightmost.closed = F,left.open = F),ifelse(order,"state_ordered","state")])
+  data$state = df.segm[findInterval(data$indice,df.segm$begin,rightmost.closed = F,left.open = F),ifelse(order,"state_ordered","state")]
 
-  data <- dplyr::mutate(data,x=x/scale,y=y/scale)
+  data$x <- data$x/scale
+  data$y <- data$y/scale
   if(!interactive){
-    g <- ggplot2::ggplot(data,ggplot2::aes(x=x,y=y))+
+    g <- ggplot2::ggplot(data,ggplot2::aes_string(x="x",y="y"))+
       ggplot2::geom_path(size = linesize)+
-      ggplot2::geom_point(ggplot2::aes(col=factor(state)),size = pointsize)
+      ggplot2::geom_point(ggplot2::aes_string(col="factor(state)"),size = "pointsize")
     return(g)
   } else {
     # coordinates(data) <- c("x","y")
@@ -57,13 +63,13 @@ map_segm <- function(data,output,interactive=F,html=F, scale=100,
     list_colors = RColorBrewer::brewer.pal(n = length(unique(df.segm$state)),name='Set1')
 
     dfSPLDF <- sp::SpatialLinesDataFrame(sp::SpatialLines(LinesList,proj4string = sp::CRS(UTMstring)),data=data.frame("ID"=seq(1,nrow(df.segm)),"state"=df.segm$state))
-    dfSPLDF@data <- dplyr::mutate(dfSPLDF@data,colors=list_colors[state])
+    dfSPLDF@data$colors <- list_colors[dfSPLDF@data$state]
 
     # dfConnection <- SpatialLinesDataFrame(SpatialLines(ConnectionList,proj4string=CRS(UTMstring)),data=data.frame("ID"=seq(nrow(dfSeg)+1,2*nrow(dfSeg)-1),"behaviour"=c("transition"),"state"=4))
     dfConnection <- sp::SpatialLinesDataFrame(sp::SpatialLines(ConnectionList,proj4string=sp::CRS(UTMstring)),data=data.frame("ID"=seq(nrow(df.segm)+1,2*nrow(df.segm)-1),"behaviour"=c("transition"),"state"=4))
 
     dfSPPDF <- sp::SpatialPointsDataFrame(cbind(data$x,data$y),data = data.frame("ID"=seq(1,nrow(data)),"state"=data$state,"date"=data$indice),proj4string = sp::CRS(UTMstring))
-    dfSPPDF@data <- dplyr::mutate(dfSPPDF@data,colors=list_colors[state])
+    dfSPPDF@data$colors=list_colors[dfSPPDF@data$state]
 
 
 

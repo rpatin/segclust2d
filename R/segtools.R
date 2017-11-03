@@ -5,7 +5,7 @@
 #'
 #' @docType package
 #' @name segtools
-#' @useDynLib segtools
+#' @useDynLib segtools, .registration=TRUE
 #' @importFrom Rcpp evalCpp
 #' @exportPattern "^[[:alpha:]]+"
 #'

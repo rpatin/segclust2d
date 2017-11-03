@@ -41,8 +41,6 @@ segclust(x, ...)
 \item{order.var}{for behavioral segmentation : names of the variable with which states are ordered}
 
 \item{coord.names}{for home-range segmentation and data.frame, names of coordinates. Default x and y. Not needed for move and ltraj objects}
-
-\item{scale.variable}{for behavioral segmentation : whether variables need to be scaled for segmentation}
 }
 \value{
 a \code{\link{segmentation-class}} object
@@ -57,5 +55,6 @@ Segmentation/Clustering function for move objects
 Segmentation/Clustering function for ltraj objects
 }
 \examples{
-segmentation(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+\dontrun{segmentation(data, diag.var = c("dist","angle"),
+order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 }

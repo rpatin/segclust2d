@@ -10,11 +10,11 @@ prepare_depmixS4(data, depmixS4.model = NULL, diag.var,
 \arguments{
 \item{data}{data}
 
+\item{depmixS4.model}{depmixS4.model}
+
 \item{diag.var}{diag.var}
 
 \item{order.var}{order.var}
-
-\item{hmm.model}{hmm.model}
 }
 \description{
 \code{prepare_depmixS4}

@@ -1,12 +1,12 @@
 #' Test function generating fake data
 
 test_data <- function() {
-  xcl1 = rnorm(90, mean = 0, sd = 1)
-  xcl2 = rnorm(90, mean = 10, sd = 1)
-  xcl3 = rnorm(90, mean = 20, sd = 1)
-  ycl1 = rnorm(90, mean = 0, sd = 1)
-  ycl2 = rnorm(90, mean = 10, sd = 1)
-  ycl3 = rnorm(90, mean = 20, sd = 1)
+  xcl1 = stats::rnorm(90, mean = 0, sd = 1)
+  xcl2 = stats::rnorm(90, mean = 10, sd = 1)
+  xcl3 = stats::rnorm(90, mean = 20, sd = 1)
+  ycl1 = stats::rnorm(90, mean = 0, sd = 1)
+  ycl2 = stats::rnorm(90, mean = 10, sd = 1)
+  ycl3 = stats::rnorm(90, mean = 20, sd = 1)
   data = data.frame(x = c(xcl1[1:30],
                           xcl2[1:30],
                           xcl3[1:30],

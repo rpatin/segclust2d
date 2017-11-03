@@ -8,7 +8,7 @@
 EM.init_simultanee <- function (x,rupt,K,P) {
 
 m = apply(rupt,1,FUN=function(y) rowMeans(x[,y[1]:y[2]]))
-v =  apply(rupt,1,FUN=function(y) apply(x[,y[1]:y[2]], 1, var))
+v =  apply(rupt,1,FUN=function(y) apply(x[,y[1]:y[2]], 1, stats::var))
 n = apply(rupt,1,diff)+1
 
 Dist = matrix(Inf,K,K)

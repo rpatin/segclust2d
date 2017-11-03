@@ -14,6 +14,8 @@ Mstep_simultanee_cpp(x, rupt, tau, phi, sameSigma = TRUE)
 \item{tau}{the K*P matrix containing posterior probabilities of membership to clusters}
 
 \item{phi}{the parameters of the mixture}
+
+\item{sameSigma}{whether segments have the same variance}
 }
 \value{
 phi the updated value of the pramaeters

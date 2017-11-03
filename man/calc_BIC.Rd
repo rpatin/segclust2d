@@ -12,6 +12,8 @@ calc_BIC(likelihood, ncluster, nseg, n)
 \item{ncluster}{number of cluster}
 
 \item{nseg}{number of segment}
+
+\item{n}{number of observations}
 }
 \value{
 a data.frame with BIC, number of cluster and number of segment
@@ -20,5 +22,6 @@ a data.frame with BIC, number of cluster and number of segment
 \code{BIC} calculates BIC given log-likelihood, number of segment and number of class
 }
 \examples{
-calc_stat_states(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+\dontrun{calc_stat_states(data, diag.var=c("dist","angle"),
+order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 }

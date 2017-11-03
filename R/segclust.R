@@ -15,7 +15,8 @@
 #' @return  a \code{\link{segmentation-class}} object
 #'
 #' @examples
-#' segmentation(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+#' \dontrun{segmentation(data, diag.var = c("dist","angle"),
+#' order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 #' @export
 
 segclust <- function (x, ...) {
@@ -27,7 +28,6 @@ segclust <- function (x, ...) {
 #' Segmentation/Clustering function for data.frame
 #' @param coord.names for home-range segmentation and data.frame, names of coordinates. Default x and y. Not needed for move and ltraj objects
 #' @param ncluster number or list of cluster to be chosen.
-#' @param scale.variable for behavioral segmentation : whether variables need to be scaled for segmentation
 #' @rdname segclust
 #' @export
 
@@ -125,9 +125,15 @@ segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "home-range", seg.var
 }
 
 #' Internal segmentation/clustering function
+#' @param dat bivariate data (one signal per row)
+#' @param sameSigma does segments have same variance ?
+#' @param scale.variable should variables be standardized ? (reduced and centered)
+#' @param subsample_over over which size should subsampling begin (depending on
+#'   speed and memory limitations)
 #' @inheritParams segclust
+#' @inheritParams chooseseg_lavielle
 
-segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable, Kmax, ncluster = NULL, lmin = NULL, dat=NULL, S=0.75, type=NULL, sameSigma = F, subsample_over = 1000, ...){
+segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = NULL, Kmax, ncluster = NULL, lmin = NULL, dat=NULL, S=0.75, type=NULL, sameSigma = F, subsample_over = 1000, ...){
 
   if(missing(Kmax)){
     Kmax = floor(dim(dat)[2]/lmin)

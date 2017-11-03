@@ -9,14 +9,17 @@ chooseseg_lavielle(J, S = 0.75)
 \arguments{
 \item{J}{likelihood for each number of segment}
 
-\item{S}{threshold for choosing the number of segment. See adehabitatLT::chooseseg}
+\item{S}{threshold for choosing the number of segment. See
+adehabitatLT::chooseseg}
 }
 \value{
-a list with optimal number of segment and full data.frame of the calculus
+a list with optimal number of segment and full data.frame of the
+  calculus
 }
 \description{
 Internal function for choosing optimal number of segment using Marc Lavielle's method. From Emilie Lebarbier. Method based on identifying breaks in the slope of the contrast.
 }
 \examples{
-segmentation(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+\dontrun{segmentation(data, diag.var=c("dist","angle"),
+order.var='dist',type='hmm', hmm.model=mod1.hmm)}
 }

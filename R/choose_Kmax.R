@@ -3,11 +3,14 @@
 #' Internal function for choosing optimal number of segment using Marc Lavielle's method. From Emilie Lebarbier. Method based on identifying breaks in the slope of the contrast.
 
 #' @param J likelihood for each number of segment
-#' @param S threshold for choosing the number of segment. See adehabitatLT::chooseseg
-#' @return  a list with optimal number of segment and full data.frame of the calculus
+#' @param S threshold for choosing the number of segment. See
+#'   adehabitatLT::chooseseg
+#' @return  a list with optimal number of segment and full data.frame of the
+#'   calculus
 #'
 #' @examples
-#' segmentation(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+#' \dontrun{segmentation(data, diag.var=c("dist","angle"),
+#' order.var='dist',type='hmm', hmm.model=mod1.hmm)}
 chooseseg_lavielle <- function(J, S=0.75)
 {
   Kmax = length(J)

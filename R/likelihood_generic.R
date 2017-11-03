@@ -1,4 +1,6 @@
 #' Generic function for likelihood
+#' @param x object from which likelihood can be extracted
+#' @param ... additional parameters
 #' @export
 
 likelihood <- function (x, ...) {
@@ -6,17 +8,3 @@ likelihood <- function (x, ...) {
   UseMethod("likelihood", x)
 }
 
-
-#' Generic function for BIC
-#' @export
-
-BIC <- function (x, ...) {
-  UseMethod("BIC", x)
-}
-
-#' Default function for BIC
-#' @export
-
-BIC.default <- function (x, ...) {
-  message("No default function for BIC")
-}

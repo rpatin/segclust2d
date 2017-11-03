@@ -7,11 +7,19 @@
 Gmixt_algo_cpp(zi, lgi, P, mvec, wk, svec, prop)
 }
 \arguments{
-\item{A}{matrix}
+\item{zi}{vector of observations}
 
-\item{n}{number of repetition in line}
+\item{lgi}{vector of indices}
 
-\item{m}{number of repetition in column}
+\item{P}{number of class}
+
+\item{mvec}{vector of means for each class}
+
+\item{wk}{temporary vector for calculations}
+
+\item{svec}{vector of standard deviations for each class}
+
+\item{prop}{mixture vector}
 }
 \description{
 Internal C++ algorithm for computing the cost matrix.

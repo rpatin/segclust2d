@@ -14,6 +14,8 @@ stat_segm(data, diag.var, order.var = NULL, param = NULL, seg.type = NULL,
 
 \item{order.var}{names of the variable with which states are ordered}
 
+\item{param}{parameters of ouptput segmentation}
+
 \item{seg.type}{either 'hybrid' or 'dynprog'}
 
 \item{nseg}{number of segment chosen}
@@ -29,5 +31,6 @@ variance of the different states. it also creates standard objects for plot.
 Actually implementation exists for \code{moveHMM} and \code{segTraj} methods.
 }
 \examples{
-stat_segm(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+\dontrun{stat_segm(data,diag.var=c("dist","angle"),
+order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 }

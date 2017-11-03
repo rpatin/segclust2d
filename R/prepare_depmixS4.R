@@ -3,7 +3,7 @@
 #' \code{prepare_depmixS4}
 #'
 #' @param data data
-#' @param hmm.model hmm.model
+#' @param depmixS4.model depmixS4.model
 #' @param diag.var diag.var
 #' @param order.var order.var
 #' @export

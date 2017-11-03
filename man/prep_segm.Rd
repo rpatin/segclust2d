@@ -14,10 +14,6 @@ prep_segm(data, param, seg.type = NULL, nseg = NULL)
 \item{seg.type}{either 'hybrid' or 'dynprog'}
 
 \item{nseg}{number of segment chosen}
-
-\item{diag.var}{names of the variables on which statistics are calculated}
-
-\item{order.var}{names of the variable with which states are ordered}
 }
 \value{
 a data.frame with states of the different segments
@@ -27,5 +23,6 @@ a data.frame with states of the different segments
 model
 }
 \examples{
-prep_segm_picard(data,picard.param,picard.type='hybrid',picard.nseg=NULL)
+\dontrun{prep_segm_picard(data, picard.param, picard.type = 'hybrid',
+picard.nseg=NULL)}
 }

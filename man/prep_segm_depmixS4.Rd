@@ -6,6 +6,9 @@
 \usage{
 prep_segm_depmixS4(depmixS4.model)
 }
+\arguments{
+\item{depmixS4.model}{depmixS4.model}
+}
 \description{
 \code{prep_segm_depmixS4}
 }

@@ -15,7 +15,7 @@ prepare_HMM <- function(data, hmm.model = NULL, diag.var, order.var = diag.var[1
                     "type" = "behavior",
                     "seg.type" = "HMM",
                     "outputs" = outputsHMM,
-                    "model.hmm" = mod.hmm,
+                    "model.hmm" = hmm.model,
                     "Diagnostic variables" = diag.var,
                     "Order variable" = order.var)
   class(segmented) <- "segmentation"

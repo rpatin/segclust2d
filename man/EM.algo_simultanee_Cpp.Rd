@@ -3,13 +3,27 @@
 \name{EM.algo_simultanee_Cpp}
 \alias{EM.algo_simultanee_Cpp}
 \title{EM.algo_simultanee caculates the MLE of phi for given change-point instants
- and for a fixed number of clusters
- @rdname EM.algo_simultanee}
+ and for a fixed number of clusters}
 \usage{
 EM.algo_simultanee_Cpp(x, rupt, P, phi, eps = 1e-06, sameSigma = FALSE)
+}
+\arguments{
+\item{x}{bivariate signal}
+
+\item{rupt}{ahe sequence of change points}
+
+\item{P}{number of clusters}
+
+\item{phi}{starting value for the  parameter}
+
+\item{eps}{eps}
+
+\item{sameSigma}{TRUE if segments have the same variance}
+}
+\value{
+a list with  phi, the MLE, tau =(taukj) the probability for segment k to belong to classe,lvinc = lvinc,empty = empty,dv = dv
 }
 \description{
 EM.algo_simultanee caculates the MLE of phi for given change-point instants
  and for a fixed number of clusters
- @rdname EM.algo_simultanee
 }

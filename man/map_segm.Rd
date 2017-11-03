@@ -5,18 +5,23 @@
 \title{Plot map of segmentation}
 \usage{
 map_segm(data, output, interactive = F, html = F, scale = 100,
-  UTMstring = "+proj=utm +zone=35 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0",
-  width = 400, height = 400, order = NULL, pointsize = 1,
-  linesize = 0.5)
+  UTMstring = "+proj=longlat +datum=WGS84 +no_defs", width = 400,
+  height = 400, order = NULL, pointsize = 1, linesize = 0.5)
 }
 \arguments{
 \item{data}{the data.frame with the different variable}
 
-\item{output}{outputs of the segmentation  or segclust algorithm for one number of segment}
+\item{output}{outputs of the segmentation  or segclust algorithm for one
+number of segment}
 
 \item{interactive}{should graph be interactive through leaflet ?}
 
-\item{html}{should the graph be incorporated in a markdown file through htmltools::tagList()}
+\item{html}{should the graph be incorporated in a markdown file through
+htmltools::tagList()}
+
+\item{scale}{scaling paremeters to represent data with leaflet}
+
+\item{UTMstring}{projection of the coordinates}
 
 \item{width}{width}
 
@@ -35,5 +40,6 @@ a graph
 \code{plot_segm} plot segmented traject on a map.
 }
 \examples{
-stat_segm(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+\dontrun{stat_segm(data, diag.var=c("dist","angle"),
+order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 }

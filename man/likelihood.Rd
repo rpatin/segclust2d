@@ -6,6 +6,11 @@
 \usage{
 likelihood(x, ...)
 }
+\arguments{
+\item{x}{object from which likelihood can be extracted}
+
+\item{...}{additional parameters}
+}
 \description{
 Generic function for likelihood
 }

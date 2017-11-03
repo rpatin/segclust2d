@@ -9,7 +9,7 @@ DynProg_algo_cpp(matD, Kmax)
 \arguments{
 \item{matD}{Cost Matrix}
 
-\item{x}{An integer vector}
+\item{Kmax}{number of segments}
 }
 \description{
 This function finds the best segmentation given a Cost Matrix using a

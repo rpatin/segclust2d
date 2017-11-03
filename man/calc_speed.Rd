@@ -25,8 +25,9 @@ vector of distance
 \code{calc_dist} calculate speed between locations, taking a dataframe as input. Speed can also be smoothed over the two steps before and after the each point.
 }
 \examples{
-calc_speed(df,coord.names = c("x","y"), timecol = "dateTime", smoothed = T)
+\dontrun{calc_speed(df,coord.names = c("x","y"), timecol = "dateTime",
+smoothed = T)}
 }
 \author{
-Rémi Patin
+Remi Patin
 }

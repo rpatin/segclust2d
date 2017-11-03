@@ -5,7 +5,7 @@
 \title{Internal segmentation/clustering function}
 \usage{
 segclust_internal(x, seg.var = NULL, diag.var = NULL, order.var = NULL,
-  scale.variable, Kmax, ncluster = NULL, lmin = NULL, dat = NULL,
+  scale.variable = NULL, Kmax, ncluster = NULL, lmin = NULL, dat = NULL,
   S = 0.75, type = NULL, sameSigma = F, subsample_over = 1000, ...)
 }
 \arguments{
@@ -17,7 +17,7 @@ segclust_internal(x, seg.var = NULL, diag.var = NULL, order.var = NULL,
 
 \item{order.var}{for behavioral segmentation : names of the variable with which states are ordered}
 
-\item{scale.variable}{for behavioral segmentation : whether variables need to be scaled for segmentation}
+\item{scale.variable}{should variables be standardized ? (reduced and centered)}
 
 \item{Kmax}{maximum number of segments. Default to 10.}
 
@@ -25,7 +25,17 @@ segclust_internal(x, seg.var = NULL, diag.var = NULL, order.var = NULL,
 
 \item{lmin}{minimum size of segments. Default to length of time series/Kmax/2.}
 
+\item{dat}{bivariate data (one signal per row)}
+
+\item{S}{threshold for choosing the number of segment. See
+adehabitatLT::chooseseg}
+
 \item{type}{type of segmentation. Either "home-range" or "behavior"}
+
+\item{sameSigma}{does segments have same variance ?}
+
+\item{subsample_over}{over which size should subsampling begin (depending on
+speed and memory limitations)}
 
 \item{...}{additional parameters}
 }

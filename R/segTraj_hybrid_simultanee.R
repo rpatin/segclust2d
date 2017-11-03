@@ -23,21 +23,21 @@
 #' @examples
 #' K  <- 5; rupt <- sample(1:20, K+1, replace=TRUE); rupt <- cumsum(rupt);
 #' n <- max(rupt)
-#' muSim <- matrix(rnorm(2*K+2,  mean=20, sd=5), nrow=2)
+#' muSim <- matrix(stats::rnorm(2*K+2,  mean=20, sd=5), nrow=2)
 #' muSim <- apply(muSim,1, cumsum)
 #' muSim <- t(muSim)
 #' sdSim <- matrix(sqrt(1/rgamma(2*K+2, shape = 10, rate = 10)), nrow=2)
 #' print(muSim)
 #' pos <- lapply(1:(K+1), function(d) 1*(rupt[d]<(1:n )))
 #' pos <- Reduce('+', x=pos)+1
-#' x <- matrix(rnorm(2*length(pos), mean=muSim[,pos], sd=sdSim[,pos]), nrow=2)
+#' x <- matrix(stats::rnorm(2*length(pos), mean=muSim[,pos], sd=sdSim[,pos]), nrow=2)
 #' bisig_plot(x = x)
 #' n  = dim(x)[2]
 #' res <- hybrid_simultanee(x, P=2, Kmax=10)
 #' Kopt=5
 #' param <- res$param[[Kopt]]
 #' bisig_plot(x = x, rupt = param$rupt, mu=param$phi$mu )
-#' @useDynLib segtools
+#' @useDynLib segtools, .registration=TRUE
 #' @importFrom Rcpp sourceCpp
 
 hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALSE,eps=1e-6,lissage=T,pureR = F){
@@ -49,7 +49,7 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
 
   if (P==1){
     rupt               = c(1, n)
-    phi                = list(mu=matrix(rowMeans(x),ncol=1),sigma=matrix(apply(x,1,sd),ncol=1),prop=1)
+    phi                = list(mu=matrix(rowMeans(x),ncol=1),sigma=matrix(apply(x,1,stats::sd),ncol=1),prop=1)
     Linc[Kmin:Kmax]    = logdens_simultanee(x,phi)
     param[[1]]         = list(phi=phi,rupt=rupt)
 
@@ -173,7 +173,7 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
 
   if(lissage){
     Ltmp= rep(-Inf,Kmax)
-    plot(1:length(Linc),Linc,col=1)
+    graphics::plot(1:length(Linc),Linc,col=1)
     cat("tracking local maxima for P =",P,"\n")
 
     while (sum(Ltmp!=Linc)>=1) {
@@ -184,7 +184,7 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
       Kmax.max = which.max(Linc)
       Lfinite  = Lfinite[kvfinite <=Kmax.max]
       kvfinite = kvfinite[kvfinite <=Kmax.max]
-      a        = chull(x=kvfinite, y=Lfinite)
+      a        = grDevices::chull(x=kvfinite, y=Lfinite)
       a        = kvfinite[sort(a)]
       if (length(a)>=3){
         rg       = which( -diff(diff(Linc[a])/diff(a))<0)
@@ -225,7 +225,7 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
 
         param          = out.neighbors$param
         Linc           = out.neighbors$L
-        lines(1:length(Ltmp),Ltmp,col=2)
+        graphics::lines(1:length(Ltmp),Ltmp,col=2)
       } # end k
       #out.neighbors  = neighbors(x=x, L=Linc,k=Kmax,param=param,P=P,lmin=lmin, eps,sameSigma)
       #param          = out.neighbors$param

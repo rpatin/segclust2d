@@ -8,6 +8,8 @@ augment(x, ...)
 }
 \arguments{
 \item{x}{object to be augmented}
+
+\item{...}{additional arguments}
 }
 \description{
 see broom::augment for more informations

@@ -1,5 +1,11 @@
 
 #' Internal function for subsampling
+#'
+#' if nrow(x) > subsample_over, subsample with the minimum needed to get a
+#' data.frame smaller than subsample_over
+#' @param x data.frame to be subsampled
+#' @param subsample_over maximum number of row accepted
+#'
 subsample <- function(x,subsample_over){
   x_nrow <- nrow(x)
   x_ind <-  1:x_nrow
@@ -19,10 +25,17 @@ subsample <- function(x,subsample_over){
 }
 
 #' Internal function for subsampling
+#'
+#' merge subsampled data.frame df with fulldata to add segmentation information
+#' on the full data.frame
+#' @param df subsampled data.frame with additional information on segmentation
+#' @param fulldata full data.frame
+#' @param colname column name
 subsample_rename <- function(df, fulldata, colname){
-  translate_ind <- dplyr::select(fulldata,x_ind,subsample_ind) %>% dplyr::filter(!is.na(subsample_ind))
-  eval_str <- paste("df <- left_join(df,translate_ind, c(\"",colname,"\" = \"subsample_ind\"))",sep="")
-  eval(parse(text = eval_str))
+  translate_ind  <- with(fulldata,data.frame(x_ind,subsample_ind))
+  translate_ind <- with(translate_ind, translate_ind[!is.na(subsample_ind),])
+  var_join <- c("subsample_ind" = paste(colname) )
+  df <- dplyr::right_join(translate_ind,df,var_join)
   df[,colname] <- df$x_ind
   df$x_ind <- NULL
   df

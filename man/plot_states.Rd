@@ -7,13 +7,13 @@
 plot_states(outputs, diag.var, position_width = 0.3, order = F)
 }
 \arguments{
+\item{outputs}{outputs of the segmentation  or segclust algorithm for one number of segment}
+
 \item{diag.var}{names of the variables on which statistics are calculated}
 
 \item{position_width}{width between different model if several models are compared}
 
 \item{order}{should cluster be ordered}
-
-\item{output}{outputs of the segmentation  or segclust algorithm for one number of segment}
 }
 \value{
 a graph
@@ -22,5 +22,6 @@ a graph
 \code{plot_states} plot states statistics
 }
 \examples{
-stat_segm(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+\dontrun{stat_segm(data,diag.var = c("dist","angle"), order.var='dist',
+type='hmm',hmm.model=mod1.hmm)}
 }

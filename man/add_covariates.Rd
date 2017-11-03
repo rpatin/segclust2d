@@ -35,8 +35,8 @@ smoothed speed, persistence and rotation velocity (calculated with spatial
 angle).
 }
 \examples{
-calc_dist(df,coord.names = c("x","y"), smoothed = T)
+\dontrun{calc_dist(df,coord.names = c("x","y"), smoothed = T)}
 }
 \author{
-Rémi Patin
+Remi Patin
 }

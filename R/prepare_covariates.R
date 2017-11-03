@@ -12,7 +12,7 @@
 #' @return data.frame increased with
 #'
 #' @examples
-#' calc_dist(df,coord.names = c("x","y"), smoothed = T)
+#' \dontrun{calc_dist(df,coord.names = c("x","y"), smoothed = T)}
 #' @export
 #' @author Remi Patin
 
@@ -22,23 +22,23 @@ add_covariates <- function(x, coord.names = c("x","y"), smoothed = F, timecol = 
   if(any(is.na(x[,coord.names[1]]))) stop("x should not contain NA")
   if(any(is.na(x[,coord.names[2]]))) stop("y should not contain NA")
 
-  dist <- calc_dist(x, coord.names = coord.names, smoothed = F)
-  dist_smoothed <- zoo::rollapply(dist, 2, mean, by.column = FALSE, fill = NA, align = "right")
+  x_dist <- calc_dist(x, coord.names = coord.names, smoothed = F)
+  x_dist_smoothed <- zoo::rollapply(x_dist, 2, mean, by.column = FALSE, fill = NA, align = "right")
   n <- nrow(x)
   tmptime =  as.numeric(difftime(x[2:n,timecol],x[1:(n-1),timecol], units = units))
-  speed = dist/c(tmptime,NA)
-  speed_smoothed <- zoo::rollapply(speed, 2, mean, by.column = FALSE, fill = NA, align = "right")
-  ang_spa <- spatial_angle(x, coord.names = coord.names, radius = radius)
-  vit_p <- speed*cos(ang_spa)
-  vit_r <- speed*sin(ang_spa)
+  x_speed = x_dist/c(tmptime,NA)
+  x_speed_smoothed <- zoo::rollapply(x_speed, 2, mean, by.column = FALSE, fill = NA, align = "right")
+  x_ang_spa <- spatial_angle(x, coord.names = coord.names, radius = radius)
+  x_vit_p <- x_speed*cos(x_ang_spa)
+  x_vit_r <- x_speed*sin(x_ang_spa)
 
-  x$dist <- dist
-  x$dist_smoothed <- dist_smoothed
-  x$speed <- speed
-  x$speed_smoothed <- speed_smoothed
-  x$spatial_angle <- ang_spa
-  x$vit_p <- vit_p
-  x$vit_r <- vit_r
+  x$dist <- x_dist
+  x$dist_smoothed <- x_dist_smoothed
+  x$speed <- x_speed
+  x$speed_smoothed <- x_speed_smoothed
+  x$spatial_angle <- x_ang_spa
+  x$vit_p <- x_vit_p
+  x$vit_r <- x_vit_r
   return(x)
 }
 
@@ -51,13 +51,13 @@ add_covariates <- function(x, coord.names = c("x","y"), smoothed = F, timecol = 
 #' @return vector of distance
 #'
 #' @examples
-#' calc_dist(df,coord.names = c("x","y"), smoothed = T)
+#' \dontrun{calc_dist(df,coord.names = c("x","y"), smoothed = T)}
 #' @export
 #' @author Remi Patin
 
 
 calc_dist <- function(x, coord.names = c("x","y"), smoothed = F){
-  tmp = zoo::rollapply(cbind(x[,coord.names[1]], x[,coord.names[2]]), 2, dist, by.column = FALSE, fill = NA)
+  tmp = zoo::rollapply(cbind(x[,coord.names[1]], x[,coord.names[2]]), 2, stats::dist, by.column = FALSE, fill = NA)
   if( smoothed ){
     tmp <- zoo::rollapply(tmp, 2, mean, by.column = FALSE, fill = NA, align = "right")
   }
@@ -75,7 +75,8 @@ calc_dist <- function(x, coord.names = c("x","y"), smoothed = F){
 #' @return vector of distance
 #'
 #' @examples
-#' calc_speed(df,coord.names = c("x","y"), timecol = "dateTime", smoothed = T)
+#' \dontrun{calc_speed(df,coord.names = c("x","y"), timecol = "dateTime",
+#' smoothed = T)}
 #' @export
 #' @author Remi Patin
 
@@ -98,23 +99,24 @@ calc_speed <- function(x, coord.names = c("x","y"), timecol = "dateTime", smooth
 #' @param x data.frame with locations
 #' @param coord.names names of coordinates column in \code{x}
 #' @param radius for angle calculation. Default is median of step length.
+#'
 #' @return vector of spatial angle.
 #'
 #' @examples
-#' calc_speed(df,coord.names = c("x","y"), timecol = "dateTime", smoothed = T)
+#' \dontrun{calc_speed(df,coord.names = c("x","y"), timecol = "dateTime", smoothed = T)}
 #' @export
 #' @author Remi Patin, Simon Benhamou.
 
 
-spatial_angle <- function(df, coord.names = c("x","y"), radius = NULL){
-  tmpdist = calc_dist(df, coord.names = coord.names)
-  x <- df[,coord.names[1]]
-  y <- df[,coord.names[2]]
-  if(is.null(radius)) radius <- median(tmpdist,na.rm=T)
+spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
+  tmpdist = calc_dist(x, coord.names = coord.names)
+  x <- x[,coord.names[1]]
+  y <- x[,coord.names[2]]
+  if(is.null(radius)) radius <- stats::median(tmpdist,na.rm=T)
   radius2 <- radius^2
   ri2 <- 0.998*radius2
   re2 <- 1.002*radius2
-  n <- nrow(df)
+  n <- nrow(x)
   angle_spa <- c(NA)
   arg1 <- c(NA)
   arg2 <- c(NA)

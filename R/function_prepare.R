@@ -8,12 +8,14 @@
 #' @param order.var names of the variable with which states are ordered
 #' @param seg.type either 'hybrid' or 'dynprog'
 #' @param nseg number of segment chosen
+#' @param param parameters of ouptput segmentation
 #' @return  a list which first element is a data.frame with states of the
 #'   different segments and which second element is a data.frame with mean and
 #'   variance of the different states
 #'
 #' @examples
-#' stat_segm(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+#' \dontrun{stat_segm(data,diag.var=c("dist","angle"),
+#' order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 #' @export
 #'
 #
@@ -40,15 +42,14 @@ stat_segm <- function(data, diag.var, order.var = NULL, param = NULL, seg.type =
 #' \code{prep_segm_picard} find the different segment and states of a given HMM
 #' model
 #' @param data the data.frame with the different variable
-#' @param diag.var names of the variables on which statistics are calculated
-#' @param order.var names of the variable with which states are ordered
 #' @param param the param output of the segmentation
 #' @param seg.type either 'hybrid' or 'dynprog'
 #' @param nseg number of segment chosen
 #' @return a data.frame with states of the different segments
 #'
 #' @examples
-#' prep_segm_picard(data,picard.param,picard.type='hybrid',picard.nseg=NULL)
+#' \dontrun{prep_segm_picard(data, picard.param, picard.type = 'hybrid',
+#' picard.nseg=NULL)}
 
 # attributes(subdf2$scaled_speed)<- NULL
 # attributes(subdf2$scaled_angle)<- NULL
@@ -88,15 +89,16 @@ prep_segm <- function(data,param,seg.type=NULL,nseg=NULL){
 #' @return  a data.frame with mean and variance of the different states
 #'
 #' @examples
-#' calc_stat_states(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+#' \dontrun{calc_stat_states(data, diag.var = c("dist","angle"),
+#' order.var='dist', type='hmm',hmm.model=mod1.hmm)}
 #' @importFrom magrittr "%>%"
 #' @export
 
 calc_stat_states <- function(data,df.segm,diag.var,order.var=NULL)
 {
-  data <- dplyr::mutate(data,state= df.segm[findInterval(indice,df.segm$begin,rightmost.closed = F,left.open = F),"state"])
+  data$state <- df.segm[findInterval(data$indice,df.segm$begin,rightmost.closed = F,left.open = F),"state"]
 
-  eval_str <- paste("dplyr::group_by(data,state) %>% dplyr::summarise(prop=n()/nrow(data),",paste("mu.",diag.var," = mean(",diag.var,",na.rm=T)",collapse=",",sep=""),",",paste("sd.",diag.var," = sd(",diag.var,",na.rm=T)",collapse=",",sep=""),") %>% as.data.frame()",sep="")
+  eval_str <- paste("dplyr::group_by(data,state) %>% dplyr::summarise(prop=n()/nrow(data),",paste("mu.",diag.var," = mean(",diag.var,",na.rm=T)",collapse=",",sep=""),",",paste("sd.",diag.var," = stats::sd(",diag.var,",na.rm=T)",collapse=",",sep=""),") %>% as.data.frame()",sep="")
   df.states <- eval(parse(text=eval_str))
   df.states$state_ordered  <- rank(df.states[,paste("mu",order.var[1],sep=".")])
   return(df.states)
@@ -112,22 +114,37 @@ calc_stat_states <- function(data,df.segm,diag.var,order.var=NULL)
 #' @return  a data.frame with mean and variance of the different states
 #'
 #' @examples
-#' calc_stat_states(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+#' \dontrun{calc_stat_states(data, diag.var=c("dist","angle"),
+#' order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 #' @export
 
 find_mu_sd <- function(df.states,diag.var){
   if(is.null(df.states$model)) df.states$model <- 'model'
-  eval_str <-  paste("reshape2::melt(df.states,measure.var = c(", paste("\"mu.",diag.var,"\"",collapse=",",sep=""),"))",sep="")
-    mu.melt <- eval(parse(text=eval_str))
+  var_measure <- c(paste("mu.",diag.var,sep=""))
+  mu.melt <-  reshape2::melt(df.states,measure.var = var_measure)
     mu.melt$variable <- plyr::laply(strsplit(as.character(mu.melt$variable),split=".",fixed=T),function(x){paste(x[-1],collapse = ".")})
-    mu.melt <- dplyr::rename(mu.melt,mu=value)
-    mu.melt <- dplyr::select(mu.melt,state,state_ordered,variable,mu,prop,model)
+    mu.melt$mu <- mu.melt$value
+    mu.melt$value <- NULL
+    mu.melt <- data.frame(mu.melt$state,
+                          mu.melt$state_ordered,
+                          mu.melt$variable,
+                          mu.melt$mu,
+                          mu.melt$prop,
+                          mu.melt$model)
 
-    eval_str <-  paste("reshape2::melt(df.states,measure.var = c(", paste("\"sd.",diag.var,"\"",collapse=",",sep=""),"))",sep="")
-    sd.melt <- eval(parse(text=eval_str))
+    var_measure <- c(paste("sd.",diag.var,sep=""))
+    sd.melt <-  reshape2::melt(df.states,measure.var = var_measure)
     sd.melt$variable <- plyr::laply(strsplit(as.character(sd.melt$variable),split=".",fixed=T),function(x){paste(x[-1],collapse = ".")})
-    sd.melt <- dplyr::rename(sd.melt,sd=value)
-    sd.melt <- dplyr::select(sd.melt,state,state_ordered,variable,sd,prop,model)
+    sd.melt$df <- sd.melt$value
+    sd.melt$value <- NULL
+
+    # sd.melt <- with(sd.melt(data.frame(state,state_ordered,variable,sd,prop,model)))
+    sd.melt <- data.frame(sd.melt$state,
+                          sd.melt$state_ordered,
+                          sd.melt$variable,
+                          sd.melt$sd,
+                          sd.melt$prop,
+                          sd.melt$model)
 
     mu.melt <- dplyr::left_join(mu.melt,sd.melt,by = c("state", "prop", "state_ordered", "variable","model"))
   return(mu.melt)
@@ -140,10 +157,12 @@ find_mu_sd <- function(df.states,diag.var){
 #' @param likelihood log-likelihood
 #' @param ncluster number of cluster
 #' @param nseg number of segment
+#' @param n number of observations
 #' @return a data.frame with BIC, number of cluster and number of segment
 #'
 #' @examples
-#' calc_stat_states(data,diag.var=c("dist","angle"),order.var='dist',type='hmm',hmm.model=mod1.hmm)
+#' \dontrun{calc_stat_states(data, diag.var=c("dist","angle"),
+#' order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 #' @export
 
 calc_BIC <- function(likelihood,ncluster,nseg,n){

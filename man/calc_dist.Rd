@@ -20,8 +20,8 @@ vector of distance
 \code{calc_dist} calculate distance between locations, taking a dataframe as input. Distance can also be smoothed over the two steps before and after the each point.
 }
 \examples{
-calc_dist(df,coord.names = c("x","y"), smoothed = T)
+\dontrun{calc_dist(df,coord.names = c("x","y"), smoothed = T)}
 }
 \author{
-Rémi Patin
+Remi Patin
 }

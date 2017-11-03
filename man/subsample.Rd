@@ -6,6 +6,12 @@
 \usage{
 subsample(x, subsample_over)
 }
+\arguments{
+\item{x}{data.frame to be subsampled}
+
+\item{subsample_over}{maximum number of row accepted}
+}
 \description{
-Internal function for subsampling
+if nrow(x) > subsample_over, subsample with the minimum needed to get a
+data.frame smaller than subsample_over
 }

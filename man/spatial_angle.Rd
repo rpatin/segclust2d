@@ -4,14 +4,14 @@
 \alias{spatial_angle}
 \title{Calculate spatial angle along a trajectory}
 \usage{
-spatial_angle(df, coord.names = c("x", "y"), radius = NULL)
+spatial_angle(x, coord.names = c("x", "y"), radius = NULL)
 }
 \arguments{
+\item{x}{data.frame with locations}
+
 \item{coord.names}{names of coordinates column in \code{x}}
 
 \item{radius}{for angle calculation. Default is median of step length.}
-
-\item{x}{data.frame with locations}
 }
 \value{
 vector of spatial angle.
@@ -20,8 +20,8 @@ vector of spatial angle.
 \code{spatial_angle} calculate spatial angle between locations, taking a dataframe as input. Spatial angle is considered as the angle between the focus point, the first location entering a given circle and the last location inside.
 }
 \examples{
-calc_speed(df,coord.names = c("x","y"), timecol = "dateTime", smoothed = T)
+\dontrun{calc_speed(df,coord.names = c("x","y"), timecol = "dateTime", smoothed = T)}
 }
 \author{
-Rémi Patin, Simon Benhamou.
+Remi Patin, Simon Benhamou.
 }

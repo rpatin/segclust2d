@@ -6,6 +6,14 @@
 \usage{
 subsample_rename(df, fulldata, colname)
 }
+\arguments{
+\item{df}{subsampled data.frame with additional information on segmentation}
+
+\item{fulldata}{full data.frame}
+
+\item{colname}{column name}
+}
 \description{
-Internal function for subsampling
+merge subsampled data.frame df with fulldata to add segmentation information
+on the full data.frame
 }
