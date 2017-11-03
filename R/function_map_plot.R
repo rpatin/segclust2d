@@ -36,7 +36,7 @@ map_segm <- function(data,output,interactive=F,html=F, scale=100,
   if(!interactive){
     g <- ggplot2::ggplot(data,ggplot2::aes_string(x="x",y="y"))+
       ggplot2::geom_path(size = linesize)+
-      ggplot2::geom_point(ggplot2::aes_string(col="factor(state)"),size = "pointsize")
+      ggplot2::geom_point(ggplot2::aes_string(col="factor(state)"),size = pointsize)
     return(g)
   } else {
     # coordinates(data) <- c("x","y")

@@ -29,15 +29,15 @@ segmentation <- function (x, ...) {
 #' @rdname segmentation
 #' @export
 
-segmentation.data.frame <- function(x, Kmax, lmin, type = "home-range", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
+segmentation.data.frame <- function(x, Kmax, lmin, type = "home-range", seg.var, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
 
-  if(type == "home-range"){
+  if(type == "home-range" & missing(seg.var)){
     dat <- t(x[,coord.names])
     seg.var = coord.names
     diag.var = coord.names
     order.var = coord.names[1]
   } else if ( type == "behavior" ){
-    if(is.null(seg.var)) stop("seg.var missing for behavioral segmentation")
+    if(is.null(seg.var)) stop("Please provide seg.var for a behavioral segmentation")
     if( length(seg.var) == 1 ){
       dat <- t(x[,rep(seg.var,2)])
     } else if ( length(seg.var) == 2 ) {
@@ -150,9 +150,11 @@ segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var 
   subsample_by <- tmp$by
   dat <- dat[,!is.na(x$subsample_ind)]
 
-  if(missing(scale.variable)){
+  if(missing(scale.variable) & type == 'behavior'){
     warning("Rescaling variables")
-    scale.variable <- T
+    scale.variable <- TRUE
+  } else {
+    scale.variable <- FALSE
   }
 
   if(scale.variable) {

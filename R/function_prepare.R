@@ -125,26 +125,26 @@ find_mu_sd <- function(df.states,diag.var){
     mu.melt$variable <- plyr::laply(strsplit(as.character(mu.melt$variable),split=".",fixed=T),function(x){paste(x[-1],collapse = ".")})
     mu.melt$mu <- mu.melt$value
     mu.melt$value <- NULL
-    mu.melt <- data.frame(mu.melt$state,
-                          mu.melt$state_ordered,
-                          mu.melt$variable,
-                          mu.melt$mu,
-                          mu.melt$prop,
-                          mu.melt$model)
+    mu.melt <- data.frame("state" = mu.melt$state,
+                          "state_ordered" = mu.melt$state_ordered,
+                          "variable" = mu.melt$variable,
+                          "mu" = mu.melt$mu,
+                          "prop" = mu.melt$prop,
+                          "model" = mu.melt$model)
 
     var_measure <- c(paste("sd.",diag.var,sep=""))
     sd.melt <-  reshape2::melt(df.states,measure.var = var_measure)
     sd.melt$variable <- plyr::laply(strsplit(as.character(sd.melt$variable),split=".",fixed=T),function(x){paste(x[-1],collapse = ".")})
-    sd.melt$df <- sd.melt$value
+    sd.melt$sd <- sd.melt$value
     sd.melt$value <- NULL
 
     # sd.melt <- with(sd.melt(data.frame(state,state_ordered,variable,sd,prop,model)))
-    sd.melt <- data.frame(sd.melt$state,
-                          sd.melt$state_ordered,
-                          sd.melt$variable,
-                          sd.melt$sd,
-                          sd.melt$prop,
-                          sd.melt$model)
+    sd.melt <- data.frame("state" = sd.melt$state,
+                          "state_ordered" = sd.melt$state_ordered,
+                          "variable" = sd.melt$variable,
+                          "sd" = sd.melt$sd,
+                          "prop" = sd.melt$prop,
+                          "model" = sd.melt$model)
 
     mu.melt <- dplyr::left_join(mu.melt,sd.melt,by = c("state", "prop", "state_ordered", "variable","model"))
   return(mu.melt)

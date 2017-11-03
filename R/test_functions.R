@@ -1,5 +1,6 @@
 #' Test function generating fake data
-
+#' @export
+#'
 test_data <- function() {
   xcl1 = stats::rnorm(90, mean = 0, sd = 1)
   xcl2 = stats::rnorm(90, mean = 10, sd = 1)

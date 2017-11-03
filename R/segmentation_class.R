@@ -109,7 +109,8 @@ plot_likelihood <- function(x) {
       ggplot2::ylab("log-Likelihood")+
       ggplot2::scale_color_discrete(name="Number of \nCluster") +
       ggplot2::geom_point(data = tmpdf, ggplot2::aes_string(x="nseg", y="likelihood"), size = 3)+
-      ggplot2::geom_text(data = tmpdf,  ggplot2::aes_string(x="nseg", y="likelihood"), label="Lavielle-selected optimum", nudge_x = nudgeX, nudge_y = -nudgeY  ,size = 3)
+      ggplot2::geom_text(data = tmpdf,  ggplot2::aes_string(x="nseg", y="likelihood"), label="Lavielle-selected optimum", nudge_x = nudgeX, nudge_y = -nudgeY  ,size = 3)+
+      ggplot2::scale_x_continuous(breaks = scales::pretty_breaks())
 
   }
   return(g)
@@ -164,7 +165,8 @@ plot_BIC <- function(x) {
       ggplot2::geom_point(data=SegOpt,shape = 15,size=2)+
       ggplot2::geom_point(data=ClusterOpt,shape = 19, size = 3.5)+
       ggplot2::geom_text(data=ClusterOpt, size = 3,label="BIC-selected optimum", nudge_x = - nudgeX, nudge_y = nudgeY)+
-      ggplot2::scale_color_discrete(name="Number of \nClusters")
+      ggplot2::scale_color_discrete(name="Number of \nClusters")+
+      ggplot2::scale_x_continuous(breaks = scales::pretty_breaks())
 
   } else if( x$seg.type == "segmentation"){
     stop("no BIC estimates for segmentation only algorithm")

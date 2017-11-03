@@ -31,8 +31,8 @@ segclust <- function (x, ...) {
 #' @rdname segclust
 #' @export
 
-segclust.data.frame <- function(x, Kmax, lmin, ncluster, type = "home-range", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"),...){
-  if(type == "home-range"){
+segclust.data.frame <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"),...){
+  if(type == "home-range" & missing(seg.var)){
     dat <- t(x[,coord.names])
     seg.var = coord.names
     diag.var = coord.names
@@ -59,7 +59,7 @@ segclust.data.frame <- function(x, Kmax, lmin, ncluster, type = "home-range", se
 #' @export
 
 
-segclust.Move <- function(x, Kmax, lmin, ncluster, type = "home-range", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
+segclust.Move <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
   if(requireNamespace("move", quietly = TRUE))
     stop("move package required for calling segclust on a Move object.")
   if(type == "home-range"){
@@ -95,7 +95,7 @@ segclust.Move <- function(x, Kmax, lmin, ncluster, type = "home-range", seg.var 
 #' @export
 
 
-segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "home-range", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
+segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
   if(type == "home-range"){
     tmp <- x[[1]]
     dat <- t(cbind(tmp$x,tmp$y))
