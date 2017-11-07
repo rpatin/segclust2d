@@ -14,6 +14,7 @@
 #' @param linesize size of lines
 #' @param scale scaling paremeters to represent data with leaflet
 #' @param UTMstring projection of the coordinates
+#' @param coord.names names of coordinates
 #' @return a graph
 #'
 #' @examples
@@ -24,7 +25,7 @@
 
 map_segm <- function(data,output,interactive=F,html=F, scale=100,
                      UTMstring="+proj=longlat +datum=WGS84 +no_defs",
-                     width=400,height=400,order=NULL,pointsize = 1, linesize = 0.5){
+                     width=400,height=400,order=NULL,pointsize = 1, linesize = 0.5, coord.names = c("x","y")){
   # print("test")
   df.segm <- dplyr::left_join(output[[1]],output[[2]],by="state")
   data$indice <- 1:nrow(data)
@@ -34,7 +35,7 @@ map_segm <- function(data,output,interactive=F,html=F, scale=100,
   data$x <- data$x/scale
   data$y <- data$y/scale
   if(!interactive){
-    g <- ggplot2::ggplot(data,ggplot2::aes_string(x="x",y="y"))+
+    g <- ggplot2::ggplot(data,ggplot2::aes_string(x=coord.names[1],y=coord.names[2]))+
       ggplot2::geom_path(size = linesize)+
       ggplot2::geom_point(ggplot2::aes_string(col="factor(state)"),size = pointsize)
     return(g)

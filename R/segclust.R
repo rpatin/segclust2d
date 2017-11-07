@@ -60,10 +60,10 @@ segclust.data.frame <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.
 
 
 segclust.Move <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
-  if(requireNamespace("move", quietly = TRUE))
+  if(!requireNamespace("move", quietly = TRUE))
     stop("move package required for calling segclust on a Move object.")
   if(type == "home-range"){
-    if(requireNamespace("sp", quietly = TRUE))
+    if(!requireNamespace("sp", quietly = TRUE))
       stop("sp package required for calling segclust (home-range) on a Move object.")
     dat <- t(sp::coordinates(x))
     seg.var = coord.names
@@ -96,6 +96,9 @@ segclust.Move <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = 
 
 
 segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
+  if(!requireNamespace("adehabitatLT", quietly = TRUE))
+    stop("adehabitatLT package required for calling segclust on a ltraj object.")
+
   if(type == "home-range"){
     tmp <- x[[1]]
     dat <- t(cbind(tmp$x,tmp$y))
@@ -182,7 +185,7 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
                                   "ncluster"=ncluster))
   class(segmented) <- "segmentation"
 
-  # DynProg segmentation nclass=0 - Initialisation
+  # DynProg segmentation ncluster=0 - Initialisation
   CostLoc <- Gmean_simultanee(dat, lmin = lmin,sameVar = sameSigma)
   res.DynProg <- DynProg(CostLoc, Kmax)
   # CostLoc <- segTraj::Gmean_simultanee(dat, lmin = lmin)
@@ -195,7 +198,7 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
   })
   names(outputs) <- paste("0 class -",1:Kmax, "segments")
 
-  likelihood <- data.frame(nseg=1:Kmax,likelihood=-res.DynProg$J.est,nclass=0)
+  likelihood <- data.frame(nseg=1:Kmax,likelihood=-res.DynProg$J.est,ncluster=0)
   # dfBIC <- calc_BIC(likelihood,ncluster = 1:Kmax, nseg = 1:Kmax)
   # dfBIC$ncluster = 0
   segmented$outputs <- c(segmented$outputs,outputs)
@@ -210,7 +213,7 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
       return(out)
     })
     names(outputs) <- paste(P,"class -",P:Kmax, "segments")
-    likelihood = data.frame(nseg=1:Kmax,likelihood = c(res$Linc),nclass=P)
+    likelihood = data.frame(nseg=1:Kmax,likelihood = c(res$Linc),ncluster=P)
     tmpBIC <- calc_BIC(likelihood$likelihood,ncluster = P, nseg = 1:Kmax, n = dim(x)[1])
     param <- list(res$param)
     names(param) <- paste(P,"class")

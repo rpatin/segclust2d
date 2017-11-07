@@ -31,11 +31,14 @@ segmentation <- function (x, ...) {
 
 segmentation.data.frame <- function(x, Kmax, lmin, type = "home-range", seg.var, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
 
-  if(type == "home-range" & missing(seg.var)){
-    dat <- t(x[,coord.names])
-    seg.var = coord.names
-    diag.var = coord.names
-    order.var = coord.names[1]
+  if(type == "home-range"){
+    if(missing(seg.var)){
+      seg.var <- coord.names
+    }
+    dat <- t(x[,seg.var])
+    seg.var = seg.var
+    diag.var = seg.var
+    order.var = seg.var[1]
   } else if ( type == "behavior" ){
     if(is.null(seg.var)) stop("Please provide seg.var for a behavioral segmentation")
     if( length(seg.var) == 1 ){
@@ -48,7 +51,7 @@ segmentation.data.frame <- function(x, Kmax, lmin, type = "home-range", seg.var,
   } else {
     stop("type must be either home-range or behavior")
   }
-
+  message("Segmentation on ",paste(seg.var,collapse = " and "))
   segmented <- segmentation_internal(x, seg.var = seg.var, diag.var = diag.var, order.var = order.var,  Kmax = Kmax, lmin = lmin, dat=dat, type=type, ...)
   return(segmented)
 }
@@ -60,11 +63,11 @@ segmentation.data.frame <- function(x, Kmax, lmin, type = "home-range", seg.var,
 
 segmentation.Move <- function(x, Kmax, lmin, type = "home-range", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("coords.x1","coords.x2"), ...){
 
-  if(requireNamespace("move", quietly = TRUE))
+  if(!requireNamespace("move", quietly = TRUE))
     stop("move package required for calling segmentation on a Move object.")
 
   if(type == "home-range"){
-    if(requireNamespace("sp", quietly = TRUE))
+    if(!requireNamespace("sp", quietly = TRUE))
       stop("sp package required for calling segmentation (home-range) on a Move object.")
     dat <- t(sp::coordinates(x))
     seg.var = coord.names
@@ -96,6 +99,8 @@ segmentation.Move <- function(x, Kmax, lmin, type = "home-range", seg.var = NULL
 #' @export
 
 segmentation.ltraj <- function(x, Kmax, lmin, type = "home-range", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
+  if(!requireNamespace("adehabitatLT", quietly = TRUE))
+    stop("adehabitatLT package required for calling segmentation on a ltraj object.")
 
   if(type == "home-range"){
     tmp <- x[[1]]
