@@ -2,11 +2,12 @@
 % Please edit documentation in R/function_map_plot.R
 \name{map_segm}
 \alias{map_segm}
-\title{Plot map of segmentation}
+\title{\code{plot_segm} plot segmented traject on a map.}
 \usage{
-map_segm(data, output, interactive = F, html = F, scale = 100,
+map_segm(data, output, interactive = F, html = F, scale = 1,
   UTMstring = "+proj=longlat +datum=WGS84 +no_defs", width = 400,
-  height = 400, order = NULL, pointsize = 1, linesize = 0.5)
+  height = 400, order = NULL, pointsize = 1, linesize = 0.5,
+  coord.names = c("x", "y"))
 }
 \arguments{
 \item{data}{the data.frame with the different variable}
@@ -14,12 +15,12 @@ map_segm(data, output, interactive = F, html = F, scale = 100,
 \item{output}{outputs of the segmentation  or segclust algorithm for one
 number of segment}
 
-\item{interactive}{should graph be interactive through leaflet ?}
+\item{interactive}{should graph be interactive with leaflet ?}
 
 \item{html}{should the graph be incorporated in a markdown file through
 htmltools::tagList()}
 
-\item{scale}{scaling paremeters to represent data with leaflet}
+\item{scale}{for dividing coordinates to have compatibility with leaflet}
 
 \item{UTMstring}{projection of the coordinates}
 
@@ -32,6 +33,8 @@ htmltools::tagList()}
 \item{pointsize}{size of points}
 
 \item{linesize}{size of lines}
+
+\item{coord.names}{names of coordinates}
 }
 \value{
 a graph

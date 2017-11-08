@@ -1,29 +1,30 @@
-#' Generic function for add_covariates
+#' Covariate Calculations
 #'
-#' @param x object to be augmented
-#' @param ... additional arguments
-#' @export
-
-add_covariates <- function (x, ...) {
-  UseMethod("add_covariates", x)
-}
-
-
-#' Add several covariates to movement observations - For Move object
+#' Add several covariates to movement observations
 #' \code{add_covariates} add several covariates to a data frame with movement
 #' information. It adds : distance between location, spatial angle, speed,
 #' smoothed speed, persistence and rotation velocity (calculated with spatial
 #' angle).
-#' @param x data.frame with locations
-#' @param coord.names names of coordinates column in \code{x}
-#' @param ... additional arguments to be passed to
-#'   \link{add_covariates.data.frame}
-#' @return data.frame increased with
 #'
-#' @examples
-#' \dontrun{calc_dist(df,coord.names = c("x","y"), smoothed = T)}
+#' @param x movement data
+#' @param ... additional arguments
 #' @export
-#' @author Remi Patin
+#'
+
+add_covariates <- function(x, ...) {
+  UseMethod("add_covariates", x)
+}
+
+
+#' add_covariates method for Move object
+#'
+#' @inheritParams add_covariates
+#' @inheritParams add_covariates.data.frame
+#'
+#' @rdname add_covariates
+#' @examples
+#' \dontrun{add_covariates(move_object, coord.names = c("x","y"), smoothed = T)}
+#' @export
 
 add_covariates.Move <- function(x, coord.names = c("x","y"), ...){
   if(!requireNamespace("move", quietly = TRUE))
@@ -39,21 +40,14 @@ add_covariates.Move <- function(x, coord.names = c("x","y"), ...){
   add_covariates.data.frame(x.dat, coord.names = coord.names, ...)
 }
 
-#' Add several covariates to movement observations - For ltraj object
-#' \code{add_covariates} add several covariates to a data frame with movement
-#' information. It adds : distance between location, spatial angle, speed,
-#' smoothed speed, persistence and rotation velocity (calculated with spatial
-#' angle).
-#' @param x data.frame with locations
-#' @param coord.names names of coordinates column in \code{x}
-#' @param ... additional arguments to be passed to
-#'   \link{add_covariates.data.frame}
-#' @return data.frame increased with
+#' add_covariates method for ltraj object
+#' @inheritParams add_covariates
+#' @inheritParams add_covariates.data.frame
 #'
 #' @examples
-#' \dontrun{calc_dist(df,coord.names = c("x","y"), smoothed = T)}
+#' \dontrun{add_covariates(ltraj_object, coord.names = c("x","y"), smoothed = T)}
 #' @export
-#' @author Remi Patin
+#' @rdname add_covariates
 
 add_covariates.ltraj <- function(x, coord.names = c("x","y"), ...){
   if(!requireNamespace("adehabitatLT", quietly = TRUE))
@@ -73,26 +67,22 @@ add_covariates.ltraj <- function(x, coord.names = c("x","y"), ...){
 }
 
 
-#' Add several covariates to movement observations
-#' \code{add_covariates} add several covariates to a data frame with movement
-#' information. It adds : distance between location, spatial angle, speed,
-#' smoothed speed, persistence and rotation velocity (calculated with spatial
-#' angle).
-#' @param x data.frame with locations
+#' add_covariates method for data.frame
+#'
 #' @param coord.names names of coordinates column in \code{x}
 #' @param timecol names of POSIXct time column
 #' @param smoothed whether speed are smoothed or not
 #' @param units units for time calculation. Default "hour"
 #' @param radius for spatial angle calculations
-#' @return data.frame increased with
-#'
+#' @return data.frame with additional covariates
+#' @inheritParams add_covariates
+#' @rdname add_covariates
 #' @examples
 #' \dontrun{calc_dist(df,coord.names = c("x","y"), smoothed = T)}
 #' @export
-#' @author Remi Patin
 
 
-add_covariates.data.frame <- function(x, coord.names = c("x","y"), smoothed = F, timecol = "dateTime", units = "hour", radius = NULL){
+add_covariates.data.frame <- function(x, coord.names = c("x","y"), smoothed = F, timecol = "dateTime", units = "hour", radius = NULL, ...){
   if(any(is.na(x[,timecol]))) stop("time should not contain NA")
   if(any(is.na(x[,coord.names[1]]))) stop("x should not contain NA")
   if(any(is.na(x[,coord.names[2]]))) stop("y should not contain NA")

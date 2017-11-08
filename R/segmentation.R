@@ -1,25 +1,36 @@
 #' Segmentation of movement data - Generic function
 #'
-#' Segmentation of movement data. No clustering. Method available for data.frame,  move and ltraj object
-#' @param x data used for segmentation. Supported : data.frame, 2-columns matrix, move object, ltraj object
-#' @param type type of segmentation. Either "home-range" or "behavior"
-#' @param seg.var for behavioral segmentation : names of the variables used for segmentation (either one or two names)
-#' @param diag.var for behavioral segmentation : names of the variables on which statistics are calculated
-#' @param order.var for behavioral segmentation : names of the variable with which states are ordered
-#' @param Kmax maximum number of segments. Default to 10.
-#' @param lmin minimum size of segments. Default to length of time series/Kmax/2.
-#' @param ... additional parameters
+#' Segmentation of movement data. No clustering. Method available for
+#' data.frame,  move and ltraj object. The algorithm finds for each number of
+#' segment the optimal segmentation using a Dynamic Programming approach. The
+#' number of segment is then chosen using Lavielle's (2005) procedure based on
+#' locating rupture in the penalized likelihood.
+#'
+#' @param x data used for segmentation. Supported: data.frame, Move object,
+#' ltraj object
+#' @param type type of segmentation. Either "home-range" or "behavior". Changes
+#'   default values of arguments order, scale.variable in the different
+#'   functions used on the output. Default for segmentation: "home-range";
+#'   default for segmentation/clustering : "behavior".
+#' @param seg.var for behavioral segmentation: names of the variables used for
+#'   segmentation (either one or two names).
+#' @param diag.var for behavioral segmentation: names of the variables on which
+#'   statistics are calculated.
+#' @param order.var for behavioral segmentation: names of the variable with
+#'   which states are ordered.
+#' @param Kmax maximum number of segments.
+#' @param lmin minimum length of segments.
+#' @param ... additional parameters given to \code{\link{segmentation_internal}}
 #' @inheritParams segmentation.data.frame
 #' @inheritParams segmentation.Move
 #' @inheritParams segmentation.ltraj
 #' @return  a \code{\link{segmentation-class}} object
 #'
 #' @examples
-#' \dontrun{segmentation(data, diag.var=c("dist","angle"),
-#' order.var='dist',type='hmm',hmm.model=mod1.hmm)}
+#' \dontrun{segmentation(data, Kmax = 30, lmin = 10, coord.names = c("x","y"))}
 #' @export
 
-segmentation <- function (x, ...) {
+segmentation <- function(x, ...) {
   UseMethod("segmentation", x)
 }
 
@@ -138,17 +149,20 @@ segmentation.ltraj <- function(x, Kmax, lmin, type = "home-range", seg.var = NUL
 #' @param scale.variable should variables be standardized ? (reduced and centered)
 #' @param subsample_over over which size should subsampling begin (depending on
 #'   speed and memory limitations)
+#' @param ... additionnal parameters given to \link{chooseseg_lavielle}
 #' @inheritParams segmentation
+#'
 #' @inheritParams chooseseg_lavielle
+#' @export
 
-segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = NULL, Kmax, lmin = NULL, dat=NULL, S=0.75, type=NULL, sameSigma = F, subsample_over = 10000){
+segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = NULL, Kmax, lmin = NULL, dat=NULL, type=NULL, sameSigma = F, subsample_over = 10000, ...){
 
 
 
   x_nrow <- nrow(x)
   if(missing(Kmax)){
     Kmax = floor(x_nrow/lmin)
-    message(paste("Unspecified Kmax, taking maximum possible value : Kmax = ",Kmax,". Think about reducing Kmax if running is too slow"))
+    message(paste("Unspecified Kmax, taking maximum possible value: Kmax = ",Kmax,". Think about reducing Kmax if running is too slow"))
   }
   tmp <- subsample(x,subsample_over)
   x <- tmp$x
@@ -182,7 +196,7 @@ segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var 
   })
 
   names(outputs) <- paste(1:Kmax, "segments")
-  output_lavielle <- chooseseg_lavielle(res.DynProg$J.est,S=S)
+  output_lavielle <- chooseseg_lavielle(res.DynProg$J.est, ...)
   # stationarity = test_stationarity(dat,outputs,Kmax)
   # seg_var = test_var(dat,outputs,Kmax)
   # seg_mean = test_mean(dat,outputs,Kmax)

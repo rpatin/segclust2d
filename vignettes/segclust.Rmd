@@ -48,7 +48,7 @@ identify behavioural modes. Input data can be a `data.frame` (shown in the first
 ### Segmentation
 
 ```{r, fig.show='hold'}
-# library(segtools)
+library(segtools)
 data(simulshift)
 ```
 

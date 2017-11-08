@@ -1,10 +1,9 @@
-#' Plot map of segmentation
 #'
 #' \code{plot_segm} plot segmented traject on a map.
 #' @param data the data.frame with the different variable
 #' @param output outputs of the segmentation  or segclust algorithm for one
 #'   number of segment
-#' @param interactive should graph be interactive through leaflet ?
+#' @param interactive should graph be interactive with leaflet ?
 #' @param html should the graph be incorporated in a markdown file through
 #'   htmltools::tagList()
 #' @param order should cluster be ordered
@@ -12,7 +11,7 @@
 #' @param height height
 #' @param width width
 #' @param linesize size of lines
-#' @param scale scaling paremeters to represent data with leaflet
+#' @param scale for dividing coordinates to have compatibility with leaflet
 #' @param UTMstring projection of the coordinates
 #' @param coord.names names of coordinates
 #' @return a graph
@@ -23,7 +22,7 @@
 #' @importFrom magrittr "%>%"
 #' @export
 
-map_segm <- function(data,output,interactive=F,html=F, scale=100,
+map_segm <- function(data,output,interactive=F,html=F, scale=1,
                      UTMstring="+proj=longlat +datum=WGS84 +no_defs",
                      width=400,height=400,order=NULL,pointsize = 1, linesize = 0.5, coord.names = c("x","y")){
   # print("test")

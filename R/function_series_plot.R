@@ -10,12 +10,8 @@
 #' @param x_col column name for time
 #' @return a graph
 #'
-#' @examples
-#' \dontrun{stat_segm(data,diag.var=c("dist","angle"), order.var='dist',
-#' type='hmm',hmm.model=mod1.hmm)}
 #' @importFrom magrittr "%>%"
 #' @export
-# plot_segm(subdf2,outputs,separate=T,interactive=T,diag.var=diag.var,x_col='date')
 
 plot_segm <- function(data,output,interactive=F,diag.var,x_col="expectTime",html=F,order=F){
   # if(class(df.states) != "list"){

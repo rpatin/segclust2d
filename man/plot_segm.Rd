@@ -28,7 +28,3 @@ a graph
 \description{
 \code{plot_segm} plot segmented time serie.
 }
-\examples{
-\dontrun{stat_segm(data,diag.var=c("dist","angle"), order.var='dist',
-type='hmm',hmm.model=mod1.hmm)}
-}

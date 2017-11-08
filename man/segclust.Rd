@@ -9,36 +9,44 @@
 \usage{
 segclust(x, ...)
 
-\method{segclust}{data.frame}(x, Kmax, lmin, ncluster, type = "home-range",
+\method{segclust}{data.frame}(x, Kmax, lmin, ncluster, type = "behavior",
   seg.var = NULL, diag.var = seg.var, order.var = seg.var[1],
   coord.names = c("x", "y"), ...)
 
-\method{segclust}{Move}(x, Kmax, lmin, ncluster, type = "home-range",
+\method{segclust}{Move}(x, Kmax, lmin, ncluster, type = "behavior",
   seg.var = NULL, diag.var = seg.var, order.var = seg.var[1],
   coord.names = c("x", "y"), ...)
 
-\method{segclust}{ltraj}(x, Kmax, lmin, ncluster, type = "home-range",
+\method{segclust}{ltraj}(x, Kmax, lmin, ncluster, type = "behavior",
   seg.var = NULL, diag.var = seg.var, order.var = seg.var[1],
   coord.names = c("x", "y"), ...)
 }
 \arguments{
-\item{x}{data used for segmentation. Supported : data.frame, 2-columns matrix, move object, ltraj object}
+\item{x}{data used for segmentation. Supported: data.frame, Move object,
+ltraj object}
 
-\item{...}{additional parameters}
+\item{...}{additional parameters given to \code{\link{segclust_internal}}.}
 
-\item{Kmax}{maximum number of segments. Default to 10.}
+\item{Kmax}{maximum number of segments.}
 
-\item{lmin}{minimum size of segments. Default to length of time series/Kmax/2.}
+\item{lmin}{minimum length of segments.}
 
-\item{ncluster}{number or list of cluster to be chosen.}
+\item{ncluster}{number of cluster into which segments should be grouped. Can
+be a vector if one want to test several number of clusters.}
 
-\item{type}{type of segmentation. Either "home-range" or "behavior"}
+\item{type}{type of segmentation. Either "home-range" or "behavior". Changes
+default values of arguments order, scale.variable in the different
+functions used on the output. Default for segmentation: "home-range";
+default for segmentation/clustering : "behavior".}
 
-\item{seg.var}{for behavioral segmentation : names of the variables used for segmentation (either one or two names)}
+\item{seg.var}{for behavioral segmentation: names of the variables used for
+segmentation (either one or two names).}
 
-\item{diag.var}{for behavioral segmentation : names of the variables on which statistics are calculated}
+\item{diag.var}{for behavioral segmentation: names of the variables on which
+statistics are calculated.}
 
-\item{order.var}{for behavioral segmentation : names of the variable with which states are ordered}
+\item{order.var}{for behavioral segmentation: names of the variable with
+which states are ordered.}
 
 \item{coord.names}{for home-range segmentation and data.frame, names of coordinates. Default x and y. Not needed for move and ltraj objects}
 }
@@ -46,7 +54,12 @@ segclust(x, ...)
 a \code{\link{segmentation-class}} object
 }
 \description{
-Joint Segmentation/Clustering of movement data. Method available for data.frame, move and ltraj object
+Joint Segmentation/Clustering of movement data. Method available for
+data.frame, move and ltraj objects. The algorithm finds the optimal
+segmentation for a given number of cluster and segments using an iterated
+alternation of a Dynamic Programming algorithm and an
+Expectation-Maximization algorithm. Among the different segmentation found,
+the best one can be chosen using the maximum of a BIC penalized likelihood.
 
 Segmentation/Clustering function for data.frame
 
@@ -55,6 +68,6 @@ Segmentation/Clustering function for move objects
 Segmentation/Clustering function for ltraj objects
 }
 \examples{
-\dontrun{segmentation(data, diag.var = c("dist","angle"),
-order.var='dist',type='hmm',hmm.model=mod1.hmm)}
+\dontrun{segclust(data, Kmax = 20, lmin = 10, ncluster = 2:4, seg.var =
+c("dist","angle"))}
 }

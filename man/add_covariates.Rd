@@ -2,17 +2,25 @@
 % Please edit documentation in R/prepare_covariates.R
 \name{add_covariates}
 \alias{add_covariates}
-\title{Add several covariates to movement observations
-\code{add_covariates} add several covariates to a data frame with movement
-information. It adds : distance between location, spatial angle, speed,
-smoothed speed, persistence and rotation velocity (calculated with spatial
-angle).}
+\alias{add_covariates.Move}
+\alias{add_covariates.ltraj}
+\alias{add_covariates.data.frame}
+\title{Covariate Calculations}
 \usage{
-add_covariates(x, coord.names = c("x", "y"), smoothed = F,
-  timecol = "dateTime", units = "hour", radius = NULL)
+add_covariates(x, ...)
+
+\method{add_covariates}{Move}(x, coord.names = c("x", "y"), ...)
+
+\method{add_covariates}{ltraj}(x, coord.names = c("x", "y"), ...)
+
+\method{add_covariates}{data.frame}(x, coord.names = c("x", "y"),
+  smoothed = F, timecol = "dateTime", units = "hour", radius = NULL,
+  ...)
 }
 \arguments{
-\item{x}{data.frame with locations}
+\item{x}{movement data}
+
+\item{...}{additional arguments}
 
 \item{coord.names}{names of coordinates column in \code{x}}
 
@@ -25,7 +33,7 @@ add_covariates(x, coord.names = c("x", "y"), smoothed = F,
 \item{radius}{for spatial angle calculations}
 }
 \value{
-data.frame increased with
+data.frame with additional covariates
 }
 \description{
 Add several covariates to movement observations
@@ -33,10 +41,15 @@ Add several covariates to movement observations
 information. It adds : distance between location, spatial angle, speed,
 smoothed speed, persistence and rotation velocity (calculated with spatial
 angle).
+
+add_covariates method for Move object
+
+add_covariates method for ltraj object
+
+add_covariates method for data.frame
 }
 \examples{
+\dontrun{add_covariates(move_object, coord.names = c("x","y"), smoothed = T)}
+\dontrun{add_covariates(ltraj_object, coord.names = c("x","y"), smoothed = T)}
 \dontrun{calc_dist(df,coord.names = c("x","y"), smoothed = T)}
-}
-\author{
-Remi Patin
 }

@@ -24,7 +24,8 @@ Imports:
     grDevices,
     graphics,
     stats,
-    utils
+    utils,
+    scales
 Suggests:
     knitr,
     rmarkdown,

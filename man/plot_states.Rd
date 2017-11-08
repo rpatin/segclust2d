@@ -22,6 +22,5 @@ a graph
 \code{plot_states} plot states statistics
 }
 \examples{
-\dontrun{stat_segm(data,diag.var = c("dist","angle"), order.var='dist',
-type='hmm',hmm.model=mod1.hmm)}
+\dontrun{plot_states(data_segm)}
 }

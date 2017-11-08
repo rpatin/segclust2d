@@ -9,9 +9,9 @@
 \usage{
 segmentation(x, ...)
 
-\method{segmentation}{data.frame}(x, Kmax, lmin, type = "home-range",
-  seg.var = NULL, diag.var = seg.var, order.var = seg.var[1],
-  coord.names = c("x", "y"), ...)
+\method{segmentation}{data.frame}(x, Kmax, lmin, type = "home-range", seg.var,
+  diag.var = seg.var, order.var = seg.var[1], coord.names = c("x", "y"),
+  ...)
 
 \method{segmentation}{Move}(x, Kmax, lmin, type = "home-range",
   seg.var = NULL, diag.var = seg.var, order.var = seg.var[1],
@@ -22,21 +22,28 @@ segmentation(x, ...)
   coord.names = c("x", "y"), ...)
 }
 \arguments{
-\item{x}{data used for segmentation. Supported : data.frame, 2-columns matrix, move object, ltraj object}
+\item{x}{data used for segmentation. Supported: data.frame, Move object,
+ltraj object}
 
-\item{...}{additional parameters}
+\item{...}{additional parameters given to \code{\link{segmentation_internal}}}
 
-\item{Kmax}{maximum number of segments. Default to 10.}
+\item{Kmax}{maximum number of segments.}
 
-\item{lmin}{minimum size of segments. Default to length of time series/Kmax/2.}
+\item{lmin}{minimum length of segments.}
 
-\item{type}{type of segmentation. Either "home-range" or "behavior"}
+\item{type}{type of segmentation. Either "home-range" or "behavior". Changes
+default values of arguments order, scale.variable in the different
+functions used on the output. Default for segmentation: "home-range";
+default for segmentation/clustering : "behavior".}
 
-\item{seg.var}{for behavioral segmentation : names of the variables used for segmentation (either one or two names)}
+\item{seg.var}{for behavioral segmentation: names of the variables used for
+segmentation (either one or two names).}
 
-\item{diag.var}{for behavioral segmentation : names of the variables on which statistics are calculated}
+\item{diag.var}{for behavioral segmentation: names of the variables on which
+statistics are calculated.}
 
-\item{order.var}{for behavioral segmentation : names of the variable with which states are ordered}
+\item{order.var}{for behavioral segmentation: names of the variable with
+which states are ordered.}
 
 \item{coord.names}{for home-range segmentation and data.frame, names of coordinates. Default x and y. Not needed for move and ltraj objects}
 }
@@ -44,7 +51,11 @@ segmentation(x, ...)
 a \code{\link{segmentation-class}} object
 }
 \description{
-Segmentation of movement data. No clustering. Method available for data.frame,  move and ltraj object
+Segmentation of movement data. No clustering. Method available for
+data.frame,  move and ltraj object. The algorithm finds for each number of
+segment the optimal segmentation using a Dynamic Programming approach. The
+number of segment is then chosen using Lavielle's (2005) procedure based on
+locating rupture in the penalized likelihood.
 
 Segmentation function for data.frame
 
@@ -53,6 +64,5 @@ Segmentation function for move objects
 Segmentation function for ltraj objects
 }
 \examples{
-\dontrun{segmentation(data, diag.var=c("dist","angle"),
-order.var='dist',type='hmm',hmm.model=mod1.hmm)}
+\dontrun{segmentation(data, Kmax = 30, lmin = 10, coord.names = c("x","y"))}
 }

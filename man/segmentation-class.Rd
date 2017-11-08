@@ -19,7 +19,7 @@
 \usage{
 \method{print}{segmentation}(x, max.level = 1, ...)
 
-\method{plot}{segmentation}(x, nseg = NULL, nclass = NULL,
+\method{plot}{segmentation}(x, nseg = NULL, ncluster = NULL,
   interactive = F, xcol = "indice", order, ...)
 
 \method{likelihood}{segmentation}(x, ...)
@@ -34,16 +34,16 @@ plot_BIC(x)
 
 \method{BIC}{segmentation}(object, ...)
 
-stateplot(x, nseg = NULL, nclass = NULL, order = NULL)
+stateplot(x, nseg = NULL, ncluster = NULL, order = NULL)
 
-states(x, nseg = NULL, nclass = NULL)
+states(x, nseg = NULL, ncluster = NULL)
 
-segment(x, nseg = NULL, nclass = NULL)
+segment(x, nseg = NULL, ncluster = NULL)
 
-\method{augment}{segmentation}(x, nseg = NULL, nclass = NULL,
+\method{augment}{segmentation}(x, nseg = NULL, ncluster = NULL,
   colname_state = "state", ...)
 
-segmap(x, interactive = F, nseg = NULL, nclass = NULL, html = F,
+segmap(x, interactive = F, nseg = NULL, ncluster = NULL, html = F,
   scale = 100, width = 400, height = 400, order = NULL, pointsize = 1,
   linesize = 0.5, ...)
 }
@@ -57,7 +57,7 @@ segmap(x, interactive = F, nseg = NULL, nclass = NULL, html = F,
 
 \item{nseg}{number of segment chosen}
 
-\item{nclass}{number of classes chosen}
+\item{ncluster}{number of classes chosen}
 
 \item{interactive}{whether plot are interactive (dygraphs/leaflet) or not (ggplot2)}
 
@@ -72,12 +72,11 @@ segmap(x, interactive = F, nseg = NULL, nclass = NULL, html = F,
 \item{html}{whether htmltools::tagList should be applied on the returned object
 object for integrating in html pages}
 
-\item{scale}{for dividing coordinates so that it works with leaflet
-(interpreting latitude/longitude)}
+\item{scale}{for dividing coordinates to have compatibility with leaflet}
 
-\item{width}{for leaflet map}
+\item{width}{width}
 
-\item{height}{for leaflet map}
+\item{height}{height}
 
 \item{pointsize}{size of points}
 
@@ -115,4 +114,5 @@ segmentation/clustering has been run.
 \code{augment.segmentation} return data.frame with original data and state information of a \code{segmentation} object
 
 \code{segmap} create maps with object of \code{segmentation} class
+  (interpreting latitude/longitude)
 }

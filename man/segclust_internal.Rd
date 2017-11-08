@@ -6,38 +6,43 @@
 \usage{
 segclust_internal(x, seg.var = NULL, diag.var = NULL, order.var = NULL,
   scale.variable = NULL, Kmax, ncluster = NULL, lmin = NULL, dat = NULL,
-  S = 0.75, type = NULL, sameSigma = F, subsample_over = 1000, ...)
+  type = NULL, sameSigma = F, subsample_over = 1000, ...)
 }
 \arguments{
-\item{x}{data used for segmentation. Supported : data.frame, 2-columns matrix, move object, ltraj object}
+\item{x}{data used for segmentation. Supported: data.frame, Move object,
+ltraj object}
 
-\item{seg.var}{for behavioral segmentation : names of the variables used for segmentation (either one or two names)}
+\item{seg.var}{for behavioral segmentation: names of the variables used for
+segmentation (either one or two names).}
 
-\item{diag.var}{for behavioral segmentation : names of the variables on which statistics are calculated}
+\item{diag.var}{for behavioral segmentation: names of the variables on which
+statistics are calculated.}
 
-\item{order.var}{for behavioral segmentation : names of the variable with which states are ordered}
+\item{order.var}{for behavioral segmentation: names of the variable with
+which states are ordered.}
 
 \item{scale.variable}{should variables be standardized ? (reduced and centered)}
 
-\item{Kmax}{maximum number of segments. Default to 10.}
+\item{Kmax}{maximum number of segments.}
 
-\item{ncluster}{number or list of cluster to be chosen.}
+\item{ncluster}{number of cluster into which segments should be grouped. Can
+be a vector if one want to test several number of clusters.}
 
-\item{lmin}{minimum size of segments. Default to length of time series/Kmax/2.}
+\item{lmin}{minimum length of segments.}
 
 \item{dat}{bivariate data (one signal per row)}
 
-\item{S}{threshold for choosing the number of segment. See
-adehabitatLT::chooseseg}
-
-\item{type}{type of segmentation. Either "home-range" or "behavior"}
+\item{type}{type of segmentation. Either "home-range" or "behavior". Changes
+default values of arguments order, scale.variable in the different
+functions used on the output. Default for segmentation: "home-range";
+default for segmentation/clustering : "behavior".}
 
 \item{sameSigma}{does segments have same variance ?}
 
 \item{subsample_over}{over which size should subsampling begin (depending on
 speed and memory limitations)}
 
-\item{...}{additional parameters}
+\item{...}{additional arguments given to \code{\link{chooseseg_lavielle}}}
 }
 \description{
 Internal segmentation/clustering function

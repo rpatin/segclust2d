@@ -28,7 +28,7 @@
 #'   \item{speed}{smoothed speed}
 #'   \item{spatial_angle}{angle at constant step length}
 #'   \item{dist}{raw speed}
-#'   \item{angle}{angular speed}
+#'   \item{angle2}{angular speed}
 #'   \item{vit_p}{persistence speed}
 #'   \item{vit_r}{rotation speed}
 #'   \item{vit_p_spa}{persistence speed calculated with spatial angles}

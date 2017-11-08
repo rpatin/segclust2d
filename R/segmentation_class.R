@@ -329,9 +329,6 @@ augment.segmentation<- function(x,nseg = NULL,ncluster=NULL,colname_state = "sta
 
 
 #' \code{segmap} create maps with object of \code{segmentation} class
-#' @param width for leaflet map
-#' @param height for leaflet map
-#' @param scale for dividing coordinates so that it works with leaflet
 #'   (interpreting latitude/longitude)
 #' @rdname segmentation-class
 #' @inheritParams map_segm

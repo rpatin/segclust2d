@@ -8,8 +8,7 @@
 #' @return a graph
 #'
 #' @examples
-#' \dontrun{stat_segm(data,diag.var = c("dist","angle"), order.var='dist',
-#' type='hmm',hmm.model=mod1.hmm)}
+#' \dontrun{plot_states(data_segm)}
 #' @export
 
 plot_states <- function(outputs,diag.var, position_width=0.3,order = F){
