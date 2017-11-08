@@ -1,3 +1,78 @@
+#' Generic function for add_covariates
+#'
+#' @param x object to be augmented
+#' @param ... additional arguments
+#' @export
+
+add_covariates <- function (x, ...) {
+  UseMethod("add_covariates", x)
+}
+
+
+#' Add several covariates to movement observations - For Move object
+#' \code{add_covariates} add several covariates to a data frame with movement
+#' information. It adds : distance between location, spatial angle, speed,
+#' smoothed speed, persistence and rotation velocity (calculated with spatial
+#' angle).
+#' @param x data.frame with locations
+#' @param coord.names names of coordinates column in \code{x}
+#' @param ... additional arguments to be passed to
+#'   \link{add_covariates.data.frame}
+#' @return data.frame increased with
+#'
+#' @examples
+#' \dontrun{calc_dist(df,coord.names = c("x","y"), smoothed = T)}
+#' @export
+#' @author Remi Patin
+
+add_covariates.Move <- function(x, coord.names = c("x","y"), ...){
+  if(!requireNamespace("move", quietly = TRUE))
+    stop("move package required for calling segclust on a Move object.")
+  if(!requireNamespace("sp", quietly = TRUE))
+    stop("sp package required for calling segclust (home-range) on a Move object.")
+  x.dat <- x@data
+    if(! all(coord.names %in% colnames(x.dat))){
+    dat <- data.frame(sp::coordinates(x))
+    colnames(dat) <- coord.names
+    x.dat <- cbind(dat,x.dat)
+  }
+  add_covariates.data.frame(x.dat, coord.names = coord.names, ...)
+}
+
+#' Add several covariates to movement observations - For ltraj object
+#' \code{add_covariates} add several covariates to a data frame with movement
+#' information. It adds : distance between location, spatial angle, speed,
+#' smoothed speed, persistence and rotation velocity (calculated with spatial
+#' angle).
+#' @param x data.frame with locations
+#' @param coord.names names of coordinates column in \code{x}
+#' @param ... additional arguments to be passed to
+#'   \link{add_covariates.data.frame}
+#' @return data.frame increased with
+#'
+#' @examples
+#' \dontrun{calc_dist(df,coord.names = c("x","y"), smoothed = T)}
+#' @export
+#' @author Remi Patin
+
+add_covariates.ltraj <- function(x, coord.names = c("x","y"), ...){
+  if(!requireNamespace("adehabitatLT", quietly = TRUE))
+    stop("adehabitatLT package required for calling segclust on a ltraj object.")
+
+
+  x.dat <- adehabitatLT::infolocs(x)[[1]]
+
+  if(! all(coord.names %in% colnames(x.dat))){
+    tmp <- x[[1]]
+    if(any(is.na(tmp$x))) stop("Please filter NA from ltraj object")
+    dat <- data.frame(cbind(tmp$x,tmp$y))
+    colnames(dat) <- coord.names
+    x.dat <- cbind(dat,x.dat)
+  }
+  add_covariates.data.frame(x.dat, coord.names = coord.names, ...)
+}
+
+
 #' Add several covariates to movement observations
 #' \code{add_covariates} add several covariates to a data frame with movement
 #' information. It adds : distance between location, spatial angle, speed,
@@ -17,7 +92,7 @@
 #' @author Remi Patin
 
 
-add_covariates <- function(x, coord.names = c("x","y"), smoothed = F, timecol = "dateTime", units = "hour", radius = NULL){
+add_covariates.data.frame <- function(x, coord.names = c("x","y"), smoothed = F, timecol = "dateTime", units = "hour", radius = NULL){
   if(any(is.na(x[,timecol]))) stop("time should not contain NA")
   if(any(is.na(x[,coord.names[1]]))) stop("x should not contain NA")
   if(any(is.na(x[,coord.names[2]]))) stop("y should not contain NA")
@@ -31,7 +106,7 @@ add_covariates <- function(x, coord.names = c("x","y"), smoothed = F, timecol = 
   x_ang_spa <- spatial_angle(x, coord.names = coord.names, radius = radius)
   x_vit_p <- x_speed*cos(x_ang_spa)
   x_vit_r <- x_speed*sin(x_ang_spa)
-
+  x$angular_speed <- angular_speed(x, coord.names = coord.names)
   x$dist <- x_dist
   x$dist_smoothed <- x_dist_smoothed
   x$speed <- x_speed
@@ -110,8 +185,8 @@ calc_speed <- function(x, coord.names = c("x","y"), timecol = "dateTime", smooth
 
 spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
   tmpdist = calc_dist(x, coord.names = coord.names)
-  x <- x[,coord.names[1]]
-  y <- x[,coord.names[2]]
+  xx <- x[,coord.names[1]]
+  yy <- x[,coord.names[2]]
   if(is.null(radius)) radius <- stats::median(tmpdist,na.rm=T)
   radius2 <- radius^2
   ri2 <- 0.998*radius2
@@ -129,25 +204,25 @@ spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
       j <- j+1
       dxp <- dxs
       dyp <- dys
-      dxs <- x[i] - x[j]
-      dys <- y[i] - y[j]
+      dxs <- xx[i] - xx[j]
+      dys <- yy[i] - yy[j]
       d2 <- dxs^2+dys^2
     }
     if (d2>ri2){
       # interpolation if needed (no interpolation if points fall between ri and re)
       if (d2<re2){
-        xinter <- x[j]
-        yinter <- y[j]
+        xinter <- xx[j]
+        yinter <- yy[j]
       } else {
-        c <- (x[j]-x[j-1])/tmpdist[j-1] # cosinus
-        s <- (y[j]-y[j-1])/tmpdist[j-1] # sinus
+        c <- (xx[j]-xx[j-1])/tmpdist[j-1] # cosinus
+        s <- (yy[j]-yy[j-1])/tmpdist[j-1] # sinus
         rd <- ( dxp*c + dyp*s+ sqrt( radius2-(dyp*c-dxp*s)^2 ) )/tmpdist[j-1] # attention au changement de repere.
         ard <- 1-rd
-        xinter <- x[j-1]*ard+x[j]*rd
-        yinter <- y[j-1]*ard+y[j]*rd
+        xinter <- xx[j-1]*ard+xx[j]*rd
+        yinter <- yy[j-1]*ard+yy[j]*rd
       }
-      cs <- xinter-x[i]
-      ss <- yinter-y[i]
+      cs <- xinter-xx[i]
+      ss <- yinter-yy[i]
     } else {
       flag = F
     }
@@ -157,25 +232,25 @@ spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
       j <- j-1
       dxp <- dxs
       dyp <- dys
-      dxs <- x[i] - x[j]
-      dys <- y[i] - y[j]
+      dxs <- xx[i] - xx[j]
+      dys <- yy[i] - yy[j]
       d2 <- dxs^2+dys^2
     }
     if (d2>ri2){
       #interpolation
       if (d2<re2){
-        xinter <- x[j]
-        yinter <- y[j]
+        xinter <- xx[j]
+        yinter <- yy[j]
       } else {
-        c <- (x[j]-x[j+1])/tmpdist[j] # cosinus
-        s <- (y[j]-y[j+1])/tmpdist[j] # sinus
+        c <- (xx[j]-xx[j+1])/tmpdist[j] # cosinus
+        s <- (yy[j]-yy[j+1])/tmpdist[j] # sinus
         rd <- (dxp*c+dyp*s+sqrt(radius2-(dyp*c-dxp*s)^2))/tmpdist[j] # attention au changement de repere.
         ard <- 1-rd
-        xinter <- x[j+1]*ard+x[j]*rd
-        yinter <- y[j+1]*ard+y[j]*rd
+        xinter <- xx[j+1]*ard+xx[j]*rd
+        yinter <- yy[j+1]*ard+yy[j]*rd
       }
-      cp <- x[i]-xinter
-      sp <- y[i]-yinter
+      cp <- xx[i]-xinter
+      sp <- yy[i]-yinter
     } else {
       flag = F
     }
@@ -188,4 +263,28 @@ spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
   }
   angle_spa <- c(angle_spa,NA)
   return(angle_spa)
+}
+
+#' Calculate angular speed along a trajectory
+#'
+#' \code{spatial_angle} calculate turning angle between locations, taking a
+#' dataframe as input.
+#' @param x data.frame with locations
+#' @param coord.names names of coordinates column in \code{x}
+#' @return vector of turning angle.
+#'
+#' @examples
+#' \dontrun{calc_speed(df,coord.names = c("x","y"), timecol = "dateTime", smoothed = T)}
+#' @export
+#' @author Remi Patin, Simon Benhamou.
+
+
+angular_speed <- function(x, coord.names = c("x","y")){
+  xx <- diff(x[,coord.names[1]])
+  yy <- diff(x[,coord.names[2]])
+  b<-sign(xx)
+  b[b==0] <- 1  #corrects for the fact that sign(0) == 0
+  bearings <- b*(yy<0)*pi+atan(xx/yy)
+
+  c(NA,diff(bearings),NA)
 }

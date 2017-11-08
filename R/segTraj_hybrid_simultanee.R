@@ -64,7 +64,7 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
 
     for (K in Kmin:Kmax){
 
-      cat("P",P,"K", K ,"\n")
+      # cat("P",P,"K", K ,"\n")
       j      = 0
       delta  = Inf
       empty  = 0
@@ -173,8 +173,8 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
 
   if(lissage){
     Ltmp= rep(-Inf,Kmax)
-    graphics::plot(1:length(Linc),Linc,col=1)
-    cat("tracking local maxima for P =",P,"\n")
+    # graphics::plot(1:length(Linc),Linc,col=1)
+    # cat("tracking local maxima for P =",P,"\n")
 
     while (sum(Ltmp!=Linc)>=1) {
       #    # find the convex hull of the likelihood
@@ -225,7 +225,7 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
 
         param          = out.neighbors$param
         Linc           = out.neighbors$L
-        graphics::lines(1:length(Ltmp),Ltmp,col=2)
+        # graphics::lines(1:length(Ltmp),Ltmp,col=2)
       } # end k
       #out.neighbors  = neighbors(x=x, L=Linc,k=Kmax,param=param,P=P,lmin=lmin, eps,sameSigma)
       #param          = out.neighbors$param
