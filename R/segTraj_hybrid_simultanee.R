@@ -64,7 +64,7 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
 
     for (K in Kmin:Kmax){
 
-      # cat("P",P,"K", K ,"\n")
+      message("Segmenting",P,"class")
       j      = 0
       delta  = Inf
       empty  = 0
