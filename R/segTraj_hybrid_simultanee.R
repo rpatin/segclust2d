@@ -61,10 +61,10 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
     G      = Gmean_simultanee(x,5,sameVar = sameVar.init)
     out    = DynProg(G,Kmax=Kmax)
 
+    message("Segmenting - ", P, " class")
 
     for (K in Kmin:Kmax){
 
-      message("Segmenting",P,"class")
       j      = 0
       delta  = Inf
       empty  = 0
@@ -172,6 +172,8 @@ hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALS
   #
 
   if(lissage){
+
+    message("Smoothing  - ", P, " class")
     Ltmp= rep(-Inf,Kmax)
     # graphics::plot(1:length(Linc),Linc,col=1)
     # cat("tracking local maxima for P =",P,"\n")

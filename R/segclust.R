@@ -146,7 +146,7 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
 
   dat <- dat[,!is.na(x$subsample_ind)]
   if(missing(scale.variable)){
-    warning("Rescaling variables")
+    message("Rescaling variables")
     scale.variable <- T
   }
 
@@ -158,7 +158,7 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
 
   lmin <- floor(lmin/subsample_by)
   if(subsample_by > 1){
-    warning(paste("Adjusting lmin to subsampling. New lmin divided by",subsample_by,"and set to",lmin,"."))
+    message(paste("Adjusting lmin to subsampling. New lmin divided by",subsample_by,"and set to",lmin,"."))
   }
   if(lmin < 1){
     stop("lmin should be > 1")

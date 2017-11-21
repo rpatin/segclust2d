@@ -13,7 +13,7 @@
 #' @importFrom magrittr "%>%"
 #' @export
 
-plot_segm <- function(data,output,interactive=F,diag.var,x_col="expectTime",html=F,order=F){
+plot_segm <- function(data, output, interactive=F, diag.var, x_col="expectTime", html=F, order=F, stationarity = F){
   # if(class(df.states) != "list"){
   #   df.states <- list(df.states)
   # }
@@ -32,6 +32,29 @@ plot_segm <- function(data,output,interactive=F,diag.var,x_col="expectTime",html
   data.melt <- reshape2::melt(data,measure.vars = diag.var)
   segmentation$begin_date <- data[segmentation$begin,x_col]
   segmentation$end_date <- data[segmentation$end,x_col]
+  if(stationarity){
+    df_stat <- NULL
+    for(seg in 1:nrow(df.segm)){
+      if(df.segm[seg,'end']-df.segm[seg,'begin'] < 3){
+        df_stat <- rbind(df_stat,df.segm[seg,])
+      } else {
+        tmp <- rbind(df.segm[seg,],df.segm[seg,],df.segm[seg,])
+        begin <- df.segm[seg,'begin']
+        end <- df.segm[seg,'end']
+        tmp$end[1] <- begin + round((end-begin) / 3) - 1
+        tmp$begin[2] <- begin + round((end-begin) / 3)
+        tmp$end[2] <- begin + round((end-begin) * 2 / 3) -1
+        tmp$begin[3] <- begin + round((end-begin) * 2 / 3)
+        df_stat <- rbind(df_stat,tmp)
+      }
+    }
+    df_stat$state <- 1:nrow(df_stat)
+    df_stat_states <- calc_stat_states(data,df_stat,diag.var = diag.var, order.var = diag.var[1])
+    prepMu_stat <- find_mu_sd(df_stat_states,diag.var)
+    segmentation_stat <- dplyr::left_join(df_stat,prepMu_stat, by = c("state"))
+    segmentation_stat$begin_date <- data[segmentation_stat$begin,x_col]
+    segmentation_stat$end_date <- data[segmentation_stat$end,x_col]
+  }
   # separate = T
   if(!(interactive)){
     # g <-   ggplot2::ggplot(data.melt)+ggplot2::geom_line(ggplot2::aes_string(x=x_col,y="value"))+
@@ -41,11 +64,16 @@ plot_segm <- function(data,output,interactive=F,diag.var,x_col="expectTime",html
 
 
     g <-   ggplot2::ggplot(data.melt)+
-      ggplot2::geom_line(ggplot2::aes_string(x=x_col,y="value"))+
+      ggplot2::geom_line(ggplot2::aes_string(x=x_col,y="value"),col='grey60')+
       ggplot2::facet_wrap(~variable,ncol=1,scales="free_y")+
       ggplot2::geom_rect(data=segmentation,ggplot2::aes_string(xmin="begin_date",xmax="end_date",ymin="mu-sd",ymax="mu+sd",fill=paste("factor(",state_color,")",sep="")),alpha=0.2)+
-      ggplot2::geom_segment(data=segmentation,ggplot2::aes_string(x="begin_date",xend="end_date",y="mu",yend="mu",col=paste("factor(",state_color,")")))
+      ggplot2::geom_segment(data=segmentation,ggplot2::aes_string(x="begin_date",xend="end_date",y="mu",yend="mu",col=paste("factor(",state_color,")")))+
+      ggplot2::theme_bw()
 
+    if(stationarity){
+      g <- g +
+        ggplot2::geom_segment(data=segmentation_stat,ggplot2::aes_string(x="begin_date",xend="end_date",y="mu",yend="mu"),col="black",size = .4)
+    }
     df.label <- data.frame()
 
     return(g)

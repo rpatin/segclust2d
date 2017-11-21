@@ -170,7 +170,7 @@ segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var 
   dat <- dat[,!is.na(x$subsample_ind)]
 
   if(missing(scale.variable) & type == 'behavior'){
-    warning("Rescaling variables")
+    message("Rescaling variables")
     scale.variable <- TRUE
   } else {
     scale.variable <- FALSE
