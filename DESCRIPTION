@@ -1,4 +1,4 @@
-Package: segtools
+Package: segclust2d
 Type: Package
 Title: Bivariate Segmentation/Clustering Methods and Tools
 Version: 0.1.0

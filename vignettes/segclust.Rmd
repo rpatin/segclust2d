@@ -1,5 +1,5 @@
 ---
-title: "segclust package"
+title: "segclust2d package"
 author: "R. Patin"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette

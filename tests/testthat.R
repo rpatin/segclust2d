@@ -1,4 +1,4 @@
 library(testthat)
-library(segtools)
+library(segclust2d)
 
-test_check("segtools")
+test_check("segclust2d")

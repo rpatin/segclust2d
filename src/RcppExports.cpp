@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // DynProg_algo_cpp
 List DynProg_algo_cpp(arma::mat matD, int Kmax);
-RcppExport SEXP _segtools_DynProg_algo_cpp(SEXP matDSEXP, SEXP KmaxSEXP) {
+RcppExport SEXP _segclust2d_DynProg_algo_cpp(SEXP matDSEXP, SEXP KmaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -20,7 +20,7 @@ END_RCPP
 }
 // logdens_simultanee_cpp
 NumericVector logdens_simultanee_cpp(arma::mat xk, arma::mat mu, arma::mat sigma, arma::vec prop);
-RcppExport SEXP _segtools_logdens_simultanee_cpp(SEXP xkSEXP, SEXP muSEXP, SEXP sigmaSEXP, SEXP propSEXP) {
+RcppExport SEXP _segclust2d_logdens_simultanee_cpp(SEXP xkSEXP, SEXP muSEXP, SEXP sigmaSEXP, SEXP propSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -34,7 +34,7 @@ END_RCPP
 }
 // apply_rowSums
 arma::mat apply_rowSums(arma::mat rupt, arma::mat x);
-RcppExport SEXP _segtools_apply_rowSums(SEXP ruptSEXP, SEXP xSEXP) {
+RcppExport SEXP _segclust2d_apply_rowSums(SEXP ruptSEXP, SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -46,7 +46,7 @@ END_RCPP
 }
 // colsums_sapply
 arma::mat colsums_sapply(int i, arma::mat rupt, arma::mat x, arma::mat mu, arma::mat tau);
-RcppExport SEXP _segtools_colsums_sapply(SEXP iSEXP, SEXP ruptSEXP, SEXP xSEXP, SEXP muSEXP, SEXP tauSEXP) {
+RcppExport SEXP _segclust2d_colsums_sapply(SEXP iSEXP, SEXP ruptSEXP, SEXP xSEXP, SEXP muSEXP, SEXP tauSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -61,7 +61,7 @@ END_RCPP
 }
 // arma_repmat
 arma::mat arma_repmat(arma::mat A, int n, int m);
-RcppExport SEXP _segtools_arma_repmat(SEXP ASEXP, SEXP nSEXP, SEXP mSEXP) {
+RcppExport SEXP _segclust2d_arma_repmat(SEXP ASEXP, SEXP nSEXP, SEXP mSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -74,7 +74,7 @@ END_RCPP
 }
 // Gmixt_algo_cpp
 arma::mat Gmixt_algo_cpp(arma::vec zi, arma::vec lgi, int P, arma::vec mvec, arma::vec wk, arma::vec svec, arma::vec prop);
-RcppExport SEXP _segtools_Gmixt_algo_cpp(SEXP ziSEXP, SEXP lgiSEXP, SEXP PSEXP, SEXP mvecSEXP, SEXP wkSEXP, SEXP svecSEXP, SEXP propSEXP) {
+RcppExport SEXP _segclust2d_Gmixt_algo_cpp(SEXP ziSEXP, SEXP lgiSEXP, SEXP PSEXP, SEXP mvecSEXP, SEXP wkSEXP, SEXP svecSEXP, SEXP propSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -91,7 +91,7 @@ END_RCPP
 }
 // Gmixt_simultanee_fullcpp
 arma::mat Gmixt_simultanee_fullcpp(arma::mat Don, int lmin, arma::rowvec prop, arma::mat mu, arma::mat s);
-RcppExport SEXP _segtools_Gmixt_simultanee_fullcpp(SEXP DonSEXP, SEXP lminSEXP, SEXP propSEXP, SEXP muSEXP, SEXP sSEXP) {
+RcppExport SEXP _segclust2d_Gmixt_simultanee_fullcpp(SEXP DonSEXP, SEXP lminSEXP, SEXP propSEXP, SEXP muSEXP, SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -106,17 +106,17 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_segtools_DynProg_algo_cpp", (DL_FUNC) &_segtools_DynProg_algo_cpp, 2},
-    {"_segtools_logdens_simultanee_cpp", (DL_FUNC) &_segtools_logdens_simultanee_cpp, 4},
-    {"_segtools_apply_rowSums", (DL_FUNC) &_segtools_apply_rowSums, 2},
-    {"_segtools_colsums_sapply", (DL_FUNC) &_segtools_colsums_sapply, 5},
-    {"_segtools_arma_repmat", (DL_FUNC) &_segtools_arma_repmat, 3},
-    {"_segtools_Gmixt_algo_cpp", (DL_FUNC) &_segtools_Gmixt_algo_cpp, 7},
-    {"_segtools_Gmixt_simultanee_fullcpp", (DL_FUNC) &_segtools_Gmixt_simultanee_fullcpp, 5},
+    {"_segclust2d_DynProg_algo_cpp", (DL_FUNC) &_segclust2d_DynProg_algo_cpp, 2},
+    {"_segclust2d_logdens_simultanee_cpp", (DL_FUNC) &_segclust2d_logdens_simultanee_cpp, 4},
+    {"_segclust2d_apply_rowSums", (DL_FUNC) &_segclust2d_apply_rowSums, 2},
+    {"_segclust2d_colsums_sapply", (DL_FUNC) &_segclust2d_colsums_sapply, 5},
+    {"_segclust2d_arma_repmat", (DL_FUNC) &_segclust2d_arma_repmat, 3},
+    {"_segclust2d_Gmixt_algo_cpp", (DL_FUNC) &_segclust2d_Gmixt_algo_cpp, 7},
+    {"_segclust2d_Gmixt_simultanee_fullcpp", (DL_FUNC) &_segclust2d_Gmixt_simultanee_fullcpp, 5},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_segtools(DllInfo *dll) {
+RcppExport void R_init_segclust2d(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

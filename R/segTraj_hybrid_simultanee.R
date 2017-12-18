@@ -37,7 +37,7 @@
 #' Kopt=5
 #' param <- res$param[[Kopt]]
 #' bisig_plot(x = x, rupt = param$rupt, mu=param$phi$mu )
-#' @useDynLib segtools, .registration=TRUE
+#' @useDynLib segclust2d, .registration=TRUE
 #' @importFrom Rcpp sourceCpp
 
 hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALSE,eps=1e-6,lissage=T,pureR = F){
