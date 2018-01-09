@@ -53,7 +53,7 @@ stat_segm <- function(data, diag.var, order.var = NULL, param = NULL, seg.type =
 
 # attributes(subdf2$scaled_speed)<- NULL
 # attributes(subdf2$scaled_angle)<- NULL
-# outputs <- segtools::stat_segm(subdf2,diag.var,order.var,model.type='picard',picard.param=param,picard.type='hybrid')
+# outputs <- segclust::stat_segm(subdf2,diag.var,order.var,model.type='picard',picard.param=param,picard.type='hybrid')
 
 prep_segm <- function(data,param,seg.type=NULL,nseg=NULL){
 

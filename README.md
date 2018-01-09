@@ -1,6 +1,6 @@
-# segtools
+# segclust2d
 
-`segtools` provides R code for two methods of segmentation and joint
+`segclust2d` provides R code for two methods of segmentation and joint
 segmentation/clustering of bivariate time-series. It was originally intended for
 ecological segmentation (home-range and behavioural modes) but can be easily
 applied on other type of time-series. The package also provides tools for
@@ -8,11 +8,11 @@ analysing outputs from R packages `moveHMM` and `marcher`.
 
 ## Installation
 
-You can install `segtools` from github with:
+You can install `segclust2d` from github with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("rpatin/segtools")
+devtools::install_github("rpatin/segclust2d")
 ```
 
 ## Examples
@@ -27,7 +27,7 @@ identify behavioural modes. Input data can be a `data.frame` (shown in the first
 ### Segmentation
 
 ``` r
-library(segtools)
+library(segclust2d)
 data(simulshift)
 ```
 

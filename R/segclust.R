@@ -140,7 +140,7 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
   }
 
   x_nrow <- nrow(x)
-  tmp <- subsample(x,subsample_over)
+  tmp <- subsample(x,subsample_over, ...)
   x <- tmp$x
   subsample_by <- tmp$by
 
