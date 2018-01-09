@@ -11,7 +11,7 @@ subsample <- function(x,subsample_over,subsample_by){
   x_nrow <- nrow(x)
   x_ind <-  1:x_nrow
   x$x_ind <- x_ind
-  if(missing(subsample_by)){
+  if(is.na(subsample_by)){
     if( x_nrow > subsample_over){
       subsample_by <- ceiling(x_nrow/subsample_over)
       message(paste("Number of data > ",subsample_over,", subsampling by ",subsample_by,".",sep=""))
