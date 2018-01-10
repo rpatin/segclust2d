@@ -49,7 +49,7 @@ segclust.data.frame <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.
   } else {
     stop("type must be either home-range or behavior")
   }
-
+  
   segmented <- segclust_internal(x, seg.var = seg.var, diag.var = diag.var, order.var = order.var, Kmax = Kmax, ncluster = ncluster, lmin = lmin, dat=dat, type=type, ... )
   return(segmented)
 }
@@ -85,7 +85,7 @@ segclust.Move <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = 
   } else {
     stop("type must be either home-range or behavior")
   }
-
+  
   segmented <- segclust_internal(x.df, seg.var = seg.var, diag.var = diag.var, order.var = order.var, Kmax = Kmax, ncluster = ncluster, lmin = lmin, dat=dat, type=type, ...)
   return(segmented)
 }
@@ -98,7 +98,7 @@ segclust.Move <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = 
 segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
   if(!requireNamespace("adehabitatLT", quietly = TRUE))
     stop("adehabitatLT package required for calling segclust on a ltraj object.")
-
+  
   if(type == "home-range"){
     tmp <- x[[1]]
     dat <- t(cbind(tmp$x,tmp$y))
@@ -122,7 +122,7 @@ segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var =
   } else {
     stop("type must be either home-range or behavior")
   }
-
+  
   segmented <- segclust_internal(x.df, seg.var = seg.var, diag.var = diag.var, order.var = order.var, Kmax = Kmax, ncluster = ncluster, lmin = lmin, dat=dat, type=type, ...)
   return(segmented)
 }
@@ -133,34 +133,39 @@ segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var =
 #' @inheritParams segmentation_internal
 
 segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = NULL, Kmax, ncluster = NULL, lmin = NULL, dat=NULL, type=NULL, sameSigma = F, subsample_over = 1000, subsample_by = NA, subsample = TRUE, ...){
-
+  
   if(missing(Kmax)){
     Kmax = floor(dim(dat)[2]/lmin)
     message(paste("Unspecified Kmax, taking maximum possible value : Kmax = ",Kmax,". Think about reducing Kmax if running is too slow"))
+  } else if (lmin*Kmax > nrow(x)){
+    stop("lmin*Kmax > number of data. Please reduce lmin (minimum length of segment) or Kmax (maximum number of segment)")
+  }
+  if(any(is.na(x[,seg.var]))){
+    stop("Variables have missing values, please remove them")
   }
   if(subsample){
     x_nrow <- nrow(x)
     tmp <- subsample(x,subsample_over, subsample_by)
     x <- tmp$x
     subsample_by <- tmp$by
-  }
-  else{
+    dat <- dat[,!is.na(x$subsample_ind)]
+  } else {
     subsample_by <- 1
+    x$subsample_ind <- 1:nrow(x)
   }
-
-
-  dat <- dat[,!is.na(x$subsample_ind)]
+  
+  
   if(missing(scale.variable)){
     message("Rescaling variables")
     scale.variable <- T
   }
-
+  
   if(scale.variable) {
     dat[1,]<- scale(dat[1,])
     dat[2,]<- scale(dat[2,])
   }
-
-
+  
+  
   lmin <- floor(lmin/subsample_by)
   if(subsample_by > 1){
     message(paste("Adjusting lmin to subsampling. New lmin divided by",subsample_by,"and set to",lmin,"."))
@@ -168,7 +173,7 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
   if(lmin < 1){
     stop("lmin should be > 1")
   }
-
+  
   segmented <- list("data" = x,
                     "type" = type,
                     "seg.type" = "segclust",
@@ -185,26 +190,26 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
                                   "Kmax"=Kmax,
                                   "ncluster"=ncluster))
   class(segmented) <- "segmentation"
-
+  
   # DynProg segmentation ncluster=0 - Initialisation
   CostLoc <- Gmean_simultanee(dat, lmin = lmin,sameVar = sameSigma)
   res.DynProg <- DynProg(CostLoc, Kmax)
   # CostLoc <- segTraj::Gmean_simultanee(dat, lmin = lmin)
   # res.DynProg <- segTraj::DynProg(CostLoc, Kmax)
-
+  
   outputs <- lapply(1:Kmax,function(k){
     out <- stat_segm(x, diag.var, order.var, param = res.DynProg, nseg=k, seg.type = "segmentation")
     names(out) <- c("segments","states")
     return(out)
   })
   names(outputs) <- paste("0 class -",1:Kmax, "segments")
-
+  
   likelihood <- data.frame(nseg=1:Kmax,likelihood=-res.DynProg$J.est,ncluster=0)
   # dfBIC <- calc_BIC(likelihood,ncluster = 1:Kmax, nseg = 1:Kmax)
   # dfBIC$ncluster = 0
   segmented$outputs <- c(segmented$outputs,outputs)
   segmented$likelihood <- likelihood
-
+  
   for(P in ncluster){
     # res <- segTraj::hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma)
     res <- hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma, ...)
@@ -226,6 +231,6 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
   }
   tmp <- dplyr::filter(segmented$BIC,ncluster > 0)
   segmented$ncluster.BIC <- tmp[which.max(tmp$BIC),"ncluster"]
-
+  
   return(segmented)
 }

@@ -22,10 +22,12 @@ subsample <- function(x,subsample_over,subsample_by){
       subsample_by <- 1
       x$subsample_ind <- x_ind
     }
-  } else {
+  } else if (subsample_by != 1) {
     keep <- (x_ind %% subsample_by) == 1
     subsample_ind <- ifelse(keep,(x_ind %/% subsample_by)+1,NA)
     x$subsample_ind <- subsample_ind
+  } else {
+    x$subsample_ind <- 1:nrow(x)
   }
 
   list(x = x, by = subsample_by)
