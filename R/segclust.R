@@ -132,17 +132,22 @@ segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var =
 #' @inheritParams segclust
 #' @inheritParams segmentation_internal
 
-segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = NULL, Kmax, ncluster = NULL, lmin = NULL, dat=NULL, type=NULL, sameSigma = F, subsample_over = 1000, subsample_by = NA, ...){
+segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = NULL, Kmax, ncluster = NULL, lmin = NULL, dat=NULL, type=NULL, sameSigma = F, subsample_over = 1000, subsample_by = NA, subsample = TRUE, ...){
 
   if(missing(Kmax)){
     Kmax = floor(dim(dat)[2]/lmin)
     message(paste("Unspecified Kmax, taking maximum possible value : Kmax = ",Kmax,". Think about reducing Kmax if running is too slow"))
   }
+  if(subsample){
+    x_nrow <- nrow(x)
+    tmp <- subsample(x,subsample_over, subsample_by)
+    x <- tmp$x
+    subsample_by <- tmp$by
+  }
+  else{
+    subsample_by <- 1
+  }
 
-  x_nrow <- nrow(x)
-  tmp <- subsample(x,subsample_over, subsample_by)
-  x <- tmp$x
-  subsample_by <- tmp$by
 
   dat <- dat[,!is.na(x$subsample_ind)]
   if(missing(scale.variable)){
