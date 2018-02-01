@@ -40,7 +40,7 @@
 #' @useDynLib segclust2d, .registration=TRUE
 #' @importFrom Rcpp sourceCpp
 
-hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALSE,eps=1e-6,lissage=T,pureR = F){
+hybrid_simultanee <- function(x,P,Kmax,lmin=3, sameSigma=TRUE, sameVar.init=FALSE,eps=1e-6,lissage=TRUE,pureR = F){
 
   Linc  = matrix(-Inf,nrow=Kmax,ncol=1)
   n     = dim(x)[2]

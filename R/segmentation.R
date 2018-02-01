@@ -155,7 +155,7 @@ segmentation.ltraj <- function(x, Kmax, lmin, type = "home-range", seg.var = NUL
 #' @inheritParams chooseseg_lavielle
 #' @export
 
-segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = NULL, Kmax, lmin = NULL, dat=NULL, type=NULL, sameSigma = F, subsample_over = 10000, ...){
+segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, scale.variable = NULL, Kmax, lmin = NULL, dat=NULL, type=NULL, sameSigma = F, subsample_over = 10000, subsample = TRUE, subsample_by = NA, ...){
 
 
 
@@ -164,11 +164,17 @@ segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var 
     Kmax = floor(x_nrow/lmin)
     message(paste("Unspecified Kmax, taking maximum possible value: Kmax = ",Kmax,". Think about reducing Kmax if running is too slow"))
   }
-  tmp <- subsample(x,subsample_over)
-  x <- tmp$x
-  subsample_by <- tmp$by
-  dat <- dat[,!is.na(x$subsample_ind)]
-
+  if(subsample){
+    x_nrow <- nrow(x)
+    tmp <- subsample(x,subsample_over, subsample_by)
+    x <- tmp$x
+    subsample_by <- tmp$by
+    dat <- dat[,!is.na(x$subsample_ind)]
+  } else {
+    subsample_by <- 1
+    x$subsample_ind <- 1:nrow(x)
+  }
+  
   if(missing(scale.variable) & type == 'behavior'){
     message("Rescaling variables")
     scale.variable <- TRUE
