@@ -101,13 +101,19 @@ plot(mode_segclust, ncluster = 3)
 plot(mode_segclust, ncluster = 3, nseg = 7)
 
 ```
-One can also inspect the BIC-based penalized log-likelihood through functions `plot_BIC()`. When segmentation-clustering is reliable, the selected optimum should the maximum just before a linear drop of the penalized log-Likelihood. Also even though higher number of cluster may have higher penalized log-Likelihood the difference between them should not be too large. Also, as in this example, if the selected number of segment for a higher number of cluster is the same, then the lower number should be preferred. Not that this selection of number of cluster is mostly a suggestion and should not be trusted. Best practice should rely on biological information to fix a priori the number of states.
+One can also inspect the BIC-based penalized log-likelihood through functions `plot_BIC()`. 
 
 ``` r
 plot_BIC(mode_segclust)
 ```
 ## Advice for choosing lmin, Kmax and ncluster
-qfqsfq
+
+`lmin` is the minimum length of a segment. For home range it is the duration for which we consider a stationary use to be a home-range. For behaviour it is the minimum time for a behaviour not te be considered anecdotical.
+
+`Kmax` is by default fixed to the maximum but for performance we advise on setting a smaller Kmax. If the selected number of segment is too close to Kmax, think about increasing Kmax, that might be limiting the number of segment.
+
+By default `ncluster` is chosen by maximizing a BIC-based penalized log-likelihood. When segmentation-clustering is reliable, the selected optimum should the maximum just before a linear drop of the penalized log-Likelihood. Also even though higher number of cluster may have higher penalized log-Likelihood the difference between them should not be too large. Also, as in this example, if the selected number of segment for a higher number of cluster is the same, then the lower number should be preferred. Not that this selection of number of cluster is mostly a suggestion and should not be trusted. Best practice should rely on biological information to fix a priori the number of states.
+
 # Exploring outputs
 
 Both functions `segmentation()` and `segclust()` returns a `segmentation-class` object for which several methods are available.
@@ -238,7 +244,10 @@ One can also override this automatic subsampling by selecting directly the subsa
 mode_segclust <- segclust(simulmode, Kmax = 30, lmin=5, ncluster = c(2,3,4), type = "behavior", seg.var = c("speed","abs_spatial_angle"), subsample_by = 2)
 ```
 
+Beware that subsampling will also divide your lmin argument. If subsampling by 2, lmin will be divided by 2. It is important that lmin stays larger than 3 and if possible than 5, for better variance estimations.
+
 Note that subsampling has been implemented in such way that outputs will show all points but segmentation is calculated only on subsampled points. Points used in segmentation can be retrieved through `augment` in data column `subsample_ind` (The subsample indices for kept points and NA for ignored points).
+
 
 ## Other data types
 
