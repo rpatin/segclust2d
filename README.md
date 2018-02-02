@@ -15,7 +15,12 @@ You can install `segclust2d` from github with:
 devtools::install_github("rpatin/segclust2d")
 ```
 
-## Examples
+This guide will organize around 3 sections :
+- First basic [examples](#examples) about how to use the [segmentation](#segmentation) or [segmentation/clustering](#segmentation-clustering) functions
+- Then we will explore diverse tools available to explore the outputs of the segmentation in the section [segmentation-class](#segmentation-class).
+- Finally we will explore advanced options such as the [different input data types available](#other-data-types) or the possibility of [subsampling](#subsampling)
+
+# Examples
 
 The algorithm can perform a [segmentation](#segmentation) of the time-serie into
 homogeneous segments. A typical case is the identification of home-range
@@ -24,7 +29,7 @@ into clusters of homogeneous behaviour through a
 [segmentation/clustering](#segmentation-clustering) algorithm. This is generally used to
 identify behavioural modes. Input data can be a `data.frame` (shown in the first examples), a `Move` object or a `ltraj` object (from package `adehabitatLT`), both shown in section [Other data types](#other-data-types)
 
-### Segmentation
+## Segmentation
 
 ``` r
 library(segclust2d)
@@ -36,7 +41,7 @@ data(simulshift)
 For a segmentation one has to specify arguments `lmin`, the minimum length of a segment and `Kmax`, the maximum number of segments. By default `Kmax` will be set to `floor(n/lmin)`, with `n` the number of observations. However this can considerably slow the calculations so do not hesitate to reduce it to a reasonable value.
 
 ``` r
-shift_seg <- segmentation(simulshift, lmin = 5, Kmax = 25, type = "home-range")
+shift_seg <- segmentation(simulshift, lmin = 15, Kmax = 25, type = "home-range", subsample_by = 3)
 ```
 
 Segmentation is performed through a Dynamic Programming algorithm that finds the best segmentation given a number of segment. For each number of segment, the optimal segmentation is associated with a likelihood value. By default, the algorithm choose the number of segment given a criterium developped by Marc Lavielle based on the value of the second derivative of the penalized likelihood. This criterium use a threshold value of `S = 0.75`, but a different threshold can be specified. By default segmentation is done on coordinates `c("x","y")` but one can specify other names through arguments `coord.names`.
@@ -59,7 +64,7 @@ The second important method is `plot_likelihood` that shows the log-likelihood o
 plot_likelihood(shift_seg, nseg = 10)
 ```
 
-### Segmentation-Clustering
+## Segmentation-Clustering
 
 ``` r
 data(simulmode)
@@ -98,36 +103,13 @@ One can also inspect the BIC-penalized log-likelihood through functions `plot_BI
 plot_BIC(mode_segclust)
 ```
 
-## Other data types
-
-We have shown examples for using data.frames but one can also segment data from `ltraj` and `Move` object that contains a single individual.
-
-### Concerning segmentation
-
-For a simple segmentation, the algorithm will assume a home-range segmentation and use coordinates directly.
-
-``` r
-segmentation(ltraj_object, lmin = 5, Kmax = 25)
-segmentation(Move_object, lmin = 5, Kmax = 25)
-```
-### Concerning segclust
-
-For a segmentation/clustering, one has to provide the variables used for segmentation
-
-``` r
-segmentation(ltraj_object, lmin = 5, Kmax = 25, ncluster = c(2,3), seg.var = c("speed","spatial_angle"))
-segmentation(Move_object, lmin = 5, Kmax = 25, ncluster = c(2,3), seg.var = c("speed","spatial_angle"))
-```
-
-Of course the variable names provided must exist as column in `Move_object@data` and `adehabitatLT::infolocs(ltraj_object[1])`.
-
-## segmentation-class
+# Exploring outputs
 
 Both functions `segmentation()` and `segclust()` returns a `segmentation-class` object for which several methods are available.
 
-### extract informations
+## extract informations
 
-#### augment  
+### augment  
 
 `augment.segmentation()` is a method for `broom::augment`. It returns an augmented data.frame with outputs of the model - here, the attribution to segment or cluster
 
@@ -143,7 +125,7 @@ augment(mode_segclust, ncluster = 2) # segclust()
 augment(mode_segclust, ncluster = 2, nseg = 5) # segclust()
 ```
 
-#### segment
+### segment
 
 `segment()` allows retrieving informations on the different segment of a given segmentation. Each segment is associated with the mean and standard deviation for each variable, the state (equivalent to the segment number for `segmentation`) and the state ordered given a variable - by default the first variable given by `seg.var`. One can specify the variable for ordering states through the `order.var` of `segmentation()` and `segclust()`.
 
@@ -154,7 +136,7 @@ segment(mode_segclust)
 segment(mode_segclust, nclust = 3, nseg = 8)
 ```
 
-#### states 
+### states 
 
 `states()` return information on the different states of the segmentation. For `segmentation()` it is quite similar to `segment()`. For `segclust`, however it gives the different cluster found and the statistics associated.
 
@@ -165,7 +147,7 @@ states(mode_segclust)
 states(mode_segclust, nclust = 3, nseg = 8)
 ```
 
-#### log-Likelihood - logLik 
+### log-Likelihood - logLik 
 
 `logLik.segmentation()` return information on the log-likelihood of the different segmentations possible. It returns a data.frame with the number of segment, the log-likelihood and eventually the number of cluster.
 
@@ -174,7 +156,7 @@ logLik(shift_seg)
 logLik(mode_segclust)
 ```
 
-#### BIC (segclust)
+### BIC (segclust)
 
 `BIC.segmentation()` return information on the BIC-penalized log-likelihood of the different segmentations possible. It returns a data.frame with the number of segment, the BIC-penalized log-likelihood and the number of cluster. For `segclust()` only.
 
@@ -182,11 +164,11 @@ logLik(mode_segclust)
 BIC(mode_segclust)
 ```
 
-### Graphical outputs
+## Graphical outputs
 
 `segmentation-class` also provides methods for plotting results of segmentations. All plot methods use ggplot2 library.
 
-#### plot.segmentation
+### plot.segmentation
 
 `plot.segmentation()` can be used to plot the output of a segmentation as a serie-plot. A specific segmentation can be chosen with `nseg` and `ncluster` arguments. If the original data had a specific x-axis, like a `POSIXct` time column, this can be specified using argument `xcol`. By default, data are plotted by their number. If you want clusters or segments to be ordered according to one of the variables, this can be specified using argument `order`. By default segmentation/clustering output are plotted using ordered states.
 
@@ -195,7 +177,7 @@ plot(shift_seg)
 plot(mode_segclust, ncluster = 3, nseg = 10, xcol = "indice", order = T)
 ```
 
-#### segmap
+### segmap
 
 `segmap()` plot the results of the segmentation as a map. This can be done only if data have a geographic meaning. Coordinate names are by default "x" and "y" but this can be provided through argument `coord.names`.
 
@@ -204,7 +186,7 @@ segmap(shift_seg, nseg = 10)
 segmap(mode_segclust, ncluster = 3, nseg = 10)
 ```
 
-#### stateplot
+### stateplot
 
 `stateplot()` show statistics for each state or segment.
 ``` r
@@ -213,7 +195,7 @@ stateplot(mode_segclust, ncluster = 3, nseg = 10)
 ```
 
 
-#### plot_likelihood
+### plot_likelihood
 
 `plot_likelihood()` plot the log-likelihood of the segmentation for all the tested number of segments and clusters.
 ``` r
@@ -221,12 +203,36 @@ plot_likelihood(shift_seg)
 plot_likelihood(mode_segclust)
 ```
 
-#### plot_BIC
+### plot_BIC
 
 `plot_likelihood()` plot the BIC-penalized log-likelihood of the segmentation for all the tested number of segments and clusters.
 ``` r
 plot_BIC(mode_segclust)
 ```
 
-## Covariate calculations
+
+# Other data types
+
+We have shown examples for using data.frames but one can also segment data from `ltraj` and `Move` object that contains a single individual.
+
+## Concerning segmentation
+
+For a simple segmentation, the algorithm will assume a home-range segmentation and use coordinates directly.
+
+``` r
+segmentation(ltraj_object, lmin = 5, Kmax = 25)
+segmentation(Move_object, lmin = 5, Kmax = 25)
+```
+## Concerning segclust
+
+For a segmentation/clustering, one has to provide the variables used for segmentation
+
+``` r
+segmentation(ltraj_object, lmin = 5, Kmax = 25, ncluster = c(2,3), seg.var = c("speed","spatial_angle"))
+segmentation(Move_object, lmin = 5, Kmax = 25, ncluster = c(2,3), seg.var = c("speed","spatial_angle"))
+```
+
+Of course the variable names provided must exist as column in `Move_object@data` and `adehabitatLT::infolocs(ltraj_object[1])`.
+
+# Covariate calculations
 
