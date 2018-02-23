@@ -68,6 +68,30 @@ Segmentation/Clustering function for move objects
 Segmentation/Clustering function for ltraj objects
 }
 \examples{
-\dontrun{segclust(data, Kmax = 20, lmin = 10, ncluster = 2:4, seg.var =
-c("dist","angle"))}
+#' @examples
+df <-  test_data()$data
+#' # data is a data.frame with column 'x' and 'y'
+# Simple segmentation with automatic subsampling if data has more than 1000 rows:
+res <- segclust(df, Kmax = 10, lmin = 20, ncluster = 3, seg.var = c("x","y"))
+ # Plot results
+ plot(res)
+ segmap(res, coord.names = c("x","y"))
+ # check penalized likelihood of alternative number of segment possible. There should
+ # be a clear break if the segmentation is good
+ plot_BIC(res)
+\dontrun{
+# Advanced options:
+# Run with automatic subsampling if df has more than 500 rows:
+res <- segclust(df, Kmax = 30, lmin = 10, ncluster = 2:4,
+ seg.var = c("x","y"), subsample_over = 500)
+# Run with subsampling by 2:
+res <- segclust(df, Kmax = 30, lmin = 10, , ncluster = 2:4,
+ seg.var = c("x","y"), subsample_by = 2)
+# Disable subsampling:
+res <- segclust(df, Kmax = 30, lmin = 10, , ncluster = 2:4,
+ seg.var = c("x","y"), subsample = FALSE)
+# Disabling automatic scaling of variables for segmentation (standardazing the variables) :
+ res <- segclust(df, Kmax = 30, lmin = 10, seg.var = c("dist","angle"),
+  scale.variable = FALSE)
+}
 }

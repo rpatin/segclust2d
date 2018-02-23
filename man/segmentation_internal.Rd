@@ -6,7 +6,8 @@
 \usage{
 segmentation_internal(x, seg.var = NULL, diag.var = NULL,
   order.var = NULL, scale.variable = NULL, Kmax, lmin = NULL,
-  dat = NULL, type = NULL, sameSigma = F, subsample_over = 10000, ...)
+  dat = NULL, type = NULL, sameSigma = F, subsample_over = 10000,
+  subsample = TRUE, subsample_by = NA, ...)
 }
 \arguments{
 \item{x}{data.frame with observations}
@@ -37,6 +38,10 @@ default for segmentation/clustering : "behavior".}
 
 \item{subsample_over}{over which size should subsampling begin (depending on
 speed and memory limitations)}
+
+\item{subsample}{if FALSE disable subsample}
+
+\item{subsample_by}{override subsample_over to adjust manually subsampling}
 
 \item{...}{additionnal parameters given to \link{chooseseg_lavielle}}
 }

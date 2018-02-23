@@ -6,6 +6,20 @@
 #' @param diag.var diag.var
 #' @param order.var order.var
 #' @export
+#' @examples 
+#' \dontrun{
+#' data(simulshift)
+#' # 1. subsample to a reasonable size
+#' subdata <- simulshift[seq(1,30000,by = 100),]
+#' # 2. use algorithm from marcher package
+#' MWN.fit <- with(subdata, marcher::estimate_shift(T=indice, X=x, Y=y,n.clust = 3))
+#' # 3. convert output
+#' MWN.segm <- prepare_shiftfit(subdata,MWN.fit,diag.var = c("x","y"))
+#' # 4. use segclust2d functions
+#' plot(MWN.segm)
+#' plot(MWN.segm,stationarity = TRUE)
+#' segmap(MWN.segm)
+#' }
 prepare_shiftfit <- function(data, shiftfit.model = NULL, diag.var, order.var = diag.var[1]){
   outputsshift <- stat_segm_shiftfit(data = data, shiftfit.model = shiftfit.model, diag.var = diag.var, order.var = order.var)
   names(outputsshift) <- c("segments","states")

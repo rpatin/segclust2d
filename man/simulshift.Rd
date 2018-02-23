@@ -9,6 +9,7 @@
   \item{indice}{index of position}
   \item{x}{x coordinates}
   \item{y}{y coordinates}
+  \item{dateTime}{arbitrary date in POSIXct format}
 }}
 \usage{
 simulshift

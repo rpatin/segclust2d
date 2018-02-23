@@ -21,7 +21,3 @@ a data.frame with BIC, number of cluster and number of segment
 \description{
 \code{BIC} calculates BIC given log-likelihood, number of segment and number of class
 }
-\examples{
-\dontrun{calc_stat_states(data, diag.var=c("dist","angle"),
-order.var='dist',type='hmm',hmm.model=mod1.hmm)}
-}

@@ -19,3 +19,18 @@ prepare_shiftfit(data, shiftfit.model = NULL, diag.var,
 \description{
 \code{prepare_shiftfit}
 }
+\examples{
+\dontrun{
+data(simulshift)
+# 1. subsample to a reasonable size
+subdata <- simulshift[seq(1,30000,by = 100),]
+# 2. use algorithm from marcher package
+MWN.fit <- with(subdata, marcher::estimate_shift(T=indice, X=x, Y=y,n.clust = 3))
+# 3. convert output
+MWN.segm <- prepare_shiftfit(subdata,MWN.fit,diag.var = c("x","y"))
+# 4. use segclust2d functions
+plot(MWN.segm)
+plot(MWN.segm,stationarity = TRUE)
+segmap(MWN.segm)
+}
+}

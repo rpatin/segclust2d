@@ -18,7 +18,3 @@ a data.frame with mean and variance of the different states
 \code{find_mu_sd} calculates statistics of a given segmentation : mean
 and variance of the different states.
 }
-\examples{
-\dontrun{calc_stat_states(data, diag.var=c("dist","angle"),
-order.var='dist',type='hmm',hmm.model=mod1.hmm)}
-}

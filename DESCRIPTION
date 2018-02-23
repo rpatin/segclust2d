@@ -2,16 +2,26 @@ Package: segclust2d
 Type: Package
 Title: Bivariate Segmentation/Clustering Methods and Tools
 Version: 0.1.0
-Authors@R: c(person("Remi", "Patin", role = c("aut", "cre"), email = "remi.patin@cefe.cnrs.fr"), person("Marie-Pierre", "Etienne", role = "aut"), person("Emilie", "Lebarbier", role = "aut"), person("Simon", "Benhamou", role = "aut"))
-Description: Provides two methods for segmentation and joint segmentation/clustering of
+Authors@R: c(person("Remi", "Patin", role = c("aut", "cre"), email = "remi.patin@normale.fr"),
+             person("Marie-Pierre", "Etienne", role = "aut"), 
+             person("Emilie", "Lebarbier", role = "aut"), 
+             person("Simon", "Benhamou", role = "aut"))
+Description: provides two methods for segmentation and joint segmentation/clustering of
     bivariate time-series. Originally intended for ecological segmentation
     (home-range and behavioural modes) but easily applied on other series,
-    the package also provides tools for analysing outputs from R packages moveHMM and marcher.
+    the package also provides tools for analysing outputs from R packages 'moveHMM' and 'marcher'.
+    The segmentation method is a bivariate extension of  Lavielle's method available in 'adehabitatLT' 
+    (Lavielle, 1999 <doi:10.1016/S0304-4149(99)00023-X> and 2005 <doi:10.1016/j.sigpro.2005.01.012>).
+    This method rely on dynamic programming for efficient segmentation.
+    The segmentation/clustering method alternates steps of dynamic programming with an Expectation-Maximization algorithm.
+    This is an extension of Picard et al (2007) <doi:10.1111/j.1541-0420.2006.00729.x> method 
+    (formerly available in 'cghseg' package) to the bivariate case.
+    The full description of the method is not published yet.
 License: GPL-3
 LazyData: TRUE
 RoxygenNote: 6.0.1
 Depends:
-    R (>= 3.3.1)
+    R (>= 3.3.0)
 Imports:
     RColorBrewer (>= 1.1-2),
     dplyr (>= 0.5.0),
@@ -38,7 +48,8 @@ Suggests:
     depmixS4,
     moveHMM (>= 1.2),
     htmltools,
-    move
+    move,
+    devtools
 LinkingTo:
     Rcpp,
     RcppArmadillo

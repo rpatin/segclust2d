@@ -21,10 +21,29 @@ plot_segm(data, output, interactive = F, diag.var, x_col = "expectTime",
 \item{html}{should the graph be incorporated in a markdown file through htmltools::tagList()}
 
 \item{order}{should cluster be ordered}
+
+\item{stationarity}{if TRUE, cut each segment in three and plot each part
+with its own mean to assess stationarity of each segment}
 }
 \value{
 a graph
 }
 \description{
 \code{plot_segm} plot segmented time serie.
+}
+\examples{
+\dontrun{
+#res.segclust is the results of the segmentation-clustering algorithm
+ncluster = 3
+nseg = 10
+ g <- plot_segm(data = res.segclust$data, output =
+  res.segclust$outputs[[paste(ncluster,"class -",nseg, "segments")]], 
+   diag.var = x$`Diagnostic variables`,x_col = 'dateTime)
+#res.seg is the results of the segmentation-only algorithm
+nseg = 10
+ g <- plot_segm(data = res.segclust$data, 
+ output = res.segclust$outputs[[paste(nseg, "segments")]], 
+  diag.var = x$`Diagnostic variables`,x_col = 'dateTime)
+ 
+}
 }

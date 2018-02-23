@@ -15,11 +15,8 @@ angular_speed(x, coord.names = c("x", "y"))
 vector of turning angle.
 }
 \description{
-\code{spatial_angle} calculate turning angle between locations, taking a
+\code{angular_speed} calculate turning angle between locations, taking a
 dataframe as input.
-}
-\examples{
-\dontrun{calc_speed(df,coord.names = c("x","y"), timecol = "dateTime", smoothed = T)}
 }
 \author{
 Remi Patin, Simon Benhamou.

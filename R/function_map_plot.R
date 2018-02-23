@@ -16,11 +16,21 @@
 #' @param coord.names names of coordinates
 #' @return a graph
 #'
-#' @examples
-#' \dontrun{stat_segm(data, diag.var=c("dist","angle"),
-#' order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 #' @importFrom magrittr "%>%"
 #' @export
+#' @examples 
+#' \dontrun{
+#' #res.seg is a result of the segmentation-only algorithm : 
+#' nseg = 10
+#' outputs = res.seg$outputs[[paste(nseg, "segments")]]
+#' map <- map_segm(data=res.seg$data,output=outputs)
+#' #res.segclust is a result of the segmentation-clusturing algorithm : 
+#' nseg = 10; ncluster = 3
+#' outputs = res.segclust$outputs[[paste(ncluster,"class -",nseg, "segments")]]
+#' map <- map_segm(data=res.seg$data,output=outputs)
+#' }
+#' 
+
 
 map_segm <- function(data,output,interactive=F,html=F, scale=1,
                      UTMstring="+proj=longlat +datum=WGS84 +no_defs",

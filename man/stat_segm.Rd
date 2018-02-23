@@ -28,9 +28,14 @@ a list which first element is a data.frame with states of the
 \description{
 \code{stat_segm} calculates statistics of a given segmentation : mean and
 variance of the different states. it also creates standard objects for plot.
-Actually implementation exists for \code{moveHMM} and \code{segTraj} methods.
 }
 \examples{
-\dontrun{stat_segm(data,diag.var=c("dist","angle"),
-order.var='dist',type='hmm',hmm.model=mod1.hmm)}
+\dontrun{
+#res.segclust is a result of a segmentation-clustering algorithm
+param <- res.segclust$param[["3 class"]]
+nseg = 10
+out <- stat_segm(data, diag.var = c("dist","angle"),
+ order.var = "dist", param = param, nseg=nseg, seg.type = "segclust")
+
+}
 }

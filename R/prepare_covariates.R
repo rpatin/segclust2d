@@ -44,8 +44,6 @@ add_covariates.Move <- function(x, coord.names = c("x","y"), ...){
 #' @inheritParams add_covariates
 #' @inheritParams add_covariates.data.frame
 #'
-#' @examples
-#' \dontrun{add_covariates(ltraj_object, coord.names = c("x","y"), smoothed = T)}
 #' @export
 #' @rdname add_covariates
 
@@ -77,9 +75,14 @@ add_covariates.ltraj <- function(x, coord.names = c("x","y"), ...){
 #' @return data.frame with additional covariates
 #' @inheritParams add_covariates
 #' @rdname add_covariates
-#' @examples
-#' \dontrun{calc_dist(df,coord.names = c("x","y"), smoothed = T)}
 #' @export
+#' @examples 
+#' \dontrun{
+#' data(simulmode)
+#' simple_data <- simulmode[,c("dateTime","x","y")]
+#' full_data   <- add_covariates(simple_data, coord.names = c("x","y"),
+#'  timecol = "dateTime",smoothed = TRUE, units ="min")
+#' }
 
 
 add_covariates.data.frame <- function(x, coord.names = c("x","y"), smoothed = F, timecol = "dateTime", units = "hour", radius = NULL, ...){
@@ -167,10 +170,14 @@ calc_speed <- function(x, coord.names = c("x","y"), timecol = "dateTime", smooth
 #'
 #' @return vector of spatial angle.
 #'
-#' @examples
-#' \dontrun{calc_speed(df,coord.names = c("x","y"), timecol = "dateTime", smoothed = T)}
 #' @export
 #' @author Remi Patin, Simon Benhamou.
+#' @examples 
+#' \dontrun{
+#' data(simulmode)
+#' spatial_angle(simulmode)
+#' }
+
 
 
 spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
@@ -257,17 +264,14 @@ spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
 
 #' Calculate angular speed along a trajectory
 #'
-#' \code{spatial_angle} calculate turning angle between locations, taking a
+#' \code{angular_speed} calculate turning angle between locations, taking a
 #' dataframe as input.
 #' @param x data.frame with locations
 #' @param coord.names names of coordinates column in \code{x}
 #' @return vector of turning angle.
 #'
-#' @examples
-#' \dontrun{calc_speed(df,coord.names = c("x","y"), timecol = "dateTime", smoothed = T)}
 #' @export
 #' @author Remi Patin, Simon Benhamou.
-
 
 angular_speed <- function(x, coord.names = c("x","y")){
   xx <- diff(x[,coord.names[1]])

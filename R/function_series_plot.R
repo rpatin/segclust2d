@@ -7,11 +7,28 @@
 #' @param interactive should graph be interactive through leaflet ?
 #' @param html should the graph be incorporated in a markdown file through htmltools::tagList()
 #' @param order should cluster be ordered
+#' @param stationarity if TRUE, cut each segment in three and plot each part
+#'   with its own mean to assess stationarity of each segment
 #' @param x_col column name for time
 #' @return a graph
 #'
 #' @importFrom magrittr "%>%"
 #' @export
+#' @examples 
+#' \dontrun{
+#' #res.segclust is the results of the segmentation-clustering algorithm
+#' ncluster = 3
+#' nseg = 10
+#'  g <- plot_segm(data = res.segclust$data, output =
+#'   res.segclust$outputs[[paste(ncluster,"class -",nseg, "segments")]], 
+#'    diag.var = x$`Diagnostic variables`,x_col = 'dateTime)
+#' #res.seg is the results of the segmentation-only algorithm
+#' nseg = 10
+#'  g <- plot_segm(data = res.segclust$data, 
+#'  output = res.segclust$outputs[[paste(nseg, "segments")]], 
+#'   diag.var = x$`Diagnostic variables`,x_col = 'dateTime)
+#'  
+#' }
 
 plot_segm <- function(data, output, interactive=F, diag.var, x_col="expectTime", html=F, order=F, stationarity = F){
   # if(class(df.states) != "list"){

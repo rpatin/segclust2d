@@ -19,10 +19,6 @@ prep_segm(data, param, seg.type = NULL, nseg = NULL)
 a data.frame with states of the different segments
 }
 \description{
-\code{prep_segm_picard} find the different segment and states of a given HMM
+\code{prep_segm} find the different segment and states of a given HMM
 model
-}
-\examples{
-\dontrun{prep_segm_picard(data, picard.param, picard.type = 'hybrid',
-picard.nseg=NULL)}
 }

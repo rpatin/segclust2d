@@ -64,5 +64,40 @@ Segmentation function for move objects
 Segmentation function for ltraj objects
 }
 \examples{
-\dontrun{segmentation(data, Kmax = 30, lmin = 10, coord.names = c("x","y"))}
+df <-  test_data()$data
+#' # data is a data.frame with column 'x' and 'y'
+# Simple segmentation with automatic subsampling if data has more than 1000 rows:
+res <- segmentation(df, Kmax = 30, lmin = 10, coord.names = c("x","y"), 
+type = 'home-range')
+ # Plot results
+ plot(res)
+ segmap(res)
+ # check likelihood of alternative number of segment possible. There should
+ # be a clear break if the segmentation is good
+ plot_likelihood(res)
+\dontrun{
+# Advanced options:
+# Run with automatic subsampling if df has more than 500 rows:
+res <- segmentation(df, Kmax = 30, lmin = 10, coord.names = c("x","y"), 
+type = 'home-range', subsample_over = 500)
+
+# Run with subsampling by 2:
+res <- segmentation(df, Kmax = 30, lmin = 10, coord.names = c("x","y"),
+ type = 'home-range', subsample_by = 2)
+ 
+# Disable subsampling:
+res <- segmentation(df, Kmax = 30, lmin = 10, coord.names = c("x","y"), 
+type = 'home-range', subsample = FALSE)
+
+# Run on other kind of variables : 
+ res <- segmentation(df, Kmax = 30, lmin = 10, seg.var = c("dist","angle"), 
+ type = 'behavior')
+ 
+# Automatic scaling of variables for segmentation 
+(set a mean of 0 and a standard deviation of 1 for both variables)
+
+ res <- segmentation(df, Kmax = 30, lmin = 10, seg.var = c("dist","angle"),
+  type = 'behavior', scale.variable = TRUE)
+ 
+}
 }

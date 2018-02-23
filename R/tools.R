@@ -7,7 +7,7 @@
 #' @param subsample_over maximum number of row accepted
 #' @param subsample_by subsampling parameters
 #'
-subsample <- function(x,subsample_over,subsample_by){
+subsample <- function(x,subsample_over,subsample_by = NA){
   x_nrow <- nrow(x)
   x_ind <-  1:x_nrow
   x$x_ind <- x_ind

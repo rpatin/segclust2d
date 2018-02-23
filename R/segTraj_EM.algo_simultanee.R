@@ -8,7 +8,6 @@
 #' @param eps eps
 #' @param sameSigma TRUE if segments have the same variance
 #' @return a list with  phi, the MLE, tau =(taukj) the probability for segment k to belong to classe,lvinc = lvinc,empty = empty,dv = dv
-#' @export
 
 EM.algo_simultanee <- function(x,rupt,P,phi, eps=1e-6,sameSigma=FALSE){
 

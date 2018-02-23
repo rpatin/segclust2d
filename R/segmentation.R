@@ -27,7 +27,42 @@
 #' @return  a \code{\link{segmentation-class}} object
 #'
 #' @examples
-#' \dontrun{segmentation(data, Kmax = 30, lmin = 10, coord.names = c("x","y"))}
+#' df <-  test_data()$data
+#' #' # data is a data.frame with column 'x' and 'y'
+#' # Simple segmentation with automatic subsampling if data has more than 1000 rows:
+#' res <- segmentation(df, Kmax = 30, lmin = 10, coord.names = c("x","y"), 
+#' type = 'home-range')
+#'  # Plot results
+#'  plot(res)
+#'  segmap(res)
+#'  # check likelihood of alternative number of segment possible. There should
+#'  # be a clear break if the segmentation is good
+#'  plot_likelihood(res)
+#' \dontrun{
+#' # Advanced options:
+#' # Run with automatic subsampling if df has more than 500 rows:
+#' res <- segmentation(df, Kmax = 30, lmin = 10, coord.names = c("x","y"), 
+#' type = 'home-range', subsample_over = 500)
+#' 
+#' # Run with subsampling by 2:
+#' res <- segmentation(df, Kmax = 30, lmin = 10, coord.names = c("x","y"),
+#'  type = 'home-range', subsample_by = 2)
+#'  
+#' # Disable subsampling:
+#' res <- segmentation(df, Kmax = 30, lmin = 10, coord.names = c("x","y"), 
+#' type = 'home-range', subsample = FALSE)
+#' 
+#' # Run on other kind of variables : 
+#'  res <- segmentation(df, Kmax = 30, lmin = 10, seg.var = c("dist","angle"), 
+#'  type = 'behavior')
+#'  
+#' # Automatic scaling of variables for segmentation 
+#' (set a mean of 0 and a standard deviation of 1 for both variables)
+#' 
+#'  res <- segmentation(df, Kmax = 30, lmin = 10, seg.var = c("dist","angle"),
+#'   type = 'behavior', scale.variable = TRUE)
+#'  
+#' }
 #' @export
 
 segmentation <- function(x, ...) {
@@ -149,6 +184,8 @@ segmentation.ltraj <- function(x, Kmax, lmin, type = "home-range", seg.var = NUL
 #' @param scale.variable should variables be standardized ? (reduced and centered)
 #' @param subsample_over over which size should subsampling begin (depending on
 #'   speed and memory limitations)
+#' @param subsample if FALSE disable subsample
+#' @param subsample_by override subsample_over to adjust manually subsampling
 #' @param ... additionnal parameters given to \link{chooseseg_lavielle}
 #' @inheritParams segmentation
 #'
@@ -188,6 +225,11 @@ segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var 
   }
   lmin <- max(floor(lmin/subsample_by),2)
   Kmax <- min(Kmax, floor( x_nrow / ( lmin*subsample_by ) ) )
+  
+  # check that there are no repetitions in the series
+  if(check_repetition(dat, lmin)){
+    stop("There are repetitions of identical values in the time series larger than lmin, cannot estimate variance for such segment. This is potentially caused by interpolation of missing values or rounding of values.")
+  }
   CostLoc <- Gmean_simultanee(dat, lmin = lmin,sameVar = sameSigma)
   res.DynProg <- DynProg(CostLoc, Kmax)
 
@@ -219,9 +261,6 @@ segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var 
                                   "Kmax"=Kmax),
                     "Kopt.lavielle" = output_lavielle["Kopt"][[1]],
                     "df.lavielle" = output_lavielle["lavielle"][[1]])
-                    # "stationarity.test" = stationarity,
-                    # "var.test" = seg_var,
-                    # "mean.test" = seg_mean)
   class(segmented) <- "segmentation"
   return(segmented)
 }

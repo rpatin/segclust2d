@@ -28,6 +28,12 @@ print.segmentation <- function(x,max.level = 1, ...){
 #' @rdname segmentation-class
 #' @inheritParams plot_segm
 #' @export
+#' 
+#' @examples 
+#' \dontrun{
+#' plot(res.segclust)
+#' plot(res.segclust, nseg = 10, ncluster = 3)
+#' }
 
 plot.segmentation <- function(x, nseg=NULL, ncluster=NULL, interactive=F, xcol="indice", order, ...) {
 
@@ -72,6 +78,7 @@ plot.segmentation <- function(x, nseg=NULL, ncluster=NULL, interactive=F, xcol="
 #' \code{likelihood.segmentation} deprecated function for plotting likelihood estimates of \code{segmentation} object. Now use \link{plot_likelihood}.
 #' @rdname segmentation-class
 #' @export
+#' 
 
 likelihood.segmentation <- function(x, ...) {
   .Deprecated("plot_likelihood")
@@ -82,6 +89,10 @@ likelihood.segmentation <- function(x, ...) {
 #' - works only for picard segmentation.
 #' @rdname segmentation-class
 #' @export
+#' @examples 
+#' \dontrun{
+#' plot_likelihood(res.seg)
+#' }
 
 plot_likelihood <- function(x) {
 
@@ -129,7 +140,11 @@ get_likelihood <- function(x) {
 #' \code{logLik.segmentation} returns log-likelihood estimates of a \code{segmentation} object
 #' @rdname segmentation-class
 #' @export
-
+#' @examples 
+#' \dontrun{
+#' logLik(res.seg)
+#' }
+#' 
 logLik.segmentation <- function(object, ...) {
   return(object$likelihood)
 }
@@ -141,7 +156,11 @@ logLik.segmentation <- function(object, ...) {
 #' - works only for segclust algorithm.
 #' @rdname segmentation-class
 #' @export
-
+#' @examples 
+#' \dontrun{
+#' plot_BIC(res.segclust)
+#' }
+#' 
 plot_BIC <- function(x) {
 
   if( x$seg.type == "segclust"){
@@ -175,13 +194,17 @@ plot_BIC <- function(x) {
 }
 
 
-#' \code{BIC} returns BIC estimates of a \code{segmentation} object when
-#' segmentation/clustering has been run.
+#' \code{BIC} returns BIC-based penalized log-likelihood estimates of a
+#' \code{segmentation} object when segmentation/clustering has been run.
 #' @param object a segmentation-class object, created by segclust.
 #' @rdname segmentation-class
 #' @importFrom stats BIC
 #' @export
-
+#' @examples 
+#' \dontrun{
+#' plot_BIC(res.segclust)
+#' }
+#' 
 BIC.segmentation <- function(object, ...) {
   return(object$BIC)
 }
@@ -189,7 +212,11 @@ BIC.segmentation <- function(object, ...) {
 #' \code{stateplot} plot state distribution of a \code{segmentation} object
 #' @rdname segmentation-class
 #' @export
-
+#' @examples 
+#' \dontrun{
+#' stateplot(res.segclust)
+#' stateplot(res.seg)
+#' }
 stateplot <- function(x,nseg = NULL,ncluster = NULL,order = NULL){
   if (is.null(order)){
     if (x$type == "home-range") order <- F
@@ -223,6 +250,11 @@ stateplot <- function(x,nseg = NULL,ncluster = NULL,order = NULL){
 #' \code{states} return data.frame with states statistics a \code{segmentation} object
 #' @rdname segmentation-class
 #' @export
+#' @examples 
+#' \dontrun{
+#' states(res.segclust)
+#' states(res.seg)
+#' }
 
 states <- function(x,nseg = NULL,ncluster = NULL){
   if( x$seg.type == "segclust"){
@@ -254,7 +286,13 @@ states <- function(x,nseg = NULL,ncluster = NULL){
 #' \code{segment} return data.frame with segment information of a \code{segmentation} object
 #' @rdname segmentation-class
 #' @export
-
+#' @examples 
+#' \dontrun{
+#' segment(res.segclust)
+#' segment(res.segclust, ncluster = 3, nseg = 30)
+#' segment(res.seg)
+#' segment(res.seg, nseg = 4)
+#' }
 segment <- function(x,nseg = NULL,ncluster = NULL){
   if( x$seg.type == "segclust"){
     if (is.null(ncluster)){
@@ -290,7 +328,13 @@ segment <- function(x,nseg = NULL,ncluster = NULL){
 #' @param colname_state column name for the added state column
 #' @rdname segmentation-class
 #' @export
-
+#' @examples 
+#' \dontrun{
+#' augment(res.segclust)
+#' augment(res.segclust, ncluster = 3, nseg = 30)
+#' augment(res.seg)
+#' augment(res.seg, nseg = 4)
+#' }
 augment.segmentation<- function(x,nseg = NULL,ncluster=NULL,colname_state = "state", ...){
   if(any(colnames(x$data) == colname_state)) stop(paste(colname_state,"already exists as column names of the data.frame. Cannot erase"))
 
@@ -333,7 +377,14 @@ augment.segmentation<- function(x,nseg = NULL,ncluster=NULL,colname_state = "sta
 #' @rdname segmentation-class
 #' @inheritParams map_segm
 #' @export
-
+#' 
+#' @examples 
+#' \dontrun{
+#' segmap(res.segclust, coord.names = c("x","y"))
+#' segmap(res.segclust, ncluster = 3, nseg = 30)
+#' segmap(res.seg)
+#' segmap(res.seg, nseg = 4)
+#' }
 segmap <-  function(x, interactive=F, nseg = NULL, ncluster = NULL, html=F,
                     scale=100, width=400, height=400, order = NULL, pointsize = 1, linesize = 0.5 , ...){
 
@@ -363,64 +414,4 @@ segmap <-  function(x, interactive=F, nseg = NULL, ncluster = NULL, html=F,
   map <- map_segm(data=x$data,output=outputs,interactive = interactive, html = html, scale=scale,width=width,height=height,order=order,pointsize = pointsize, linesize = linesize, ...)
 
   return(map)
-}
-
-#' \code{stationarity} extract mean and sd for each tier of segment of a
-#' \code{segmentation} class object
-#' @param max.level argument to be passed to utils::str()
-#' @rdname segmentation-class
-#' @export
-
-
-stationarity <- function(x,nseg = NULL, ncluster = NULL, ...){
-  if( x$seg.type == "segclust"){
-    if (is.null(ncluster)){
-      ncluster <- x$ncluster.BIC
-      nseg <- x$Kopt.BIC[ncluster]
-      message(paste("BIC-selected number of class : ",ncluster," class.\nBIC-selected number of segment : ",nseg,sep=""))
-    } else if (is.null(nseg)) {
-      nseg <- x$Kopt.BIC[ncluster]
-      message(paste("User-specified number of class :",ncluster,"\nBIC-selected number of segment : ",nseg,sep=""))
-    }
-    output = x$outputs[[paste(ncluster,"class -",nseg, "segments")]]
-  } else if( x$seg.type == "segmentation"){
-    if( is.null(nseg) ){
-      nseg <- x$Kopt.lavielle
-      message(paste("Lavielle-selected number of segment : ",nseg,sep=""))
-    }
-    output <- x$outputs[[paste(nseg, "segments")]]
-  } else if (x$seg.type == "HMM" | x$seg.type == "shiftfit" | x$seg.type == "depmixS4" ){
-    stop("stationarity() works only for segmentation() and segclust()")
-  }
-  data <- x$data
-  data$indice <- 1:nrow(data)
-  df.states <- output[[2]]
-  df.segm <- output[[1]]
-
-
-  df_stat <- NULL
-  for(seg in 1:nrow(df.segm)){
-    if(df.segm[seg,'end']-df.segm[seg,'begin'] < 3){
-      df_stat <- rbind(df_stat,df.segm[seg,])
-    } else {
-      tmp <- rbind(df.segm[seg,],df.segm[seg,],df.segm[seg,])
-      begin <- df.segm[seg,'begin']
-      end <- df.segm[seg,'end']
-      tmp$end[1] <- begin + round((end-begin) / 3) - 1
-      tmp$begin[2] <- begin + round((end-begin) / 3)
-      tmp$end[2] <- begin + round((end-begin) * 2 / 3) -1
-      tmp$begin[3] <- begin + round((end-begin) * 2 / 3)
-      tmp$state <- paste("seg",seg,"-tier",c(1,2,3),sep="")
-      df_stat <- rbind(df_stat,tmp)
-    }
-  }
-  diag.var <- x$`Diagnostic variables`
-  # df_stat$state <- 1:nrow(df_stat)
-  df_stat_states <- calc_stat_states(data,df_stat,diag.var= diag.var, order.var = diag.var[1])
-  # prepMu_stat <- find_mu_sd(df_stat_states,diag.var)
-  df_stat_states$prop <- NULL
-  df_stat_states$state_ordered <- NULL
-  df_stat <- dplyr::select(df_stat,state,begin,end)
-  dfreturn <- left_join(df_stat_states,df_stat, by = "state")
-  return(dfreturn)
 }

@@ -6,7 +6,8 @@
 \usage{
 segclust_internal(x, seg.var = NULL, diag.var = NULL, order.var = NULL,
   scale.variable = NULL, Kmax, ncluster = NULL, lmin = NULL, dat = NULL,
-  type = NULL, sameSigma = F, subsample_over = 1000, ...)
+  type = NULL, sameSigma = F, subsample_over = 1000, subsample_by = NA,
+  subsample = TRUE, ...)
 }
 \arguments{
 \item{x}{data used for segmentation. Supported: data.frame, Move object,
@@ -41,6 +42,10 @@ default for segmentation/clustering : "behavior".}
 
 \item{subsample_over}{over which size should subsampling begin (depending on
 speed and memory limitations)}
+
+\item{subsample_by}{override subsample_over to adjust manually subsampling}
+
+\item{subsample}{if FALSE disable subsample}
 
 \item{...}{additional arguments given to \code{\link{chooseseg_lavielle}}}
 }

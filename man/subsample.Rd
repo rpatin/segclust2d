@@ -4,12 +4,14 @@
 \alias{subsample}
 \title{Internal function for subsampling}
 \usage{
-subsample(x, subsample_over)
+subsample(x, subsample_over, subsample_by = NA)
 }
 \arguments{
 \item{x}{data.frame to be subsampled}
 
 \item{subsample_over}{maximum number of row accepted}
+
+\item{subsample_by}{subsampling parameters}
 }
 \description{
 if nrow(x) > subsample_over, subsample with the minimum needed to get a

@@ -2,7 +2,6 @@
 #'
 #' \code{stat_segm} calculates statistics of a given segmentation : mean and
 #' variance of the different states. it also creates standard objects for plot.
-#' Actually implementation exists for \code{moveHMM} and \code{segTraj} methods.
 #' @param data the data.frame with the different variable
 #' @param diag.var names of the variables on which statistics are calculated
 #' @param order.var names of the variable with which states are ordered
@@ -14,15 +13,16 @@
 #'   variance of the different states
 #'
 #' @examples
-#' \dontrun{stat_segm(data,diag.var=c("dist","angle"),
-#' order.var='dist',type='hmm',hmm.model=mod1.hmm)}
+#' \dontrun{
+#' #res.segclust is a result of a segmentation-clustering algorithm
+#' param <- res.segclust$param[["3 class"]]
+#' nseg = 10
+#' out <- stat_segm(data, diag.var = c("dist","angle"),
+#'  order.var = "dist", param = param, nseg=nseg, seg.type = "segclust")
+#' 
+#' }
 #' @export
 #'
-#
-# test <- stat_segm(data=subdf2,diag.var,order.var,model.type='picard',picard.param=param,picard.type='hybrid')
-# attributes(data$scaled_speed)<- NULL
-# attributes(data$scaled_angle)<- NULL
-# plot_states(outputs,diag.var)
 
 stat_segm <- function(data, diag.var, order.var = NULL, param = NULL, seg.type = NULL, nseg){
   subdata <- data[!is.na(data$subsample_ind),]
@@ -39,7 +39,7 @@ stat_segm <- function(data, diag.var, order.var = NULL, param = NULL, seg.type =
 
 #' Find segment and states for a Picard model
 #'
-#' \code{prep_segm_picard} find the different segment and states of a given HMM
+#' \code{prep_segm} find the different segment and states of a given HMM
 #' model
 #' @param data the data.frame with the different variable
 #' @param param the param output of the segmentation
@@ -47,13 +47,6 @@ stat_segm <- function(data, diag.var, order.var = NULL, param = NULL, seg.type =
 #' @param nseg number of segment chosen
 #' @return a data.frame with states of the different segments
 #'
-#' @examples
-#' \dontrun{prep_segm_picard(data, picard.param, picard.type = 'hybrid',
-#' picard.nseg=NULL)}
-
-# attributes(subdf2$scaled_speed)<- NULL
-# attributes(subdf2$scaled_angle)<- NULL
-# outputs <- segclust::stat_segm(subdf2,diag.var,order.var,model.type='picard',picard.param=param,picard.type='hybrid')
 
 prep_segm <- function(data,param,seg.type=NULL,nseg=NULL){
 
@@ -113,9 +106,6 @@ calc_stat_states <- function(data,df.segm,diag.var,order.var=NULL)
 #' @param diag.var names of the variables on which statistics are calculated
 #' @return  a data.frame with mean and variance of the different states
 #'
-#' @examples
-#' \dontrun{calc_stat_states(data, diag.var=c("dist","angle"),
-#' order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 #' @export
 
 find_mu_sd <- function(df.states,diag.var){
@@ -160,12 +150,37 @@ find_mu_sd <- function(df.states,diag.var){
 #' @param n number of observations
 #' @return a data.frame with BIC, number of cluster and number of segment
 #'
-#' @examples
-#' \dontrun{calc_stat_states(data, diag.var=c("dist","angle"),
-#' order.var='dist',type='hmm',hmm.model=mod1.hmm)}
 #' @export
 
 calc_BIC <- function(likelihood,ncluster,nseg,n){
   BIC = likelihood - 0.5*(5*ncluster-1)*log(2*n) - 0.5 * nseg * log(2*n)
   return(data.frame(BIC=BIC,ncluster=ncluster,nseg=nseg))
+}
+
+#' Check for exact repetition in the series
+#'
+#' \code{check_repetition} checks whether the series have exact repetition larger than lmin.
+#' if that is the case, throw an error, the algorithm cannot yet handle these repetition,
+#' because variance on the segment would be null.
+#' @param x the bivariate series to be tested
+#' @param lmin minimum length of segment
+#' @return a boolean, TRUE if there is any repetition larger or equal to lmin.
+#'
+#' @export
+#' @examples 
+#' set.seed(42) 
+#' dat <- rbind(base::sample(seq(1,10),  size= 100, replace = TRUE),
+#'              base::sample(seq(1,10),  size= 100, replace = TRUE))
+#' check_repetition(dat, lmin = 3)
+#' check_repetition(dat, lmin = 5)             
+
+
+check_repetition <- function(x,lmin){
+  rep_1 <- rle(x[1,])
+  rep_2 <- rle(x[2,])
+  if( any(rep_1$length >= lmin) || any(rep_2$length >= lmin)){
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
 }

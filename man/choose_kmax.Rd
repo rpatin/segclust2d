@@ -20,5 +20,10 @@ Choosing optimal number of segment using Marc Lavielle's method. From Emilie
 Lebarbier. Method based on identifying breaks in the slope of the contrast.
 }
 \examples{
-\dontrun{choose_kmax(x, S = 0.5)}
+
+\dontrun{
+res.seg <- segmentation(df, coord.names = c("x","y"), Kmax = 30, lmin = 10)
+#find the optimal number of segment according to Lavielle's criterium with a different threshold.
+choose_kmax(res.seg, S = 0.60) 
+}
 }

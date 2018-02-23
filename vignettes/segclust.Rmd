@@ -4,7 +4,7 @@ author: "R. Patin"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Segmentation/Clustering with segclust2d}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -45,7 +45,6 @@ install.packages("segclust2d")
 If you want the newest version, you can install `segclust2d` from github with:
 
 ``` {r, fig.show='hold', eval = FALSE}
-install.packages("devtools")
 devtools::install_github("rpatin/segclust2d")
 ```
 # Examples
@@ -109,7 +108,7 @@ For a joint segmentation/clustering one has to specify arguments `lmin`, the min
 By default `segclust()` will standardized variables, but one can change this by setting `scale.variable = FALSE`. 
 
 ```{r, fig.show='hold'}
-mode_segclust <- segclust(simulmode, Kmax = 30, lmin=5, ncluster = c(2,3,4), type = "behavior", seg.var = c("speed","abs_spatial_angle"))
+mode_segclust <- segclust(simulmode, Kmax = 20, lmin=10, ncluster = c(2,3), type = "behavior", seg.var = c("speed","abs_spatial_angle"))
 
 ```
 

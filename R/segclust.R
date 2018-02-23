@@ -17,8 +17,32 @@
 #' @return  a \code{\link{segmentation-class}} object
 #'
 #' @examples
-#' \dontrun{segclust(data, Kmax = 20, lmin = 10, ncluster = 2:4, seg.var =
-#' c("dist","angle"))}
+#' #' @examples
+#' df <-  test_data()$data
+#' #' # data is a data.frame with column 'x' and 'y'
+#' # Simple segmentation with automatic subsampling if data has more than 1000 rows:
+#' res <- segclust(df, Kmax = 10, lmin = 20, ncluster = 3, seg.var = c("x","y"))
+#'  # Plot results
+#'  plot(res)
+#'  segmap(res, coord.names = c("x","y"))
+#'  # check penalized likelihood of alternative number of segment possible. There should
+#'  # be a clear break if the segmentation is good
+#'  plot_BIC(res)
+#' \dontrun{
+#' # Advanced options:
+#' # Run with automatic subsampling if df has more than 500 rows:
+#' res <- segclust(df, Kmax = 30, lmin = 10, ncluster = 2:4,
+#'  seg.var = c("x","y"), subsample_over = 500)
+#' # Run with subsampling by 2:
+#' res <- segclust(df, Kmax = 30, lmin = 10, , ncluster = 2:4,
+#'  seg.var = c("x","y"), subsample_by = 2)
+#' # Disable subsampling:
+#' res <- segclust(df, Kmax = 30, lmin = 10, , ncluster = 2:4,
+#'  seg.var = c("x","y"), subsample = FALSE)
+#' # Disabling automatic scaling of variables for segmentation (standardazing the variables) :
+#'  res <- segclust(df, Kmax = 30, lmin = 10, seg.var = c("dist","angle"),
+#'   scale.variable = FALSE)
+#' }
 #' @export
 
 segclust <- function (x, ...) {
@@ -172,6 +196,11 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
   }
   if(lmin < 1){
     stop("lmin should be > 1")
+  }
+  
+  # check that there are no repetitions in the series
+  if(check_repetition(dat, lmin)){
+    stop("There are repetitions of identical values in the time series larger than lmin, cannot estimate variance for such segment. This is potentially caused by interpolation of missing values or rounding of values.")
   }
   
   segmented <- list("data" = x,

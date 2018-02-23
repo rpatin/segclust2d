@@ -50,6 +50,10 @@ add_covariates method for data.frame
 }
 \examples{
 \dontrun{add_covariates(move_object, coord.names = c("x","y"), smoothed = T)}
-\dontrun{add_covariates(ltraj_object, coord.names = c("x","y"), smoothed = T)}
-\dontrun{calc_dist(df,coord.names = c("x","y"), smoothed = T)}
+\dontrun{
+data(simulmode)
+simple_data <- simulmode[,c("dateTime","x","y")]
+full_data   <- add_covariates(simple_data, coord.names = c("x","y"),
+ timecol = "dateTime",smoothed = TRUE, units ="min")
+}
 }

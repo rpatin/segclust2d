@@ -64,7 +64,7 @@ The second important method is `plot_likelihood` that shows the log-likelihood o
 
 
 ``` r
-plot_likelihood(shift_seg, nseg = 10)
+plot_likelihood(shift_seg)
 ```
 
 ## Segmentation-Clustering

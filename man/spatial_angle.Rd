@@ -20,7 +20,10 @@ vector of spatial angle.
 \code{spatial_angle} calculate spatial angle between locations, taking a dataframe as input. Spatial angle is considered as the angle between the focus point, the first location entering a given circle and the last location inside.
 }
 \examples{
-\dontrun{calc_speed(df,coord.names = c("x","y"), timecol = "dateTime", smoothed = T)}
+\dontrun{
+data(simulmode)
+spatial_angle(simulmode)
+}
 }
 \author{
 Remi Patin, Simon Benhamou.

@@ -8,7 +8,17 @@
 #' @return a graph
 #'
 #' @examples
-#' \dontrun{plot_states(data_segm)}
+#' \dontrun{ 
+#' #res.segclust is the results of the segmentation-clustering algorithm 
+#' ncluster = 3 
+#' nseg = 10 
+#' g <- plot_states(output = res.segclust$outputs[[paste(ncluster,"class -",nseg, "segments")]],
+#' diag.var = c("dist","angle2")
+#' #res.seg is the results of the segmentation-only algorithm 
+#' nseg = 10 
+#' g <- plot_states(output = res.segclust$outputs[[paste(nseg, "segments")]],
+#' diag.var = c("dist","angle2")) 
+#' }
 #' @export
 
 plot_states <- function(outputs,diag.var, position_width=0.3,order = F){

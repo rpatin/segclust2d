@@ -1,9 +1,9 @@
 # Gmean_simultanee
-#' Gmean_simultanee  calculates the cost matrix for a segmentation model with changes in the mean and same variance for all signals
+#' Gmean_simultanee  calculates the cost matrix for a segmentation model with changes in the mean and variance for all signals
 #' @param Don the bivariate signal
 #' @param lmin minimum size for a segment, default value is 2
+#' @param sameVar whether variance is the same for each segment.
 #' @return the cost matrix G(i,j) which contains the variance of the data between point (i+1) to point j
-#' @export
 Gmean_simultanee<-function(Don,lmin,sameVar=FALSE)
 {
   n = dim(Don)[2]
