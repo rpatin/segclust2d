@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepare_covariates.R
 \name{spatial_angle}
 \alias{spatial_angle}
-\title{Calculate spatial angle along a trajectory}
+\title{Calculate spatial angle along a path}
 \usage{
 spatial_angle(x, coord.names = c("x", "y"), radius = NULL)
 }

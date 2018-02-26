@@ -132,7 +132,7 @@ calc_dist <- function(x, coord.names = c("x","y"), smoothed = F){
   return(tmp)
 }
 
-#' Calculate speed along a trajectory
+#' Calculate speed along a path
 #'
 #' \code{calc_dist} calculate speed between locations, taking a dataframe as input. Speed can also be smoothed over the two steps before and after the each point.
 #' @param x data.frame with locations
@@ -161,7 +161,7 @@ calc_speed <- function(x, coord.names = c("x","y"), timecol = "dateTime", smooth
 }
 
 
-#' Calculate spatial angle along a trajectory
+#' Calculate spatial angle along a path
 #'
 #' \code{spatial_angle} calculate spatial angle between locations, taking a dataframe as input. Spatial angle is considered as the angle between the focus point, the first location entering a given circle and the last location inside.
 #' @param x data.frame with locations
@@ -262,7 +262,7 @@ spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
   return(angle_spa)
 }
 
-#' Calculate angular speed along a trajectory
+#' Calculate angular speed along a path
 #'
 #' \code{angular_speed} calculate turning angle between locations, taking a
 #' dataframe as input.

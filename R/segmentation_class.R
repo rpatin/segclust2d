@@ -180,7 +180,7 @@ plot_BIC <- function(x) {
       ggplot2::geom_point()+
       ggplot2::geom_line()+
       ggplot2::xlab("Number of segments")+
-      ggplot2::ylab("BIC penalized log-Likelihood")+
+      ggplot2::ylab("BIC-based penalized log-Likelihood")+
       ggplot2::geom_point(data=SegOpt,shape = 15,size=2)+
       ggplot2::geom_point(data=ClusterOpt,shape = 19, size = 3.5)+
       ggplot2::geom_text(data=ClusterOpt, size = 3,label="selected optimum", nudge_x = - nudgeX, nudge_y = nudgeY)+

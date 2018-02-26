@@ -6,7 +6,7 @@ Authors@R: c(person("Remi", "Patin", role = c("aut", "cre"), email = "remi.patin
              person("Marie-Pierre", "Etienne", role = "aut"), 
              person("Emilie", "Lebarbier", role = "aut"), 
              person("Simon", "Benhamou", role = "aut"))
-Description: provides two methods for segmentation and joint segmentation/clustering of
+Description: Provides two methods for segmentation and joint segmentation/clustering of
     bivariate time-series. Originally intended for ecological segmentation
     (home-range and behavioural modes) but easily applied on other series,
     the package also provides tools for analysing outputs from R packages 'moveHMM' and 'marcher'.

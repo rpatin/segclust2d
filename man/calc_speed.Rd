@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepare_covariates.R
 \name{calc_speed}
 \alias{calc_speed}
-\title{Calculate speed along a trajectory}
+\title{Calculate speed along a path}
 \usage{
 calc_speed(x, coord.names = c("x", "y"), timecol = "dateTime",
   smoothed = F, units = "hour")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepare_covariates.R
 \name{angular_speed}
 \alias{angular_speed}
-\title{Calculate angular speed along a trajectory}
+\title{Calculate angular speed along a path}
 \usage{
 angular_speed(x, coord.names = c("x", "y"))
 }
