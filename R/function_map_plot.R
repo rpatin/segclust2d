@@ -41,8 +41,8 @@ map_segm <- function(data,output,interactive=F,html=F, scale=1,
 
   data$state = df.segm[findInterval(data$indice,df.segm$begin,rightmost.closed = F,left.open = F),ifelse(order,"state_ordered","state")]
 
-  data$x <- data$x/scale
-  data$y <- data$y/scale
+  data[,coord.names[1]] <- data[,coord.names[1]]/scale
+  data[,coord.names[2]] <- data[,coord.names[2]]/scale
   if(!interactive){
     g <- ggplot2::ggplot(data,ggplot2::aes_string(x=coord.names[1],y=coord.names[2]))+
       ggplot2::geom_path(size = linesize)+
