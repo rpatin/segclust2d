@@ -386,7 +386,7 @@ augment.segmentation<- function(x,nseg = NULL,ncluster=NULL,colname_state = "sta
 #' segmap(res.seg, nseg = 4)
 #' }
 segmap <-  function(x, interactive=F, nseg = NULL, ncluster = NULL, html=F,
-                    scale=100, width=400, height=400, order = NULL, pointsize = 1, linesize = 0.5 , ...){
+                    scale=1, width=400, height=400, order = NULL, pointsize = 1, linesize = 0.5 , ...){
 
   if (is.null(order)){
     if (x$type == "home-range") order <- F
