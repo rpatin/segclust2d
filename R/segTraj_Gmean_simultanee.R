@@ -55,7 +55,7 @@ Gmean_simultanee<-function(Don,lmin,sameVar=FALSE)
         tmp_gmean <- (z2i-(zi^2)/(lmin:(n-i+1)))/(lmin:(n-i+1))
         if(any(tmp_gmean <= 0)){
           # browser()
-          stop(paste0("Problem with a segment starting at point ",i," (once subsampled) and ending between point ", i+lmin-1," and ",n,". Check for segment with potentially very low variance compared to the rest of the serie. This could happen if there are interpolation of trajectories or if data have not been properly cleaned (e.g. stationary gps points). The algorithm cannot work with stationnary points."))
+          stop(paste0("Problem with a segment starting at point ",i," (once subsampled) and ending between point ", i+lmin-1," and ",n,". Check for segment with potentially very low variance compared to the rest of the serie. This could happen if there are interpolation of trajectories or if data have not been properly cleaned (e.g. stationary gps points). The algorithm cannot work with series of (near)-identical points."))
         }
         Res[i,(i+lmin-1):n]=(lmin:(n-i+1))*(log(tmp_gmean))
         
