@@ -157,13 +157,15 @@ calc_BIC <- function(likelihood,ncluster,nseg,n){
   return(data.frame(BIC=BIC,ncluster=ncluster,nseg=nseg))
 }
 
-#' Check for exact repetition in the series
+#' Check for repetition in the series
 #'
-#' \code{check_repetition} checks whether the series have exact repetition larger than lmin.
+#' \code{check_repetition} checks whether the series have identical or near-identical repetition larger than lmin.
 #' if that is the case, throw an error, the algorithm cannot yet handle these repetition,
-#' because variance on the segment would be null.
+#' because variance on the segment would be null. 
 #' @param x the bivariate series to be tested
 #' @param lmin minimum length of segment
+#' @param rounding whether or not series are rounded
+#' @param magnitude number of magnitude of standard deviation below which values are rounded. i.e if magnitude = 3, difference smaller than one thousandth of the standard deviation are rounded to the same value.
 #' @return a boolean, TRUE if there is any repetition larger or equal to lmin.
 #'
 #' @export
@@ -174,13 +176,29 @@ calc_BIC <- function(likelihood,ncluster,nseg,n){
 #' check_repetition(dat, lmin = 3)
 #' check_repetition(dat, lmin = 5)             
 
-
-check_repetition <- function(x,lmin){
-  rep_1 <- rle(x[1,])
-  rep_2 <- rle(x[2,])
-  if( any(rep_1$length >= lmin) || any(rep_2$length >= lmin)){
-    return(TRUE)
-  } else {
-    return(FALSE)
-  }
+check_repetition <- function(x,lmin, rounding = FALSE, magnitude = 3){
+    if(rounding){
+      sd_x1 <- sd(x[1,])
+      magn1 <- - floor(log10(sd_x1)) +magnitude
+      x1 <- round(x[1,], digits = magn1)
+      sd_x2 <- sd(x[2,])
+      magn2 <- - floor(log10(sd_x2)) +magnitude
+      x2 <- round(x[2,], digits = magn2)
+      rep_1 <- rle(x1)
+      rep_2 <- rle(x2)
+      if( any(rep_1$length >= lmin) || any(rep_2$length >= lmin)){
+        return(TRUE)
+      } else {
+        return(FALSE)
+      } 
+    } else {
+      rep_1 <- rle(x[1,])
+      rep_2 <- rle(x[2,])
+      if( any(rep_1$length >= lmin) || any(rep_2$length >= lmin)){
+        return(TRUE)
+      } else {
+        return(FALSE)
+      } 
+    }
+   
 }
