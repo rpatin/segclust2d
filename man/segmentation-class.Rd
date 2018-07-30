@@ -44,7 +44,7 @@ segment(x, nseg = NULL, ncluster = NULL)
   colname_state = "state", ...)
 
 segmap(x, interactive = F, nseg = NULL, ncluster = NULL, html = F,
-  scale = 100, width = 400, height = 400, order = NULL, pointsize = 1,
+  scale = 1, width = 400, height = 400, order = NULL, pointsize = 1,
   linesize = 0.5, ...)
 }
 \arguments{

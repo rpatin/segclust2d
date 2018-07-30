@@ -149,3 +149,14 @@ arma::mat Gmixt_simultanee_fullcpp(arma::mat Don,int lmin, arma::rowvec prop, ar
   arma::mat G2 = sum(G,2);
   return G2;
 }
+
+//' cumsum_cpp
+//'
+//' C++ function for cumulative sum (replacing R cumsum)
+//'
+//' @param x Numerical Vector
+// [[Rcpp::export]]
+
+NumericVector cumsum_cpp(NumericVector x){
+  return(cumsum(x));
+}

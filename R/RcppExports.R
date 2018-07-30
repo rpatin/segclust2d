@@ -87,3 +87,12 @@ Gmixt_simultanee_fullcpp <- function(Don, lmin, prop, mu, s) {
     .Call(`_segclust2d_Gmixt_simultanee_fullcpp`, Don, lmin, prop, mu, s)
 }
 
+#' cumsum_cpp
+#'
+#' C++ function for cumulative sum (replacing R cumsum)
+#'
+#' @param x Numerical Vector
+cumsum_cpp <- function(x) {
+    .Call(`_segclust2d_cumsum_cpp`, x)
+}
+
