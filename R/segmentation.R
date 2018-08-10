@@ -230,8 +230,6 @@ segmentation_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var 
   if(check_repetition(dat, lmin)){
     stop("There are repetitions of identical values in the time series larger than lmin, cannot estimate variance for such segment. This is potentially caused by interpolation of missing values or rounding of values.")
   }
-  dat[1,] <- dat[1,]-mean(dat[1,])
-  dat[2,] <- dat[2,]-mean(dat[2,])
   CostLoc <- Gmean_simultanee(dat, lmin = lmin,sameVar = sameSigma)
   res.DynProg <- DynProg(CostLoc, Kmax)
 

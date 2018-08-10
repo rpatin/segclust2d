@@ -104,17 +104,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cumsum_cpp
-NumericVector cumsum_cpp(NumericVector x);
-RcppExport SEXP _segclust2d_cumsum_cpp(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(cumsum_cpp(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_segclust2d_DynProg_algo_cpp", (DL_FUNC) &_segclust2d_DynProg_algo_cpp, 2},
@@ -124,7 +113,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_segclust2d_arma_repmat", (DL_FUNC) &_segclust2d_arma_repmat, 3},
     {"_segclust2d_Gmixt_algo_cpp", (DL_FUNC) &_segclust2d_Gmixt_algo_cpp, 7},
     {"_segclust2d_Gmixt_simultanee_fullcpp", (DL_FUNC) &_segclust2d_Gmixt_simultanee_fullcpp, 5},
-    {"_segclust2d_cumsum_cpp", (DL_FUNC) &_segclust2d_cumsum_cpp, 1},
     {NULL, NULL, 0}
 };
 

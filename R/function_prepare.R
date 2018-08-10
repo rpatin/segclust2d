@@ -202,3 +202,27 @@ check_repetition <- function(x,lmin, rounding = FALSE, magnitude = 3){
     }
    
 }
+
+#' Relabel states of a segmentation/clustering output
+#' 
+#' \code{relabel_states} relabel the states of a segmentation/clustering output.
+#' This allows merging different states into the same if for instance several of
+#' the model states represent the same behavioural states.
+#' @param mode.segclust segclust output
+#' @param newlabel a vector with the new names ordered, corresponding to 
+#'   state_ordered
+#' @param ncluster the number of cluster for which you want relabeling
+#' @param nseg the number of segment for which you want relabeling
+#' @param order boolean, whether this changes the ordered states or not. FALSE 
+#'   value obsolete for now
+#' @return a segmentation object with state names changed for the segmentation
+#'   specified by ncluster and nseg
+#'   
+#' @export
+
+relabel_states <- function(mode.segclust, newlabel, ncluster, nseg, order = TRUE){
+  tmp <- mode.segclust$outputs[[paste0(ncluster," class - ",nseg," segments")]]  
+  tmp$states$state_ordered <- relabel_vector[tmp$states$state_ordered]
+  mode.segclust$outputs[[paste0(ncluster," class - ",nseg," segments")]]  <- tmp
+  mode.segclust
+}

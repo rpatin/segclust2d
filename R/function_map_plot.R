@@ -87,3 +87,53 @@ map_segm <- function(data,output,interactive=F,html=F, scale=1,
     return(a)
   }
 }
+
+
+
+
+
+#' \code{segmap_list} create maps with a list of object of \code{segmentation} class
+#'   (interpreting latitude/longitude)
+#' @param data the data.frame with the different variable
+#' @param output outputs of the segmentation  or segclust algorithm for one
+#'   number of segment
+#' @param interactive should graph be interactive with leaflet ?
+#' @param html should the graph be incorporated in a markdown file through
+#'   htmltools::tagList()
+#' @param order should cluster be ordered
+#' @param pointsize size of points
+#' @param height height
+#' @param width width
+#' @param linesize size of lines
+#' @param scale for dividing coordinates to have compatibility with leaflet
+#' @param UTMstring projection of the coordinates
+#' @param coord.names names of coordinates
+#' @return a graph
+#'
+#' @importFrom magrittr "%>%"
+#' @export
+#' @examples 
+segmap_list <-  function(x_list, ncluster_list, nseg_list, pointsize = 1, linesize = 0.5, coord.names = c("x","y"), ...){
+  
+  g <- ggplot2::ggplot()
+  for(i in 1:length(x_list)){
+    x <- x_list[[i]]
+    ncluster <- ncluster_list[i]
+    nseg <- nseg_list[i]
+    outputs <-  x$outputs[[paste(ncluster,"class -",nseg, "segments")]]
+    data <- x$data
+    df.segm <- dplyr::left_join(outputs[[1]],outputs[[2]],by="state")
+    data$indice <- 1:nrow(data)
+    data$state = df.segm[findInterval(data$indice,df.segm$begin,rightmost.closed = F,left.open = F),"state_ordered"]
+
+    g <- g + 
+        ggplot2::geom_path(data = data,
+                           ggplot2::aes_string(x=coord.names[1],y=coord.names[2]), 
+                           size = linesize)+
+        ggplot2::geom_point(data = data,
+                            ggplot2::aes_string(x=coord.names[1],y=coord.names[2], col="factor(state)"),
+                            size = pointsize)
+      
+  }
+  return(g)
+}
