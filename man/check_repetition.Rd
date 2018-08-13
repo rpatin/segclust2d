@@ -2,20 +2,24 @@
 % Please edit documentation in R/function_prepare.R
 \name{check_repetition}
 \alias{check_repetition}
-\title{Check for exact repetition in the series}
+\title{Check for repetition in the series}
 \usage{
-check_repetition(x, lmin)
+check_repetition(x, lmin, rounding = FALSE, magnitude = 3)
 }
 \arguments{
 \item{x}{the bivariate series to be tested}
 
 \item{lmin}{minimum length of segment}
+
+\item{rounding}{whether or not series are rounded}
+
+\item{magnitude}{number of magnitude of standard deviation below which values are rounded. i.e if magnitude = 3, difference smaller than one thousandth of the standard deviation are rounded to the same value.}
 }
 \value{
 a boolean, TRUE if there is any repetition larger or equal to lmin.
 }
 \description{
-\code{check_repetition} checks whether the series have exact repetition larger than lmin.
+\code{check_repetition} checks whether the series have identical or near-identical repetition larger than lmin.
 if that is the case, throw an error, the algorithm cannot yet handle these repetition,
 because variance on the segment would be null.
 }
