@@ -92,34 +92,34 @@ map_segm <- function(data,output,interactive=F,html=F, scale=1,
 
 
 
-#' \code{segmap_list} create maps with a list of object of \code{segmentation} class
-#'   (interpreting latitude/longitude)
-#' @param data the data.frame with the different variable
-#' @param output outputs of the segmentation  or segclust algorithm for one
-#'   number of segment
-#' @param interactive should graph be interactive with leaflet ?
-#' @param html should the graph be incorporated in a markdown file through
-#'   htmltools::tagList()
-#' @param order should cluster be ordered
+#' \code{segmap_list} create maps with a list of object of \code{segmentation}
+#' class
+#' @param x_list list of segmentation objects for different individuals or path
+#' @param ncluster_list list of number of cluster to be selected for each
+#'   individual. If empty, the function takes the default one
+#' @param nseg_list list of number of segment to be selected for each
+#'   individual. If empty, the function takes the default one
 #' @param pointsize size of points
-#' @param height height
-#' @param width width
 #' @param linesize size of lines
-#' @param scale for dividing coordinates to have compatibility with leaflet
-#' @param UTMstring projection of the coordinates
 #' @param coord.names names of coordinates
-#' @return a graph
+#' @return a ggplot2 graph
 #'
-#' @importFrom magrittr "%>%"
 #' @export
-#' @examples 
-segmap_list <-  function(x_list, ncluster_list, nseg_list, pointsize = 1, linesize = 0.5, coord.names = c("x","y"), ...){
+segmap_list <-  function(x_list, ncluster_list = NULL, nseg_list = NULL, pointsize = 1, linesize = 0.5, coord.names = c("x","y")){
   
   g <- ggplot2::ggplot()
   for(i in 1:length(x_list)){
     x <- x_list[[i]]
-    ncluster <- ncluster_list[i]
-    nseg <- nseg_list[i]
+    if(is.null(ncluster_list)){
+      ncluster <- x$ncluster.BIC
+    } else {
+      ncluster <- ncluster_list[i]
+    }
+    if(is.null(nseg_list)){
+      nseg <- x$Kopt.BIC[ncluster]
+    } else {
+      nseg <- nseg_list[i]
+    }
     outputs <-  x$outputs[[paste(ncluster,"class -",nseg, "segments")]]
     data <- x$data
     df.segm <- dplyr::left_join(outputs[[1]],outputs[[2]],by="state")
