@@ -1,7 +1,7 @@
 Package: segclust2d
 Type: Package
 Title: Bivariate Segmentation/Clustering Methods and Tools
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(person("Remi", "Patin", role = c("aut", "cre"), email = "remi.patin@normale.fr"),
              person("Marie-Pierre", "Etienne", role = "aut"), 
              person("Emilie", "Lebarbier", role = "aut"), 
@@ -16,10 +16,10 @@ Description: Provides two methods for segmentation and joint segmentation/cluste
     The segmentation/clustering method alternates steps of dynamic programming with an Expectation-Maximization algorithm.
     This is an extension of Picard et al (2007) <doi:10.1111/j.1541-0420.2006.00729.x> method 
     (formerly available in 'cghseg' package) to the bivariate case.
-    The full description of the method is not published yet.
+    The method is fully described in Patin et al (2018) <doi:10.1101/444794>.
 License: GPL-3
 LazyData: TRUE
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Depends:
     R (>= 3.3.0)
 Imports:
