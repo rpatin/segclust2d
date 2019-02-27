@@ -63,15 +63,15 @@ library(segclust2d)
 data(simulshift)
 ```
 
-`simulshift` is an example dataset containing a simulation of home-range behaviour with two shifts. It is a data.frame with two columns for coordinates : x and y. We can now run a simple segmentation with this dataset to find the different home-ranges. By default `segmentation()` function will take `type` argument as 'home-range' and choose default column x and y as coordinates but one can specify something else using argument `seg.var`.
+`simulshift` is an example dataset containing a simulation of home-range behaviour with two shifts. It is a data.frame with two columns for coordinates : x and y. We can now run a simple segmentation with this dataset to find the different home-ranges. You can specify the variables to be segmented using argument `seg.var`. The function allow rescaling of variable (not recommended for segmentation on coordinates), with argument `scale.variable`.
 
-For a segmentation one has to specify arguments `lmin`, the minimum length of a segment and `Kmax`, the maximum number of segments. By default `Kmax` will be set to `floor(n/lmin)`, with `n` the number of observations. However this can considerably slow the calculations so do not hesitate to reduce it to a reasonable value.
+The segmentation require arguments `lmin`, the minimum length of a segment and `Kmax`, the maximum number of segments. By default `Kmax` will be set to `0.75*floor(n/lmin)`, with `n` the number of observations. However this can considerably slow the calculations so do not hesitate to reduce it to a reasonable value. Be carefull if you want to fix a higher `Kmax` the algorithm tend to over-segment (which you can check by looking at the segmentation or the likelihood curve)
 
 ```{r, fig.show='hold'}
-shift_seg <- segmentation(simulshift, lmin = 300, Kmax = 25, type = "home-range", subsample_by = 60)
+shift_seg <- segmentation(simulshift, lmin = 300, Kmax = 25, seg.var = c("x","y"), subsample_by = 60, scale.variable = FALSE)
 ```
 
-Segmentation is performed through a Dynamic Programming algorithm that finds the best segmentation given a number of segment. For each number of segment, the optimal segmentation is associated with a likelihood value. By default, the algorithm choose the number of segment given a criterium developped by Marc Lavielle based on the value of the second derivative of the penalized likelihood. This criterium use a threshold value of `S = 0.75`, but a different threshold can be specified. By default segmentation is done on coordinates `c("x","y")` but one can specify other names through arguments `coord.names`.  Argument `subsample_by` controls subsampling and will be explored in section [subsampling](#subsampling)
+Segmentation is performed through a Dynamic Programming algorithm that finds the best segmentation given a number of segment. For each number of segment, the optimal segmentation is associated with a likelihood value. By default, the algorithm choose the number of segment given a criterium developped by Marc Lavielle based on the value of the second derivative of the penalized likelihood. This criterium use a threshold value of `S = 0.75`, but a different threshold can be specified. Argument `subsample_by` controls subsampling and will be explored in section [subsampling](#subsampling)
 
 `segmentation()` returns an object of `segmentation-class` for which several methods are available (see section [exploring outputs](#exploring-outputs)). The most important one is plot.segmentation, that shows the segmented time-series. 
 
@@ -84,7 +84,7 @@ By default,  `plot.segmentation` shows the best segmentation, but one can specif
 plot(shift_seg, nseg = 10)
 ```
 
-The second important method is `plot_likelihood` that shows the log-likelihood of the best segmentation versus the number of segments and highlights the one chosen with Lavielle's criterium.
+The second important method is `plot_likelihood` that shows the log-likelihood of the best segmentation versus the number of segments and highlights the one chosen with Lavielle's criterium. The likelihood should show an increasing curve with a clear breakpoints for the optimal number of segment. Note that with real data breaks are often less clear than for that example. An artifactual decrease of likelihood can happen for large number of segment when Kmax is too high (close to `n/lmin`) and correspond generally to an oversegmentation.
 
 
 ```{r, fig.show='hold'}
@@ -101,14 +101,13 @@ simulmode <- simulmode[!is.na(simulmode$abs_spatial_angle), ]
 
 `simulmode` is an example dataset containing a movement simulation with three different movement mode. It is a data.frame with 11 columns, with coordinates and several covariates. Be careful to check your dataset for missing value.
 
-We can now run a joint segmentation/clustering on this dataset to identify the different behavioural modes. By default `segclust()` function will take `type` argument as 'behavior' but one has to specify two variables for segmentation using argument `seg.var`. 
+We can now run a joint segmentation/clustering on this dataset to identify the different behavioural modes. As in `segmentation`, you can specify the variables to be segmented using argument `seg.var`. The function allow rescaling of variable (recommended for segmentation/clustering to identify behavioural state), with argument `scale.variable`.
 
-For a joint segmentation/clustering one has to specify arguments `lmin`, the minimum length of a segment and `Kmax`, the maximum number of segments, and `ncluster` a vector of number of class. By default `Kmax` will be set to `floor(n/lmin)`, with `n` the number of observations. However this can considerably slow the calculations so do not hesitate to reduce it to a reasonable value.
+For a joint segmentation/clustering one has to specify arguments `lmin`, the minimum length of a segment and `Kmax`, the maximum number of segments, and `ncluster` a vector of number of class. By default `Kmax` will be set to `0.75*floor(n/lmin)`, with `n` the number of observations. Be carefull if you want to fix a higher `Kmax` the algorithm tend to over-segment (which you can check by looking at the segmentation or the likelihood curve)
 
-By default `segclust()` will standardized variables, but one can change this by setting `scale.variable = FALSE`. 
 
 ```{r, fig.show='hold'}
-mode_segclust <- segclust(simulmode, Kmax = 20, lmin=10, ncluster = c(2,3), type = "behavior", seg.var = c("speed","abs_spatial_angle"))
+mode_segclust <- segclust(simulmode, Kmax = 20, lmin=10, ncluster = c(2,3), seg.var = c("speed","abs_spatial_angle"), scale.variable = TRUE)
 
 ```
 
@@ -125,7 +124,8 @@ plot(mode_segclust, ncluster = 3)
 plot(mode_segclust, ncluster = 3, nseg = 7)
 
 ```
-One can also inspect the BIC-based penalized log-likelihood through functions `plot_BIC()`. 
+One can also inspect the BIC-based penalized log-likelihood through functions `plot_BIC()`. Best-case scenario is as below, the BIC show a steep increase up to a maximum and a slow decrease after the optimum and one number of cluster is clearly above the others. With real data it also happens that more cluster always improve the penalized-likelihood but so we generally advise to choose the number of cluster based on expectation and biological knowledge.
+
 
 ```{r, fig.show='hold'}
 plot_BIC(mode_segclust)
@@ -134,7 +134,7 @@ plot_BIC(mode_segclust)
 
 `lmin` is the minimum length of a segment. For home range it is the duration for which we consider a stationary use to be a home-range. For behaviour it is the minimum time for a behaviour not te be considered anecdotical.
 
-`Kmax` is by default fixed to the maximum but for performance we advise on setting a smaller Kmax. If the selected number of segment is too close to Kmax, think about increasing Kmax, that might be limiting the number of segment.
+`Kmax` is by default fixed to the maximum but for performance we advise on setting a smaller Kmax. If the selected number of segment is too close to Kmax, think about increasing Kmax, that might be limiting the number of segment. As noted before, when Kmax is to close to the maximum (`n/lmin`) the algorithm may oversegment and we advise to look carefully at the likelihood curve when using `Kmax > 0.75*n/lmin`
 
 By default `ncluster` is chosen by maximizing a BIC-based penalized log-likelihood. When segmentation-clustering is reliable, the selected optimum should the maximum just before a linear drop of the penalized log-Likelihood. Also even though higher number of cluster may have higher penalized log-Likelihood the difference between them should not be too large. Also, as in this example, if the selected number of segment for a higher number of cluster is the same, then the lower number should be preferred. Not that this selection of number of cluster is mostly a suggestion and should not be trusted. Best practice should rely on biological information to fix a priori the number of states.
 
@@ -201,7 +201,7 @@ BIC(mode_segclust)
 
 ## Graphical outputs
 
-`segmentation-class` also provides methods for plotting results of segmentations. All plot methods use `ggplot2` package.
+`segmentation-class` also provides methods for plotting results of segmentations. All plot methods use `ggplot2` package and return `ggplot` objects that can be further modified and customized using classical `ggplot2` (see [ggplot2 function reference](https://ggplot2.tidyverse.org/reference/).
 
 ### plot.segmentation - series plot of the segmentation
 
@@ -210,6 +210,13 @@ BIC(mode_segclust)
 ```{r, fig.show='hold'}
 plot(shift_seg)
 plot(mode_segclust, ncluster = 3, nseg = 10, xcol = "indice", order = T)
+```
+
+
+Here there was a fake `dateTime` column in `POSIXct` format in the `data.frame` originally given to the function `segclust`. We can then plot the results of the segmentation according the the time given.
+
+```{r, fig.show='hold'}
+plot(mode_segclust, ncluster = 3, nseg = 10, xcol = "dateTime", order = T)
 ```
 
 ### segmap - map the segmentation
@@ -298,7 +305,7 @@ Of course the variable names provided must exist as column in `Move_object@data`
 
 # Covariate calculations
 
-The package also includes functions in order to calculate unusual covariates, such as the turning angle at constant step length (here called `spatial_angle`). For the latter, a radius have to be chosen and can be specified through argument `radius`. If no radius is specified, the default one will be the median of the step length distribution. Other covariates calculated are : peristence and turning speed (v_p and v_r) from Gurarie et al (2009), distance travelled between points, speed and smoothed version of the latter.
+The package also includes functions in order to calculate unusual covariates, such as the turning angle at constant step length (here called `spatial_angle`). For the latter, a radius have to be chosen and can be specified through argument `radius`. If no radius is specified, the default one will be the median of the step length distribution. Other covariates calculated are : peristence and turning speed (v_p and v_r) from Gurarie et al (2009), distance travelled between points, speed and smoothed version of the latter. Covariates dependent on time interval (like speed) are by default calculated with hours, but you can change this with argument `units` as in the example below.
  
 ```{r, fig.show='hold', eval = FALSE}
 simple_data <- simulmode[,c("dateTime","x","y")]

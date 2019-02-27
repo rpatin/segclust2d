@@ -17,7 +17,7 @@ library(segclust2d)
 data(simulshift)
 
 ## ---- fig.show='hold'----------------------------------------------------
-shift_seg <- segmentation(simulshift, lmin = 300, Kmax = 25, type = "home-range", subsample_by = 60)
+shift_seg <- segmentation(simulshift, lmin = 300, Kmax = 25, seg.var = c("x","y"), subsample_by = 60, scale.variable = FALSE)
 
 ## ---- fig.show='hold'----------------------------------------------------
 plot(shift_seg)
@@ -34,7 +34,7 @@ simulmode$abs_spatial_angle <- abs(simulmode$spatial_angle)
 simulmode <- simulmode[!is.na(simulmode$abs_spatial_angle), ]
 
 ## ---- fig.show='hold'----------------------------------------------------
-mode_segclust <- segclust(simulmode, Kmax = 20, lmin=10, ncluster = c(2,3), type = "behavior", seg.var = c("speed","abs_spatial_angle"))
+mode_segclust <- segclust(simulmode, Kmax = 20, lmin=10, ncluster = c(2,3), seg.var = c("speed","abs_spatial_angle"), scale.variable = TRUE)
 
 
 ## ---- fig.show='hold'----------------------------------------------------
@@ -79,6 +79,9 @@ BIC(mode_segclust)
 ## ---- fig.show='hold'----------------------------------------------------
 plot(shift_seg)
 plot(mode_segclust, ncluster = 3, nseg = 10, xcol = "indice", order = T)
+
+## ---- fig.show='hold'----------------------------------------------------
+plot(mode_segclust, ncluster = 3, nseg = 10, xcol = "dateTime", order = T)
 
 ## ---- fig.show='hold'----------------------------------------------------
 segmap(shift_seg, nseg = 10)
