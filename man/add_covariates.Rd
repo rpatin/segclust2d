@@ -14,8 +14,8 @@ add_covariates(x, ...)
 \method{add_covariates}{ltraj}(x, coord.names = c("x", "y"), ...)
 
 \method{add_covariates}{data.frame}(x, coord.names = c("x", "y"),
-  smoothed = F, timecol = "dateTime", units = "hour", radius = NULL,
-  ...)
+  smoothed = F, timecol = "dateTime", units = "hour",
+  radius = NULL, ...)
 }
 \arguments{
 \item{x}{movement data}
@@ -41,12 +41,6 @@ Add several covariates to movement observations
 information. It adds : distance between location, spatial angle, speed,
 smoothed speed, persistence and rotation velocity (calculated with spatial
 angle).
-
-add_covariates method for Move object
-
-add_covariates method for ltraj object
-
-add_covariates method for data.frame
 }
 \examples{
 \dontrun{add_covariates(move_object, coord.names = c("x","y"), smoothed = T)}

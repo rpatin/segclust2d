@@ -89,7 +89,7 @@ add_covariates.data.frame <- function(x, coord.names = c("x","y"), smoothed = F,
   if(any(is.na(x[,timecol]))) stop("time should not contain NA")
   if(any(is.na(x[,coord.names[1]]))) stop("x should not contain NA")
   if(any(is.na(x[,coord.names[2]]))) stop("y should not contain NA")
-
+  if(missing(units)) message("Using hours as default time unit. You can change this with argument units.")
   x_dist <- calc_dist(x, coord.names = coord.names, smoothed = F)
   x_dist_smoothed <- zoo::rollapply(x_dist, 2, mean, by.column = FALSE, fill = NA, align = "right")
   n <- nrow(x)
@@ -99,7 +99,8 @@ add_covariates.data.frame <- function(x, coord.names = c("x","y"), smoothed = F,
   x_ang_spa <- spatial_angle(x, coord.names = coord.names, radius = radius)
   x_vit_p <- x_speed*cos(x_ang_spa)
   x_vit_r <- x_speed*sin(x_ang_spa)
-  x$angular_speed <- angular_speed(x, coord.names = coord.names)
+  x$angular_speed <- angular_speed(x, coord.names = coord.names)/c(tmptime,NA)
+  x$angle <- angular_speed(x, coord.names = coord.names)
   x$dist <- x_dist
   x$dist_smoothed <- x_dist_smoothed
   x$speed <- x_speed
@@ -274,6 +275,7 @@ spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
 #' @author Remi Patin, Simon Benhamou.
 
 angular_speed <- function(x, coord.names = c("x","y")){
+
   xx <- diff(x[,coord.names[1]])
   yy <- diff(x[,coord.names[2]])
   b<-sign(xx)
