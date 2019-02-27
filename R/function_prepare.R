@@ -91,7 +91,7 @@ calc_stat_states <- function(data,df.segm,diag.var,order.var=NULL)
 {
   data$state <- df.segm[findInterval(data$indice,df.segm$begin,rightmost.closed = F,left.open = F),"state"]
 
-  eval_str <- paste("dplyr::group_by(data,state) %>% dplyr::summarise(prop=n()/nrow(data),",paste("mu.",diag.var," = mean(",diag.var,",na.rm=T)",collapse=",",sep=""),",",paste("sd.",diag.var," = stats::sd(",diag.var,",na.rm=T)",collapse=",",sep=""),") %>% as.data.frame()",sep="")
+  eval_str <- paste("dplyr::group_by(data,state) %>% dplyr::summarise(prop=dplyr::n()/nrow(data),",paste("mu.",diag.var," = mean(",diag.var,",na.rm=T)",collapse=",",sep=""),",",paste("sd.",diag.var," = stats::sd(",diag.var,",na.rm=T)",collapse=",",sep=""),") %>% as.data.frame()",sep="")
   df.states <- eval(parse(text=eval_str))
   df.states$state_ordered  <- rank(df.states[,paste("mu",order.var[1],sep=".")])
   return(df.states)
@@ -178,12 +178,12 @@ calc_BIC <- function(likelihood,ncluster,nseg,n){
 
 check_repetition <- function(x,lmin, rounding = FALSE, magnitude = 3){
     if(rounding){
-      sd_x1 <- sd(x[1,])
-      magn1 <- - floor(log10(sd_x1)) +magnitude
-      x1 <- round(x[1,], digits = magn1)
-      sd_x2 <- sd(x[2,])
-      magn2 <- - floor(log10(sd_x2)) +magnitude
-      x2 <- round(x[2,], digits = magn2)
+      sd_x1 <- stats::sd(x[1,])
+      magn1 <- - base::floor(log10(sd_x1)) +magnitude
+      x1 <- base::round(x[1,], digits = magn1)
+      sd_x2 <- stats::sd(x[2,])
+      magn2 <- - base::floor(log10(sd_x2)) +magnitude
+      x2 <- base::round(x[2,], digits = magn2)
       rep_1 <- rle(x1)
       rep_2 <- rle(x2)
       if( any(rep_1$length >= lmin) || any(rep_2$length >= lmin)){
@@ -222,7 +222,7 @@ check_repetition <- function(x,lmin, rounding = FALSE, magnitude = 3){
 
 relabel_states <- function(mode.segclust, newlabel, ncluster, nseg, order = TRUE){
   tmp <- mode.segclust$outputs[[paste0(ncluster," class - ",nseg," segments")]]  
-  tmp$states$state_ordered <- relabel_vector[tmp$states$state_ordered]
+  tmp$states$state_ordered <- newlabel[tmp$states$state_ordered]
   mode.segclust$outputs[[paste0(ncluster," class - ",nseg," segments")]]  <- tmp
   mode.segclust
 }
