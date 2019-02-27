@@ -4,8 +4,8 @@
 \alias{plot_segm}
 \title{Plot segmentation on time-serie}
 \usage{
-plot_segm(data, output, interactive = F, diag.var, x_col = "expectTime",
-  html = F, order = F, stationarity = F)
+plot_segm(data, output, interactive = F, diag.var,
+  x_col = "expectTime", html = F, order = F, stationarity = F)
 }
 \arguments{
 \item{data}{the data.frame with the different variable}

@@ -4,7 +4,8 @@
 \alias{bisig_plot}
 \title{bisig_plot draws the plots of the bivaraite signal on the same plot (scale free)}
 \usage{
-bisig_plot(x, rupt = NULL, mu = NULL, pop = NULL, merge.seg = FALSE)
+bisig_plot(x, rupt = NULL, mu = NULL, pop = NULL,
+  merge.seg = FALSE)
 }
 \arguments{
 \item{x}{the signal to be plotted}

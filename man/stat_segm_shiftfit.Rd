@@ -4,7 +4,8 @@
 \alias{stat_segm_shiftfit}
 \title{Get segment statistic for shiftfit model}
 \usage{
-stat_segm_shiftfit(data, shiftfit.model = NULL, diag.var, order.var = NULL)
+stat_segm_shiftfit(data, shiftfit.model = NULL, diag.var,
+  order.var = NULL)
 }
 \arguments{
 \item{data}{data}

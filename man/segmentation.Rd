@@ -9,9 +9,9 @@
 \usage{
 segmentation(x, ...)
 
-\method{segmentation}{data.frame}(x, Kmax, lmin, type = "home-range", seg.var,
-  diag.var = seg.var, order.var = seg.var[1], coord.names = c("x", "y"),
-  ...)
+\method{segmentation}{data.frame}(x, Kmax, lmin, type = "home-range",
+  seg.var, diag.var = seg.var, order.var = seg.var[1],
+  coord.names = c("x", "y"), ...)
 
 \method{segmentation}{Move}(x, Kmax, lmin, type = "home-range",
   seg.var = NULL, diag.var = seg.var, order.var = seg.var[1],
@@ -56,12 +56,6 @@ data.frame,  move and ltraj object. The algorithm finds for each number of
 segment the optimal segmentation using a Dynamic Programming approach. The
 number of segment is then chosen using Lavielle's (2005) procedure based on
 locating rupture in the penalized likelihood.
-
-Segmentation function for data.frame
-
-Segmentation function for move objects
-
-Segmentation function for ltraj objects
 }
 \examples{
 df <-  test_data()$data

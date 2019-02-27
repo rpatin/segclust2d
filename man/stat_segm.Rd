@@ -4,8 +4,8 @@
 \alias{stat_segm}
 \title{Calculate statistics on a given segmentation}
 \usage{
-stat_segm(data, diag.var, order.var = NULL, param = NULL, seg.type = NULL,
-  nseg)
+stat_segm(data, diag.var, order.var = NULL, param = NULL,
+  seg.type = NULL, nseg)
 }
 \arguments{
 \item{data}{the data.frame with the different variable}
