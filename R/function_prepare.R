@@ -91,8 +91,15 @@ calc_stat_states <- function(data,df.segm,diag.var,order.var=NULL)
 {
   data$state <- df.segm[findInterval(data$indice,df.segm$begin,rightmost.closed = F,left.open = F),"state"]
 
-  eval_str <- paste("dplyr::group_by(data,state) %>% dplyr::summarise(prop=dplyr::n()/nrow(data),",paste("mu.",diag.var," = mean(",diag.var,",na.rm=T)",collapse=",",sep=""),",",paste("sd.",diag.var," = stats::sd(",diag.var,",na.rm=T)",collapse=",",sep=""),") %>% as.data.frame()",sep="")
-  df.states <- eval(parse(text=eval_str))
+  
+  tmp.gp <- dplyr::group_by(data,state)
+  eval_str <- paste("dplyr::summarise(tmp.gp, prop=dplyr::n()/nrow(data),",
+                    paste("mu.",diag.var," = mean(",diag.var,",na.rm=T)",collapse=",",sep=""),
+                    ",",
+                    paste("sd.",diag.var," = stats::sd(",diag.var,",na.rm=T)",collapse
+                          =",",sep=""), ")")
+  tmp.states <- eval(parse(text=eval_str))
+  df.states <- as.data.frame(tmp.states)
   df.states$state_ordered  <- rank(df.states[,paste("mu",order.var[1],sep=".")])
   return(df.states)
 }
