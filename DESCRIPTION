@@ -19,7 +19,7 @@ Description: Provides two methods for segmentation and joint segmentation/cluste
     The method is fully described in Patin et al (2018) <doi:10.1101/444794>.
 License: GPL-3
 LazyData: TRUE
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Depends:
     R (>= 3.3.0)
 Imports:
@@ -54,3 +54,4 @@ LinkingTo:
     Rcpp,
     RcppArmadillo
 VignetteBuilder: knitr
+Encoding: UTF-8
