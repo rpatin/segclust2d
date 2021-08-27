@@ -39,5 +39,4 @@
 #' @name segclust2d
 #' @useDynLib segclust2d, .registration=TRUE
 #' @importFrom Rcpp evalCpp
-#' @exportPattern "^[[:alpha:]]+"
 NULL
