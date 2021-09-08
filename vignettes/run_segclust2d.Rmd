@@ -10,7 +10,7 @@ vignette: >
 ---
 
 
-```{r, echo = FALSE}
+```{r option chunk, echo = FALSE}
 knitr::opts_chunk$set(
   fig.width = 8,
   fig.height = 5,
@@ -19,34 +19,89 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r load cli, include = FALSE}
+library(cli)
+```
 
-# Examples
+The package provides access to two different method:
 
-The algorithm can perform a [segmentation](#segmentation) of the time-series into
+- It can perform a [segmentation](#segmentation) of the time-series into
 homogeneous segments. A typical case is the identification of home-range
-behaviour. It can also perform an integrated classification of those segments
+behaviour. 
+- It can also perform an integrated classification of those segments
 into clusters of homogeneous behaviour through a
-[segmentation/clustering](#segmentation-clustering) algorithm. This is generally used to
-identify behavioural modes. Input data can be a `data.frame` (shown in the first examples), a `Move` object or a `ltraj` object (from package `adehabitatLT`), both shown in section [Other data types](#other-data-types)
+[segmentation/clustering](#segmentation-clustering) algorithm. 
+This is generally used to identify behavioural modes. 
 
-## Segmentation
+Input data is here a `data.frame` (shown in the first examples), but it can also be a `Move` object, a `ltraj` object (from package `adehabitatLT`) or a `sftraj` object, both shown in section [Preparing data for Segmentation/Clustering with segclust2d](https://rpatin.github.io/segclust2d/articles/preparing_data.html)
 
-```{r, fig.show='hold'}
+
+# Segmentation
+
+## Loading data set
+
+```{r load package and data, fig.show='hold'}
 library(segclust2d)
 data(simulshift)
 ```
 
+Here we will load a test dataset: `simulshift`, containing a simulation of home-range behaviour with two shifts. It is a data.frame with two columns for coordinates : x and y. We can now run a simple segmentation with this dataset to find the different home-ranges.
 
-`simulshift` is an example dataset containing a simulation of home-range behaviour with two shifts. It is a data.frame with two columns for coordinates : x and y. We can now run a simple segmentation with this dataset to find the different home-ranges. You can specify the variables to be segmented using argument `seg.var`. The function allow rescaling of variable (not recommended for segmentation on coordinates), with argument `scale.variable`.
+```{r plot simulshift, echo = FALSE, fig.width = 5,  fig.height = 4, fig.cap = "`simulshift`: simulation of movement within three successive home-range. Data shown after subsampling by 100."}
+library(ggplot2)
+tmpdf <- simulshift[seq(1,30000, by = 100),]
+tmpdf$class <- factor(rep(c(1,2,3), each = 102)[1:300])
+ggplot(tmpdf)+
+  geom_path(aes(x = x, y = y))+
+  geom_point(aes(x= x, y = y, col = factor(class)))+
+  scale_color_discrete("home-range")+
+  theme(legend.position= "top")
 
-The segmentation require arguments `lmin`, the minimum length of a segment and `Kmax`, the maximum number of segments. By default `Kmax` will be set to `0.75*floor(n/lmin)`, with `n` the number of observations. However this can considerably slow the calculations so do not hesitate to reduce it to a reasonable value. Be careful if you want to fix a higher `Kmax` the algorithm tend to over-segment (which you can check by looking at the segmentation or the likelihood curve)
-
-```{r, fig.show='hold'}
-shift_seg <- segmentation(simulshift, lmin = 300, Kmax = 25, seg.var = c("x","y"), subsample_by = 60, scale.variable = FALSE)
 ```
 
-Segmentation is performed through a Dynamic Programming algorithm that finds the best segmentation given a number of segment. For each number of segment, the optimal segmentation is associated with a likelihood value. By default, the algorithm choose the number of segment given a criterium developed by Marc Lavielle based on the value of the second derivative of the penalized likelihood. This criterium use a threshold value of `S = 0.75`, but a different threshold can be specified. Argument `subsample_by` controls subsampling and will be explored in section [subsampling](#subsampling)
 
+## Setting `segmentation()` parameters.
+
+### Required: `lmin`: minimum length of a segment
+
+To run the `segmentation()` function, argument `lmin` needs to be provided. `lmin` is the minimum length of a segment. It is has to be set not only to speed up the algorithm, but also, more fundamentally, to prevent over‐segmenting, based on biological considerations. For example, setting `lmin` to a value of a few weeks when analysing locational time series will prevent the algorithm from considering an area exploited only for a few days, corresponding to foray outside the usual home range or to stopover during migration, as a distinct home range. Similarly, setting `lmin` to a value long enough (depending on the species) when looking for changes of behavioural modes will force the algorithm to assign a given behavioural bout to a given mode even when it is interspersed by ephemeral events related to another behaviour (e.g. a long transit with opportunistic short feeding events on the move will be considered as a single transit phase).
+
+Statistically, `lmin` cannot be `<5`, because of the need to estimate variances for each segment. In such case the program should throw an error message like this:
+
+```{r error small lmin, error = TRUE}
+shift_seg <- segmentation(simulshift, lmin = 4,Kmax = 25, seg.var = c("x","y"), subsample_by = 60, scale.variable = FALSE)
+```
+
+Note that you can get this error even if you provided lmin>5. Indeed, if subsampling is allowed (see [data preparation](https://rpatin.github.io/segclust2d/articles/preparing_data.html)), either automatically (`subsampling = TRUE` or `subsample_over = 1000`) or manually (`subsample_by = 60`), the value of lmin provided is divided by the subsampling interval and the value used by the function may then become <5:
+
+```{r error small lmin subsampling, error = TRUE}
+shift_seg <- segmentation(simulshift, lmin = 240,Kmax = 25, seg.var = c("x","y"), subsample_by = 60, scale.variable = FALSE)
+```
+
+To avoid such situation, you should be carefull to provide `lmin` large enough so that subsampling will not cause this error. Alternatively you can also do the subsampling outside of the function to have a clearer control over `lmin`
+
+### Optional: `Kmax`: the maximum number of segments.
+
+By default, `Kmax` will be set to `0.75*floor(n/lmin)`, with `n` the number of observations, so you can omit this argument. You can however provide a different value with the following advices:
+- `Kmax` should be limited to values lower than `0.75*floor(n/lmin)`. Larger values may produce instability.
+- `Kmax` should be large enough so that there is a clear cut in the likelihood plot (see section [Optimal number of segment](#optimal))
+- `Kmax` too large can considerably slow the calculations.
+
+### Optional `seg.var`
+ 
+ You can specify the variables to be segmented using argument `seg.var`. 
+ 
+### Optional: `scale.variable`
+The function allow rescaling of variable (not recommended for segmentation on coordinates), with argument `scale.variable`.
+
+
+# Running `segmentation()`
+
+Segmentation is performed through a Dynamic Programming algorithm that finds the best segmentation given a number of segment. For each number of segment, the optimal segmentation is associated with a likelihood value. 
+
+
+
+By default, the algorithm choose the number of segment given a criterium developed by Marc Lavielle based on the value of the second derivative of the penalized likelihood. This criterium use a threshold value of `S = 0.75`, but a different threshold can be specified. 
 
 The second important method is `plot_likelihood` that shows the log-likelihood of the best segmentation versus the number of segments and highlights the one chosen with Lavielle's criterium. The likelihood should show an increasing curve with a clear breakpoints for the optimal number of segment. Note that with real data breaks are often less clear than for that example. An artifactual decrease of likelihood can happen for large number of segment when Kmax is too high (close to `n/lmin`) and correspond generally to an oversegmentation.
 
