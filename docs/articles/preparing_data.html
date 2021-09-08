@@ -97,38 +97,26 @@
 
     
     
-<div id="advanced-options" class="section level1">
-<h1 class="hasAnchor">
-<a href="#advanced-options" class="anchor"></a>Advanced Options</h1>
-<div id="subsampling" class="section level2">
-<h2 class="hasAnchor">
-<a href="#subsampling" class="anchor"></a>Subsampling</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rpatin/segclust2d">segclust2d</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">simulshift</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">simulmode</span><span class="op">)</span></code></pre></div>
-<p>Computation cost for the algorithm scales non-linearly and can be both memory and time-consuming. Performance depends on computer, but from what we’ve tested, a segmentation on data of size &gt; 10000 can be quite memory consuming (more than 10Go of RAM) and segmentation-clustering can be quite long for data &gt; 1000 (few minutes to hours). For such dataset we recommend either subsampling if loosing resolution is not a big deal (looking for home-range changes over a year with hourly points might be a lost of time when daily points are sufficient) or if splitting the dataset for very long data. Although for segmentation-clustering, clusters will not be easily comparable between the different part of the dataset, if one provides parts where all cluster are present for sure, there should be no problem.</p>
-<p>3 different options are available for subsampling. First one can disable subsampling through argument <code>subsample</code> :</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mode_segclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segclust.html">segclust</a></span><span class="op">(</span><span class="va">simulmode</span>, Kmax <span class="op">=</span> <span class="fl">30</span>, lmin<span class="op">=</span><span class="fl">5</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"behavior"</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span>, subsample <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<p>By default subsampling is allowed (subsample = TRUE) and subsampling will occur if the number of data exceed a threshold (10000 for segmentation, 1000 for segmentation-clustering). The function will subsample by the lower factor (by 2, 3, 4…) for which the dataset will fall below the threshold once subsampled. For instance a 2500 rows dataset for segmentation-clustering would be subsampled by 3 to fall below 1000 rows. The threshold can be changed through argument <code>subsample_over</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mode_segclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segclust.html">segclust</a></span><span class="op">(</span><span class="va">simulmode</span>, Kmax <span class="op">=</span> <span class="fl">30</span>, lmin<span class="op">=</span><span class="fl">5</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"behavior"</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span>, subsample_over <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></code></pre></div>
-<p>One can also override this automatic subsampling by selecting directly the subsampling factor through argument <code>subsample_by</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mode_segclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segclust.html">segclust</a></span><span class="op">(</span><span class="va">simulmode</span>, Kmax <span class="op">=</span> <span class="fl">30</span>, lmin<span class="op">=</span><span class="fl">5</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"behavior"</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span>, subsample_by <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
-<p>Beware that subsampling will also divide your lmin argument. If subsampling by 2, lmin will be divided by 2. It is important that lmin stays larger than 3 and if possible than 5, for better variance estimations.</p>
-<p>Note that subsampling has been implemented in such way that outputs will show all points but segmentation is calculated only on subsampled points. Points used in segmentation can be retrieved through <code>augment</code> in data column <code>subsample_ind</code> (The subsample indices for kept points and NA for ignored points).</p>
-</div>
-<div id="other-data-types" class="section level2">
+<div id="type-of-data-accepted-and-content-required-to-run-segmentation-or-segclust" class="section level1">
+<h1 class="hasAnchor">
+<a href="#type-of-data-accepted-and-content-required-to-run-segmentation-or-segclust" class="anchor"></a>Type of data accepted and content required to run segmentation() or segclust()</h1>
+<div id="data-frame" class="section level2">
 <h2 class="hasAnchor">
-<a href="#other-data-types" class="anchor"></a>Other data types</h2>
+<a href="#data-frame" class="anchor"></a>data.frame</h2>
+</div>
+<div id="move" class="section level2">
+<h2 class="hasAnchor">
+<a href="#move" class="anchor"></a>move</h2>
 <p>We have shown examples for using data.frames but one can also segment data from <code>ltraj</code> and <code>Move</code> object that contains a single individual.</p>
 <div id="concerning-segmentation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#concerning-segmentation" class="anchor"></a>Concerning segmentation</h3>
 <p>For a simple segmentation, the algorithm will assume a home-range segmentation and use coordinates directly.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">ltraj_object</span>, lmin <span class="op">=</span> <span class="fl">5</span>, Kmax <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>
 <span class="fu"><a href="../reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">Move_object</span>, lmin <span class="op">=</span> <span class="fl">5</span>, Kmax <span class="op">=</span> <span class="fl">25</span><span class="op">)</span></code></pre></div>
 </div>
@@ -136,11 +124,39 @@
 <h3 class="hasAnchor">
 <a href="#concerning-segclust" class="anchor"></a>Concerning segclust</h3>
 <p>For a segmentation/clustering, one has to provide the variables used for segmentation</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">ltraj_object</span>, lmin <span class="op">=</span> <span class="fl">5</span>, Kmax <span class="op">=</span> <span class="fl">25</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="../reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">Move_object</span>, lmin <span class="op">=</span> <span class="fl">5</span>, Kmax <span class="op">=</span> <span class="fl">25</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Of course the variable names provided must exist as column in <code>Move_object@data</code> and <code><a href="https://rdrr.io/pkg/adehabitatLT/man/burst.html">adehabitatLT::infolocs(ltraj_object[1])</a></code>.</p>
 </div>
+</div>
+<div id="ltraj" class="section level2">
+<h2 class="hasAnchor">
+<a href="#ltraj" class="anchor"></a>ltraj</h2>
+</div>
+<div id="sftraj" class="section level2">
+<h2 class="hasAnchor">
+<a href="#sftraj" class="anchor"></a>sftraj</h2>
+</div>
+</div>
+<div id="limitations-on-data-size-subsampling-smoothing" class="section level1">
+<h1 class="hasAnchor">
+<a href="#limitations-on-data-size-subsampling-smoothing" class="anchor"></a>Limitations on data size, subsampling &amp; smoothing</h1>
+<div id="subsampling" class="section level2">
+<h2 class="hasAnchor">
+<a href="#subsampling" class="anchor"></a>Subsampling</h2>
+<p>Computation cost for the algorithm scales non-linearly and can be both memory and time-consuming. Performance depends on computer, but from what we’ve tested, a segmentation on data of size &gt; 10000 can be quite memory consuming (more than 10Go of RAM) and segmentation-clustering can be quite long for data &gt; 1000 (few minutes to hours). For such dataset we recommend either subsampling if loosing resolution is not a big deal (looking for home-range changes over a year with hourly points might be a lost of time when daily points are sufficient) or if splitting the dataset for very long data. Although for segmentation-clustering, clusters will not be easily comparable between the different part of the dataset, if one provides parts where all cluster are present for sure, there should be no problem.</p>
+<p>3 different options are available for subsampling. First one can disable subsampling through argument <code>subsample</code> :</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mode_segclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segclust.html">segclust</a></span><span class="op">(</span><span class="va">simulmode</span>, Kmax <span class="op">=</span> <span class="fl">30</span>, lmin<span class="op">=</span><span class="fl">5</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"behavior"</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span>, subsample <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<p>By default subsampling is allowed (subsample = TRUE) and subsampling will occur if the number of data exceed a threshold (10000 for segmentation, 1000 for segmentation-clustering). The function will subsample by the lower factor (by 2, 3, 4…) for which the dataset will fall below the threshold once subsampled. For instance a 2500 rows dataset for segmentation-clustering would be subsampled by 3 to fall below 1000 rows. The threshold can be changed through argument <code>subsample_over</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mode_segclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segclust.html">segclust</a></span><span class="op">(</span><span class="va">simulmode</span>, Kmax <span class="op">=</span> <span class="fl">30</span>, lmin<span class="op">=</span><span class="fl">5</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"behavior"</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span>, subsample_over <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></code></pre></div>
+<p>One can also override this automatic subsampling by selecting directly the subsampling factor through argument <code>subsample_by</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mode_segclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segclust.html">segclust</a></span><span class="op">(</span><span class="va">simulmode</span>, Kmax <span class="op">=</span> <span class="fl">30</span>, lmin<span class="op">=</span><span class="fl">5</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"behavior"</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span>, subsample_by <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
+<p>Beware that subsampling will also divide your lmin argument. If subsampling by 2, lmin will be divided by 2. It is important that lmin stays larger than 3 and if possible than 5, for better variance estimations.</p>
+<p>Note that subsampling has been implemented in such way that outputs will show all points but segmentation is calculated only on subsampled points. Points used in segmentation can be retrieved through <code>augment</code> in data column <code>subsample_ind</code> (The subsample indices for kept points and NA for ignored points).</p>
 </div>
 </div>
 <div id="covariate-calculations" class="section level1">
@@ -151,6 +167,10 @@
 <code class="sourceCode R"><span class="va">simple_data</span> <span class="op">&lt;-</span> <span class="va">simulmode</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"dateTime"</span>,<span class="st">"x"</span>,<span class="st">"y"</span><span class="op">)</span><span class="op">]</span>
 <span class="va">full_data</span>   <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_covariates.html">add_covariates</a></span><span class="op">(</span><span class="va">simple_data</span>, coord.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>,<span class="st">"y"</span><span class="op">)</span>, timecol <span class="op">=</span> <span class="st">"dateTime"</span>,smoothed <span class="op">=</span> <span class="cn">TRUE</span>, units <span class="op">=</span><span class="st">"min"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">full_data</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="advise-on-data-pre-processing" class="section level1">
+<h1 class="hasAnchor">
+<a href="#advise-on-data-pre-processing" class="anchor"></a>Advise on data pre-processing</h1>
 </div>
   </div>
 

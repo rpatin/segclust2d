@@ -97,47 +97,101 @@
 
     
     
-<div id="examples" class="section level1">
+<p>The package provides access to two different method:</p>
+<ul>
+<li>It can perform a <a href="#segmentation">segmentation</a> of the time-series into homogeneous segments. A typical case is the identification of home-range behaviour.</li>
+<li>It can also perform an integrated classification of those segments into clusters of homogeneous behaviour through a <a href="#segmentation-clustering">segmentation/clustering</a> algorithm. This is generally used to identify behavioural modes.</li>
+</ul>
+<p>Input data is here a <code>data.frame</code> (shown in the first examples), but it can also be a <code>Move</code> object, a <code>ltraj</code> object (from package <code>adehabitatLT</code>) or a <code>sftraj</code> object, both shown in section <a href="https://rpatin.github.io/segclust2d/articles/preparing_data.html">Preparing data for Segmentation/Clustering with segclust2d</a></p>
+<div id="segmentation" class="section level1">
 <h1 class="hasAnchor">
-<a href="#examples" class="anchor"></a>Examples</h1>
-<p>The algorithm can perform a <a href="#segmentation">segmentation</a> of the time-series into homogeneous segments. A typical case is the identification of home-range behaviour. It can also perform an integrated classification of those segments into clusters of homogeneous behaviour through a <a href="#segmentation-clustering">segmentation/clustering</a> algorithm. This is generally used to identify behavioural modes. Input data can be a <code>data.frame</code> (shown in the first examples), a <code>Move</code> object or a <code>ltraj</code> object (from package <code>adehabitatLT</code>), both shown in section <a href="#other-data-types">Other data types</a></p>
-<div id="segmentation" class="section level2">
+<a href="#segmentation" class="anchor"></a>Segmentation</h1>
+<div id="loading-data-set" class="section level2">
 <h2 class="hasAnchor">
-<a href="#segmentation" class="anchor"></a>Segmentation</h2>
+<a href="#loading-data-set" class="anchor"></a>Loading data set</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rpatin/segclust2d">segclust2d</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">simulshift</span><span class="op">)</span></code></pre></div>
-<p><code>simulshift</code> is an example dataset containing a simulation of home-range behaviour with two shifts. It is a data.frame with two columns for coordinates : x and y. We can now run a simple segmentation with this dataset to find the different home-ranges. You can specify the variables to be segmented using argument <code>seg.var</code>. The function allow rescaling of variable (not recommended for segmentation on coordinates), with argument <code>scale.variable</code>.</p>
-<p>The segmentation require arguments <code>lmin</code>, the minimum length of a segment and <code>Kmax</code>, the maximum number of segments. By default <code>Kmax</code> will be set to <code>0.75*floor(n/lmin)</code>, with <code>n</code> the number of observations. However this can considerably slow the calculations so do not hesitate to reduce it to a reasonable value. Be careful if you want to fix a higher <code>Kmax</code> the algorithm tend to over-segment (which you can check by looking at the segmentation or the likelihood curve)</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">shift_seg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">simulshift</span>, lmin <span class="op">=</span> <span class="fl">300</span>, Kmax <span class="op">=</span> <span class="fl">25</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>,<span class="st">"y"</span><span class="op">)</span>, subsample_by <span class="op">=</span> <span class="fl">60</span>, scale.variable <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; Segmentation on x and y</span></code></pre></div>
-<p>Segmentation is performed through a Dynamic Programming algorithm that finds the best segmentation given a number of segment. For each number of segment, the optimal segmentation is associated with a likelihood value. By default, the algorithm choose the number of segment given a criterium developed by Marc Lavielle based on the value of the second derivative of the penalized likelihood. This criterium use a threshold value of <code>S = 0.75</code>, but a different threshold can be specified. Argument <code>subsample_by</code> controls subsampling and will be explored in section <a href="#subsampling">subsampling</a></p>
-<p>The second important method is <code>plot_likelihood</code> that shows the log-likelihood of the best segmentation versus the number of segments and highlights the one chosen with Lavielle’s criterium. The likelihood should show an increasing curve with a clear breakpoints for the optimal number of segment. Note that with real data breaks are often less clear than for that example. An artifactual decrease of likelihood can happen for large number of segment when Kmax is too high (close to <code>n/lmin</code>) and correspond generally to an oversegmentation.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/segmentation-class.html">plot_likelihood</a></span><span class="op">(</span><span class="va">shift_seg</span><span class="op">)</span></code></pre></div>
-<p><img src="run_segclust2d_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
+<p>Here we will load a test dataset: <code>simulshift</code>, containing a simulation of home-range behaviour with two shifts. It is a data.frame with two columns for coordinates : x and y. We can now run a simple segmentation with this dataset to find the different home-ranges.</p>
+<div class="figure">
+<img src="run_segclust2d_files/figure-html/plot%20simulshift-1.png" alt="`simulshift`: simulation of movement within three successive home-range. Data shown after subsampling by 100." width="480"><p class="caption">
+<code>simulshift</code>: simulation of movement within three successive home-range. Data shown after subsampling by 100.
+</p>
 </div>
+</div>
+<div id="setting-segmentation-parameters-" class="section level2">
+<h2 class="hasAnchor">
+<a href="#setting-segmentation-parameters-" class="anchor"></a>Setting <code>segmentation()</code> parameters.</h2>
+<div id="required-lmin-minimum-length-of-a-segment" class="section level3">
+<h3 class="hasAnchor">
+<a href="#required-lmin-minimum-length-of-a-segment" class="anchor"></a>Required: <code>lmin</code>: minimum length of a segment</h3>
+<p>To run the <code><a href="../reference/segmentation.html">segmentation()</a></code> function, argument <code>lmin</code> needs to be provided. <code>lmin</code> is the minimum length of a segment. It is has to be set not only to speed up the algorithm, but also, more fundamentally, to prevent over‐segmenting, based on biological considerations. For example, setting <code>lmin</code> to a value of a few weeks when analysing locational time series will prevent the algorithm from considering an area exploited only for a few days, corresponding to foray outside the usual home range or to stopover during migration, as a distinct home range. Similarly, setting <code>lmin</code> to a value long enough (depending on the species) when looking for changes of behavioural modes will force the algorithm to assign a given behavioural bout to a given mode even when it is interspersed by ephemeral events related to another behaviour (e.g. a long transit with opportunistic short feeding events on the move will be considered as a single transit phase).</p>
+<p>Statistically, <code>lmin</code> cannot be <code>&lt;5</code>, because of the need to estimate variances for each segment. In such case the program should throw an error message like this:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">shift_seg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">simulshift</span>, lmin <span class="op">=</span> <span class="fl">4</span>,Kmax <span class="op">=</span> <span class="fl">25</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>,<span class="st">"y"</span><span class="op">)</span>, subsample_by <span class="op">=</span> <span class="fl">60</span>, scale.variable <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="co">#&gt; Segmentation on x and y</span>
+<span class="co">#&gt; Error in segmentation_internal(x, seg.var = seg.var, diag.var = diag.var, : There are repetitions of identical values</span>
+<span class="co">#&gt;          in the time series larger than lmin,</span>
+<span class="co">#&gt;          cannot estimate variance for such segment. </span>
+<span class="co">#&gt;          This is potentially caused by interpolation</span>
+<span class="co">#&gt;          of missing values or rounding of values.</span></code></pre></div>
+<p>Note that you can get this error even if you provided lmin&gt;5. Indeed, if subsampling is allowed (see <a href="https://rpatin.github.io/segclust2d/articles/preparing_data.html">data preparation</a>), either automatically (<code>subsampling = TRUE</code> or <code>subsample_over = 1000</code>) or manually (<code>subsample_by = 60</code>), the value of lmin provided is divided by the subsampling interval and the value used by the function may then become &lt;5:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">shift_seg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">simulshift</span>, lmin <span class="op">=</span> <span class="fl">240</span>,Kmax <span class="op">=</span> <span class="fl">25</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>,<span class="st">"y"</span><span class="op">)</span>, subsample_by <span class="op">=</span> <span class="fl">60</span>, scale.variable <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="co">#&gt; Segmentation on x and y</span>
+<span class="co">#&gt; lmin = 4  and should be &gt; 5 when sameV = FALSE </span>
+<span class="co">#&gt;           to avoid variance estimation instability</span></code></pre></div>
+<p>To avoid such situation, you should be carefull to provide <code>lmin</code> large enough so that subsampling will not cause this error. Alternatively you can also do the subsampling outside of the function to have a clearer control over <code>lmin</code></p>
+</div>
+<div id="optional-kmax-the-maximum-number-of-segments-" class="section level3">
+<h3 class="hasAnchor">
+<a href="#optional-kmax-the-maximum-number-of-segments-" class="anchor"></a>Optional: <code>Kmax</code>: the maximum number of segments.</h3>
+<p>By default, <code>Kmax</code> will be set to <code>0.75*floor(n/lmin)</code>, with <code>n</code> the number of observations, so you can omit this argument. You can however provide a different value with the following advices: - <code>Kmax</code> should be limited to values lower than <code>0.75*floor(n/lmin)</code>. Larger values may produce instability. - <code>Kmax</code> should be large enough so that there is a clear cut in the likelihood plot (see section <a href="#optimal">Optimal number of segment</a>) - <code>Kmax</code> too large can considerably slow the calculations.</p>
+</div>
+<div id="optional-seg-var" class="section level3">
+<h3 class="hasAnchor">
+<a href="#optional-seg-var" class="anchor"></a>Optional <code>seg.var</code>
+</h3>
+<p>You can specify the variables to be segmented using argument <code>seg.var</code>.</p>
+</div>
+<div id="optional-scale-variable" class="section level3">
+<h3 class="hasAnchor">
+<a href="#optional-scale-variable" class="anchor"></a>Optional: <code>scale.variable</code>
+</h3>
+<p>The function allow rescaling of variable (not recommended for segmentation on coordinates), with argument <code>scale.variable</code>.</p>
+</div>
+</div>
+</div>
+<div id="running-segmentation" class="section level1">
+<h1 class="hasAnchor">
+<a href="#running-segmentation" class="anchor"></a>Running <code>segmentation()</code>
+</h1>
+<p>Segmentation is performed through a Dynamic Programming algorithm that finds the best segmentation given a number of segment. For each number of segment, the optimal segmentation is associated with a likelihood value.</p>
+<p>By default, the algorithm choose the number of segment given a criterium developed by Marc Lavielle based on the value of the second derivative of the penalized likelihood. This criterium use a threshold value of <code>S = 0.75</code>, but a different threshold can be specified.</p>
+<p>The second important method is <code>plot_likelihood</code> that shows the log-likelihood of the best segmentation versus the number of segments and highlights the one chosen with Lavielle’s criterium. The likelihood should show an increasing curve with a clear breakpoints for the optimal number of segment. Note that with real data breaks are often less clear than for that example. An artifactual decrease of likelihood can happen for large number of segment when Kmax is too high (close to <code>n/lmin</code>) and correspond generally to an oversegmentation.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/segmentation-class.html">plot_likelihood</a></span><span class="op">(</span><span class="va">shift_seg</span><span class="op">)</span></code></pre></div>
+<p><img src="run_segclust2d_files/figure-html/unnamed-chunk-1-1.png" width="768"></p>
 <div id="segmentation-clustering" class="section level2">
 <h2 class="hasAnchor">
 <a href="#segmentation-clustering" class="anchor"></a>Segmentation-Clustering</h2>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">simulmode</span><span class="op">)</span>
 <span class="va">simulmode</span><span class="op">$</span><span class="va">abs_spatial_angle</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">simulmode</span><span class="op">$</span><span class="va">spatial_angle</span><span class="op">)</span>
 <span class="va">simulmode</span> <span class="op">&lt;-</span> <span class="va">simulmode</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">simulmode</span><span class="op">$</span><span class="va">abs_spatial_angle</span><span class="op">)</span>, <span class="op">]</span></code></pre></div>
 <p><code>simulmode</code> is an example dataset containing a movement simulation with three different movement mode. It is a data.frame with 11 columns, with coordinates and several covariates. Be careful to check your dataset for missing value.</p>
 <p>We can now run a joint segmentation/clustering on this dataset to identify the different behavioural modes. As in <code>segmentation</code>, you can specify the variables to be segmented using argument <code>seg.var</code>. The function allow rescaling of variable (recommended for segmentation/clustering to identify behavioural state), with argument <code>scale.variable</code>.</p>
 <p>For a joint segmentation/clustering one has to specify arguments <code>lmin</code>, the minimum length of a segment and <code>Kmax</code>, the maximum number of segments, and <code>ncluster</code> a vector of number of class. By default <code>Kmax</code> will be set to <code>0.75*floor(n/lmin)</code>, with <code>n</code> the number of observations. Be carefull if you want to fix a higher <code>Kmax</code> the algorithm tend to over-segment (which you can check by looking at the segmentation or the likelihood curve)</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mode_segclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segclust.html">segclust</a></span><span class="op">(</span><span class="va">simulmode</span>, Kmax <span class="op">=</span> <span class="fl">20</span>, lmin<span class="op">=</span><span class="fl">10</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span>, scale.variable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; Segmenting - 2 class</span>
 <span class="co">#&gt; Smoothing  - 2 class</span>
 <span class="co">#&gt; Segmenting - 3 class</span>
 <span class="co">#&gt; Smoothing  - 3 class</span></code></pre></div>
 <p>One can also inspect the BIC-based penalized log-likelihood through functions <code><a href="../reference/segmentation-class.html">plot_BIC()</a></code>. Best-case scenario is as below, the BIC show a steep increase up to a maximum and a slow decrease after the optimum and one number of cluster is clearly above the others. With real data it also happens that more cluster always improve the penalized-likelihood but so we generally advise to choose the number of cluster based on expectation and biological knowledge.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/segmentation-class.html">plot_BIC</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span></code></pre></div>
-<p><img src="run_segclust2d_files/figure-html/unnamed-chunk-7-1.png" width="768"></p>
+<p><img src="run_segclust2d_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
 </div>
 <div id="advice-for-choosing-lmin-kmax-and-ncluster" class="section level2">
 <h2 class="hasAnchor">

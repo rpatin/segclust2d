@@ -27,7 +27,11 @@
 #'Report number 5339, Institut national de recherche en informatique et en
 #'automatique.
 #'
-#'Patin, R., Etienne, M. P., Lebarbier, E., Chamaill{\'e}‐Jammes, S., & Benhamou, S. (2020). Identifying stationary phases in multivariate time series for highlighting behavioural modes and home range settlements. \emph{Journal of Animal Ecology}, 89(1), 44-56.
+#'Patin, R., Etienne, M. P., Lebarbier, E., Chamaill{\'e}‐Jammes, S., 
+#'& Benhamou, S. (2020). Identifying stationary phases in
+#' multivariate time series for highlighting behavioural modes 
+#' and home range settlements. \emph{Journal of Animal Ecology}, 
+#' 89(1), 44-56.
 #'
 #'
 #'Picard, F., Robin, S., Lebarbier, E. and Daudin, J.-J. (2007), A
