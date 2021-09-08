@@ -64,7 +64,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/segclust.html">Segmentation/Clustering with segclust2d package</a>
+      <a href="articles/explore_outputs.html">Exploring Outputs from segclust2d</a>
+    </li>
+    <li>
+      <a href="articles/preparing_data.html">Preparing data for Segmentation/Clustering with segclust2d</a>
+    </li>
+    <li>
+      <a href="articles/run_segclust2d.html">Running Segmentation/Clustering with segclust2d</a>
     </li>
   </ul>
 </li>
@@ -89,244 +95,31 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<div id="segclust2d" class="section level1">
+<div id="introduction" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#segclust2d" class="anchor"></a>segclust2d</h1></div>
-<p>This guide will organize around 5 sections :</p>
-<ul>
-<li>A first section introducing the package and giving basic instruction for installation.</li>
-<li>Second, basic <a href="#examples">examples</a> about how to use the <a href="#segmentation">segmentation</a> or <a href="#segmentation-clustering">segmentation/clustering</a> functions</li>
-<li>Then we will explore diverse tools available to <a href="#exploring-outputs">explore the outputs</a> of the segmentation.</li>
-<li>We will also explore advanced options such as the <a href="#other-data-types">different input data types available</a> or the possibility of <a href="#subsampling">subsampling</a>
-</li>
-<li>Finally we will see additional tools allowing for <a href="#covariate-calculation">covariate calculations</a>, such as smoothed speed or turning angle at constant step length.</li>
-</ul>
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
+<a href="#introduction" class="anchor"></a>Introduction</h1></div>
 <p><code>segclust2d</code> provides R code for two methods of segmentation and joint segmentation/clustering of bivariate time-series. It was originally intended for ecological segmentation (home-range and behavioural modes) but can be easily applied on other type of time-series. The package also provides tools for analysing outputs from R packages <code>moveHMM</code> and <code>marcher</code>.</p>
 </div>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<div id="website" class="section level1">
+<h1 class="hasAnchor">
+<a href="#website" class="anchor"></a>Website</h1>
+<p>Full documentation for segclust2d is available on its website: <a href="https://rpatin.github.io/segclust2d/">https://rpatin.github.io/segclust2d/</a></p>
+<p>Three differents topic are discussed there, and are also available as vignettes in the R package:</p>
+<ul>
+<li>First, preparation of data to be analysed with segmentation/clustering algorithm, including covariate calculations, subsampling and guidelines to prepare movement data.</li>
+<li>Second, a guide to run the segmentation and segmentation/clustering method, including advise on setting parameters</li>
+<li>Finally, an overview of the possible outputs that can be generated with the package.</li>
+</ul>
+</div>
+<div id="installation" class="section level1">
+<h1 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h1>
 <p>For the CRAN version :</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"segclust2d"</span><span class="op">)</span></code></pre></div>
 <p>If you want the newest version, you can install <code>segclust2d</code> from github with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"rpatin/segclust2d"</span><span class="op">)</span></code></pre></div>
-</div>
-</div>
-<div id="examples" class="section level1">
-<h1 class="hasAnchor">
-<a href="#examples" class="anchor"></a>Examples</h1>
-<p>The algorithm can perform a <a href="#segmentation">segmentation</a> of the time-series into homogeneous segments. A typical case is the identification of home-range behaviour. It can also perform an integrated classification of those segments into clusters of homogeneous behaviour through a <a href="#segmentation-clustering">segmentation/clustering</a> algorithm. This is generally used to identify behavioural modes. Input data can be a <code>data.frame</code> (shown in the first examples), a <code>Move</code> object or a <code>ltraj</code> object (from package <code>adehabitatLT</code>), both shown in section <a href="#other-data-types">Other data types</a></p>
-<div id="segmentation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#segmentation" class="anchor"></a>Segmentation</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rpatin/segclust2d">segclust2d</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">simulshift</span><span class="op">)</span></code></pre></div>
-<p><code>simulshift</code> is an example dataset containing a simulation of home-range behaviour with two shifts. It is a data.frame with two columns for coordinates : x and y. We can now run a simple segmentation with this dataset to find the different home-ranges. You can specify the variables to be segmented using argument <code>seg.var</code>. The function allow rescaling of variable (not recommended for segmentation on coordinates), with argument <code>scale.variable</code>.</p>
-<p>The segmentation require arguments <code>lmin</code>, the minimum length of a segment and <code>Kmax</code>, the maximum number of segments. By default <code>Kmax</code> will be set to <code>0.75*floor(n/lmin)</code>, with <code>n</code> the number of observations. However this can considerably slow the calculations so do not hesitate to reduce it to a reasonable value. Be careful if you want to fix a higher <code>Kmax</code> the algorithm tend to over-segment (which you can check by looking at the segmentation or the likelihood curve)</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">shift_seg</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">simulshift</span>, lmin <span class="op">=</span> <span class="fl">300</span>, Kmax <span class="op">=</span> <span class="fl">25</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>,<span class="st">"y"</span><span class="op">)</span>, subsample_by <span class="op">=</span> <span class="fl">60</span>, scale.variable <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<p>Segmentation is performed through a Dynamic Programming algorithm that finds the best segmentation given a number of segment. For each number of segment, the optimal segmentation is associated with a likelihood value. By default, the algorithm choose the number of segment given a criterium developed by Marc Lavielle based on the value of the second derivative of the penalized likelihood. This criterium use a threshold value of <code>S = 0.75</code>, but a different threshold can be specified. Argument <code>subsample_by</code> controls subsampling and will be explored in section <a href="#subsampling">subsampling</a></p>
-<p><code><a href="reference/segmentation.html">segmentation()</a></code> returns an object of <code>segmentation-class</code> for which several methods are available (see section <a href="#exploring-outputs">exploring outputs</a>). The most important one is plot.segmentation, that shows the segmented time-series.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">shift_seg</span><span class="op">)</span></code></pre></div>
-<p>By default, <code>plot.segmentation</code> shows the best segmentation, but one can specify a given number of segments (inside the range <code>1:Kmax</code>). See <a href="#plot.segmentation">segmentation-class</a> for additional informations.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">shift_seg</span>, nseg <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
-<p>The second important method is <code>plot_likelihood</code> that shows the log-likelihood of the best segmentation versus the number of segments and highlights the one chosen with Lavielle’s criterium. The likelihood should show an increasing curve with a clear breakpoints for the optimal number of segment. Note that with real data breaks are often less clear than for that example. An artifactual decrease of likelihood can happen for large number of segment when Kmax is too high (close to <code>n/lmin</code>) and correspond generally to an oversegmentation.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/segmentation-class.html">plot_likelihood</a></span><span class="op">(</span><span class="va">shift_seg</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="segmentation-clustering" class="section level2">
-<h2 class="hasAnchor">
-<a href="#segmentation-clustering" class="anchor"></a>Segmentation-Clustering</h2>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">simulmode</span><span class="op">)</span>
-<span class="va">simulmode</span><span class="op">$</span><span class="va">abs_spatial_angle</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">simulmode</span><span class="op">$</span><span class="va">spatial_angle</span><span class="op">)</span>
-<span class="va">simulmode</span> <span class="op">&lt;-</span> <span class="va">simulmode</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">simulmode</span><span class="op">$</span><span class="va">abs_spatial_angle</span><span class="op">)</span>, <span class="op">]</span></code></pre></div>
-<p><code>simulmode</code> is an example dataset containing a movement simulation with three different movement mode. It is a data.frame with 11 columns, with coordinates and several covariates. Be careful to check your dataset for missing value.</p>
-<p>We can now run a joint segmentation/clustering on this dataset to identify the different behavioural modes. As in <code>segmentation</code>, you can specify the variables to be segmented using argument <code>seg.var</code>. The function allow rescaling of variable (recommended for segmentation/clustering to identify behavioural state), with argument <code>scale.variable</code>.</p>
-<p>For a joint segmentation/clustering one has to specify arguments <code>lmin</code>, the minimum length of a segment and <code>Kmax</code>, the maximum number of segments, and <code>ncluster</code> a vector of number of class. By default <code>Kmax</code> will be set to <code>0.75*floor(n/lmin)</code>, with <code>n</code> the number of observations. Be careful if you want to fix a higher <code>Kmax</code> the algorithm tend to over-segment (which you can check by looking at the segmentation or the likelihood curve)</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mode_segclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/segclust.html">segclust</a></span><span class="op">(</span><span class="va">simulmode</span>, Kmax <span class="op">=</span> <span class="fl">20</span>, lmin<span class="op">=</span><span class="fl">10</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span>, scale.variable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><code><a href="reference/segclust.html">segclust()</a></code> returns also an object of <code>segmentation-class</code> for which the same methods are available (see section <a href="#exploring-outputs">exploring outputs</a>). The most important one is again plot.segmentation, that shows the segmented time-series.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span></code></pre></div>
-<p>By default for a segmentation/clustering, <code>plot.segmentation</code> shows the best segmentation, maximizing BIC-based penalized likelihood, but one can specify a given number of cluster/or segment See <a href="#plot.segmentation">segmentation-class</a> for additional informations.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mode_segclust</span>, ncluster <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mode_segclust</span>, ncluster <span class="op">=</span> <span class="fl">3</span>, nseg <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></code></pre></div>
-<p>One can also inspect the BIC-based penalized log-likelihood through functions <code><a href="reference/segmentation-class.html">plot_BIC()</a></code>. Best-case scenario is as below, the BIC show a steep increase up to a maximum and a slow decrease after the optimum and one number of cluster is clearly above the others. With real data it also happens that more cluster always improve the penalized-likelihood but so we generally advise to choose the number of cluster based on expectation and biological knowledge.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/segmentation-class.html">plot_BIC</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="advice-for-choosing-lmin-kmax-and-ncluster" class="section level2">
-<h2 class="hasAnchor">
-<a href="#advice-for-choosing-lmin-kmax-and-ncluster" class="anchor"></a>Advice for choosing lmin, Kmax and ncluster</h2>
-<p><code>lmin</code> is the minimum length of a segment. For home range it is the duration for which we consider a stationary use to be a home-range. For behaviour it is the minimum time for a behaviour not te be considered anecdotical.</p>
-<p><code>Kmax</code> is by default fixed to the maximum but for performance we advise on setting a smaller Kmax. If the selected number of segment is too close to Kmax, think about increasing Kmax, that might be limiting the number of segment. As noted before, when Kmax is to close to the maximum (<code>n/lmin</code>) the algorithm may oversegment and we advise to look carefully at the likelihood curve when using <code>Kmax &gt; 0.75*n/lmin</code></p>
-<p>By default <code>ncluster</code> is chosen by maximizing a BIC-based penalized log-likelihood. When segmentation-clustering is reliable, the selected optimum should the maximum just before a linear drop of the penalized log-Likelihood. Also even though higher number of cluster may have higher penalized log-Likelihood the difference between them should not be too large. Also, as in this example, if the selected number of segment for a higher number of cluster is the same, then the lower number should be preferred. Not that this selection of number of cluster is mostly a suggestion and should not be trusted. Best practice should rely on biological information to fix a priori the number of states.</p>
-</div>
-</div>
-<div id="exploring-outputs" class="section level1">
-<h1 class="hasAnchor">
-<a href="#exploring-outputs" class="anchor"></a>Exploring outputs</h1>
-<p>Both functions <code><a href="reference/segmentation.html">segmentation()</a></code> and <code><a href="reference/segclust.html">segclust()</a></code> returns a <code>segmentation-class</code> object for which several methods are available.</p>
-<div id="extract-information-about-predicted-states" class="section level2">
-<h2 class="hasAnchor">
-<a href="#extract-information-about-predicted-states" class="anchor"></a>Extract information about predicted states.</h2>
-<div id="augment---get-state-for-each-point" class="section level3">
-<h3 class="hasAnchor">
-<a href="#augment---get-state-for-each-point" class="anchor"></a>augment - get state for each point.</h3>
-<p><code><a href="reference/segmentation-class.html">augment.segmentation()</a></code> is a method for <code><a href="https://generics.r-lib.org/reference/augment.html">broom::augment</a></code>. It returns an augmented data.frame with outputs of the model - here, the attribution to segment or cluster</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/augment.html">augment</a></span><span class="op">(</span><span class="va">shift_seg</span><span class="op">)</span>
-<span class="fu"><a href="reference/augment.html">augment</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span></code></pre></div>
-<p>By default <code>augment.segmentation</code> will use data for the best segmentation (maximum of penalized log-Likelihood for <code><a href="reference/segclust.html">segclust()</a></code> and Lavielle’s criterium for <code><a href="reference/segmentation.html">segmentation()</a></code>) but one can ask for a specific segmentation :</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/augment.html">augment</a></span><span class="op">(</span><span class="va">shift_seg</span>, nseg <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># segmentation()</span>
-<span class="fu"><a href="reference/augment.html">augment</a></span><span class="op">(</span><span class="va">mode_segclust</span>, ncluster <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="co"># segclust()</span>
-<span class="fu"><a href="reference/augment.html">augment</a></span><span class="op">(</span><span class="va">mode_segclust</span>, ncluster <span class="op">=</span> <span class="fl">2</span>, nseg <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="co"># segclust()</span></code></pre></div>
-</div>
-<div id="segment---extract-each-segment-begin-end-statistics" class="section level3">
-<h3 class="hasAnchor">
-<a href="#segment---extract-each-segment-begin-end-statistics" class="anchor"></a>segment - Extract each segment (begin, end, statistics)</h3>
-<p><code><a href="reference/segmentation-class.html">segment()</a></code> allows retrieving informations on the different segment of a given segmentation. Each segment is associated with the mean and standard deviation for each variable, the state (equivalent to the segment number for <code>segmentation</code>) and the state ordered given a variable - by default the first variable given by <code>seg.var</code>. One can specify the variable for ordering states through the <code>order.var</code> of <code><a href="reference/segmentation.html">segmentation()</a></code> and <code><a href="reference/segclust.html">segclust()</a></code>.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/segmentation-class.html">segment</a></span><span class="op">(</span><span class="va">shift_seg</span><span class="op">)</span>
-<span class="fu"><a href="reference/segmentation-class.html">segment</a></span><span class="op">(</span><span class="va">shift_seg</span>, nseg <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>
-<span class="fu"><a href="reference/segmentation-class.html">segment</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span>
-<span class="fu"><a href="reference/segmentation-class.html">segment</a></span><span class="op">(</span><span class="va">mode_segclust</span>, nclust <span class="op">=</span> <span class="fl">3</span>, nseg <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="states---statistics-about-each-states" class="section level3">
-<h3 class="hasAnchor">
-<a href="#states---statistics-about-each-states" class="anchor"></a>states - statistics about each states.</h3>
-<p><code><a href="reference/segmentation-class.html">states()</a></code> return information on the different states of the segmentation. For <code><a href="reference/segmentation.html">segmentation()</a></code> it is quite similar to <code><a href="reference/segmentation-class.html">segment()</a></code>. For <code>segclust</code>, however it gives the different cluster found and the statistics associated.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/segmentation-class.html">states</a></span><span class="op">(</span><span class="va">shift_seg</span><span class="op">)</span>
-<span class="fu"><a href="reference/segmentation-class.html">states</a></span><span class="op">(</span><span class="va">shift_seg</span>, nseg <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>
-<span class="fu"><a href="reference/segmentation-class.html">states</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span>
-<span class="fu"><a href="reference/segmentation-class.html">states</a></span><span class="op">(</span><span class="va">mode_segclust</span>, nclust <span class="op">=</span> <span class="fl">3</span>, nseg <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="log-likelihood---loglik" class="section level3">
-<h3 class="hasAnchor">
-<a href="#log-likelihood---loglik" class="anchor"></a>log-Likelihood - logLik</h3>
-<p><code><a href="reference/segmentation-class.html">logLik.segmentation()</a></code> return information on the log-likelihood of the different segmentations possible. It returns a data.frame with the number of segment, the log-likelihood and eventually the number of cluster.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/logLik.html">logLik</a></span><span class="op">(</span><span class="va">shift_seg</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/logLik.html">logLik</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="bic-based-penalized-likelihood-segclust" class="section level3">
-<h3 class="hasAnchor">
-<a href="#bic-based-penalized-likelihood-segclust" class="anchor"></a>BIC-based penalized likelihood (segclust)</h3>
-<p><code><a href="reference/segmentation-class.html">BIC.segmentation()</a></code> return information on the BIC-based penalized log-likelihood of the different segmentations possible. It returns a data.frame with the number of segment, the BIC-based penalized log-likelihood and the number of cluster. For <code><a href="reference/segclust.html">segclust()</a></code> only. Note that this does not truly returns a BIC.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">BIC</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span></code></pre></div>
-</div>
-</div>
-<div id="graphical-outputs" class="section level2">
-<h2 class="hasAnchor">
-<a href="#graphical-outputs" class="anchor"></a>Graphical outputs</h2>
-<p><code>segmentation-class</code> also provides methods for plotting results of segmentations. All plot methods use <code>ggplot2</code> package and return <code>ggplot</code> objects that can be further modified and customized using classical <code>ggplot2</code> (see <a href="https://ggplot2.tidyverse.org/reference/">ggplot2 function reference</a>.</p>
-<div id="plotsegmentation---series-plot-of-the-segmentation" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plotsegmentation---series-plot-of-the-segmentation" class="anchor"></a>plot.segmentation - series plot of the segmentation</h3>
-<p><code><a href="reference/segmentation-class.html">plot.segmentation()</a></code> can be used to plot the output of a segmentation as a series-plot. A specific segmentation can be chosen with <code>nseg</code> and <code>ncluster</code> arguments. If the original data had a specific x-axis, like a <code>POSIXct</code> time column, this can be specified using argument <code>xcol</code>. By default, data are plotted by their number. If you want clusters or segments to be ordered according to one of the variables, this can be specified using argument <code>order</code>. By default segmentation/clustering output are plotted using ordered states.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">shift_seg</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mode_segclust</span>, ncluster <span class="op">=</span> <span class="fl">3</span>, nseg <span class="op">=</span> <span class="fl">10</span>, xcol <span class="op">=</span> <span class="st">"indice"</span>, order <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
-<p>Here there was a fake <code>dateTime</code> column in <code>POSIXct</code> format in the <code>data.frame</code> originally given to the function <code>segclust</code>. We can then plot the results of the segmentation according the the time given.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mode_segclust</span>, ncluster <span class="op">=</span> <span class="fl">3</span>, nseg <span class="op">=</span> <span class="fl">10</span>, xcol <span class="op">=</span> <span class="st">"dateTime"</span>, order <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="segmap---map-the-segmentation" class="section level3">
-<h3 class="hasAnchor">
-<a href="#segmap---map-the-segmentation" class="anchor"></a>segmap - map the segmentation</h3>
-<p><code><a href="reference/segmentation-class.html">segmap()</a></code> plot the results of the segmentation as a map. This can be done only if data have a geographic meaning. Coordinate names are by default “x” and “y” but this can be provided through argument <code>coord.names</code>.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/segmentation-class.html">segmap</a></span><span class="op">(</span><span class="va">shift_seg</span>, nseg <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="fu"><a href="reference/segmentation-class.html">segmap</a></span><span class="op">(</span><span class="va">mode_segclust</span>, ncluster <span class="op">=</span> <span class="fl">3</span>, nseg <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="stateplot---plot-states-statistics" class="section level3">
-<h3 class="hasAnchor">
-<a href="#stateplot---plot-states-statistics" class="anchor"></a>stateplot - plot states statistics</h3>
-<p><code><a href="reference/segmentation-class.html">stateplot()</a></code> show statistics for each state or segment.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/segmentation-class.html">stateplot</a></span><span class="op">(</span><span class="va">shift_seg</span>, nseg <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="fu"><a href="reference/segmentation-class.html">stateplot</a></span><span class="op">(</span><span class="va">mode_segclust</span>, ncluster <span class="op">=</span> <span class="fl">3</span>, nseg <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="plot_likelihood" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plot_likelihood" class="anchor"></a>plot_likelihood</h3>
-<p><code><a href="reference/segmentation-class.html">plot_likelihood()</a></code> plot the log-likelihood of the segmentation for all the tested number of segments and clusters.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/segmentation-class.html">plot_likelihood</a></span><span class="op">(</span><span class="va">shift_seg</span><span class="op">)</span>
-<span class="fu"><a href="reference/segmentation-class.html">plot_likelihood</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="plot_bic---plot-the-bic-based-penalized-likelihood" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plot_bic---plot-the-bic-based-penalized-likelihood" class="anchor"></a>plot_BIC - plot the BIC-based penalized likelihood</h3>
-<p><code><a href="reference/segmentation-class.html">plot_BIC()</a></code> plot the BIC-based penalized log-likelihood of the segmentation for all the tested number of segments and clusters.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/segmentation-class.html">plot_BIC</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span></code></pre></div>
-</div>
-</div>
-</div>
-<div id="advanced-options" class="section level1">
-<h1 class="hasAnchor">
-<a href="#advanced-options" class="anchor"></a>Advanced Options</h1>
-<div id="subsampling" class="section level2">
-<h2 class="hasAnchor">
-<a href="#subsampling" class="anchor"></a>Subsampling</h2>
-<p>Computation cost for the algorithm scales non-linearly and can be both memory and time-consuming. Performance depends on computer, but from what we’ve tested, a segmentation on data of size &gt; 10000 can be quite memory consuming (more than 10Go of RAM) and segmentation-clustering can be quite long for data &gt; 1000 (few minutes to hours). For such dataset we recommend either subsampling if loosing resolution is not a big deal (looking for home-range changes over a year with hourly points might be a lost of time when daily points are sufficient) or if splitting the dataset for very long data. Although for segmentation-clustering, clusters will not be easily comparable between the different part of the dataset, if one provides parts where all cluster are present for sure, there should be no problem.</p>
-<p>3 different options are available for subsampling. First one can disable subsampling through argument <code>subsample</code> :</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mode_segclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/segclust.html">segclust</a></span><span class="op">(</span><span class="va">simulmode</span>, Kmax <span class="op">=</span> <span class="fl">30</span>, lmin<span class="op">=</span><span class="fl">5</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"behavior"</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span>, subsample <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<p>By default subsampling is allowed (subsample = TRUE) and subsampling will occur if the number of data exceed a threshold (10000 for segmentation, 1000 for segmentation-clustering). The function will subsample by the lower factor (by 2, 3, 4…) for which the dataset will fall below the threshold once subsampled. For instance a 2500 rows dataset for segmentation-clustering would be subsampled by 3 to fall below 1000 rows. The threshold can be changed through argument <code>subsample_over</code>.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mode_segclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/segclust.html">segclust</a></span><span class="op">(</span><span class="va">simulmode</span>, Kmax <span class="op">=</span> <span class="fl">30</span>, lmin<span class="op">=</span><span class="fl">5</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"behavior"</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span>, subsample_over <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></code></pre></div>
-<p>One can also override this automatic subsampling by selecting directly the subsampling factor through argument <code>subsample_by</code>.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mode_segclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/segclust.html">segclust</a></span><span class="op">(</span><span class="va">simulmode</span>, Kmax <span class="op">=</span> <span class="fl">30</span>, lmin<span class="op">=</span><span class="fl">5</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"behavior"</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span>, subsample_by <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
-<p>Beware that subsampling will also divide your lmin argument. If subsampling by 2, lmin will be divided by 2. It is important that lmin stays larger than 3 and if possible than 5, for better variance estimations.</p>
-<p>Note that subsampling has been implemented in such way that outputs will show all points but segmentation is calculated only on subsampled points. Points used in segmentation can be retrieved through <code>augment</code> in data column <code>subsample_ind</code> (The subsample indices for kept points and NA for ignored points).</p>
-</div>
-<div id="other-data-types" class="section level2">
-<h2 class="hasAnchor">
-<a href="#other-data-types" class="anchor"></a>Other data types</h2>
-<p>We have shown examples for using data.frames but one can also segment data from <code>ltraj</code> and <code>Move</code> object that contains a single individual.</p>
-<div id="concerning-segmentation" class="section level3">
-<h3 class="hasAnchor">
-<a href="#concerning-segmentation" class="anchor"></a>Concerning segmentation</h3>
-<p>For a simple segmentation, the algorithm will assume a home-range segmentation and use coordinates directly.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">ltraj_object</span>, lmin <span class="op">=</span> <span class="fl">5</span>, Kmax <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>
-<span class="fu"><a href="reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">Move_object</span>, lmin <span class="op">=</span> <span class="fl">5</span>, Kmax <span class="op">=</span> <span class="fl">25</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="concerning-segclust" class="section level3">
-<h3 class="hasAnchor">
-<a href="#concerning-segclust" class="anchor"></a>Concerning segclust</h3>
-<p>For a segmentation/clustering, one has to provide the variables used for segmentation</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">ltraj_object</span>, lmin <span class="op">=</span> <span class="fl">5</span>, Kmax <span class="op">=</span> <span class="fl">25</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">Move_object</span>, lmin <span class="op">=</span> <span class="fl">5</span>, Kmax <span class="op">=</span> <span class="fl">25</span>, ncluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>, seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>Of course the variable names provided must exist as column in <code>Move_object@data</code> and <code><a href="https://rdrr.io/pkg/adehabitatLT/man/burst.html">adehabitatLT::infolocs(ltraj_object[1])</a></code>.</p>
-</div>
-</div>
-</div>
-<div id="covariate-calculations" class="section level1">
-<h1 class="hasAnchor">
-<a href="#covariate-calculations" class="anchor"></a>Covariate calculations</h1>
-<p>The package also includes functions in order to calculate unusual covariates, such as the turning angle at constant step length (here called <code>spatial_angle</code>). For the latter, a radius have to be chosen and can be specified through argument <code>radius</code>. If no radius is specified, the default one will be the median of the step length distribution. Other covariates calculated are : persistence and turning speed (v_p and v_r) from Gurarie et al (2009), distance travelled between points, speed and smoothed version of the latter. Covariates dependent on time interval (like speed) are by default calculated with hours, but you can change this with argument <code>units</code> as in the example below.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">simple_data</span> <span class="op">&lt;-</span> <span class="va">simulmode</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"dateTime"</span>,<span class="st">"x"</span>,<span class="st">"y"</span><span class="op">)</span><span class="op">]</span>
-<span class="va">full_data</span>   <span class="op">&lt;-</span> <span class="fu"><a href="reference/add_covariates.html">add_covariates</a></span><span class="op">(</span><span class="va">simple_data</span>, coord.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>,<span class="st">"y"</span><span class="op">)</span>, timecol <span class="op">=</span> <span class="st">"dateTime"</span>,smoothed <span class="op">=</span> <span class="cn">TRUE</span>, units <span class="op">=</span><span class="st">"min"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">full_data</span><span class="op">)</span></code></pre></div>
 </div>
 
   </div>
