@@ -1,11 +1,13 @@
 Package: segclust2d
 Type: Package
 Title: Bivariate Segmentation/Clustering Methods and Tools
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: c(person("Remi", "Patin", role = c("aut", "cre"), email = "remi.patin@normale.fr"),
              person("Marie-Pierre", "Etienne", role = "aut"), 
              person("Emilie", "Lebarbier", role = "aut"), 
              person("Simon", "Benhamou", role = "aut"))
+URL: https://github.com/rpatin/segclust2d
+BugReports: https://github.com/rpatin/segclust2d/issues
 Description: Provides two methods for segmentation and joint segmentation/clustering of
     bivariate time-series. Originally intended for ecological segmentation
     (home-range and behavioural modes) but easily applied on other series,
@@ -24,7 +26,7 @@ Depends:
     R (>= 3.3.0)
 Imports:
     RColorBrewer (>= 1.1-2),
-    dplyr (>= 0.5.0),
+    dplyr (>= 1.0.0),
     plyr (>= 1.8.4),
     reshape2 (>= 1.4.1),
     ggplot2(>= 2.1.0),
@@ -35,7 +37,8 @@ Imports:
     graphics,
     stats,
     utils,
-    scales
+    scales,
+    rlang
 Suggests:
     knitr,
     rmarkdown,
@@ -49,9 +52,11 @@ Suggests:
     moveHMM (>= 1.2),
     htmltools,
     move,
-    devtools
+    devtools,
+    spelling
 LinkingTo:
     Rcpp,
     RcppArmadillo
 VignetteBuilder: knitr
 Encoding: UTF-8
+Language: en-US

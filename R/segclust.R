@@ -20,13 +20,17 @@
 #' #' @examples
 #' df <-  test_data()$data
 #' #' # data is a data.frame with column 'x' and 'y'
-#' # Simple segmentation with automatic subsampling if data has more than 1000 rows:
-#' res <- segclust(df, Kmax = 15, lmin = 10, ncluster = 2:4, seg.var = c("x","y"))
+#' # Simple segmentation with automatic subsampling 
+#' # if data has more than 1000 rows:
+#' res <- segclust(df,
+#'  Kmax = 15, lmin = 10, ncluster = 2:4, 
+#'  seg.var = c("x","y"))
 #'  # Plot results
 #'  plot(res)
 #'  segmap(res, coord.names = c("x","y"))
-#'  # check penalized likelihood of alternative number of segment possible. There should
-#'  # be a clear break if the segmentation is good
+#'  # check penalized likelihood of 
+#'  # alternative number of segment possible. 
+#'  # There should be a clear break if the segmentation is good
 #'  plot_BIC(res)
 #' \dontrun{
 #' # Advanced options:
@@ -39,7 +43,8 @@
 #' # Disable subsampling:
 #' res <- segclust(df, Kmax = 30, lmin = 10, 
 #'                 ncluster = 2:4, seg.var = c("x","y"), subsample = FALSE)
-#' # Disabling automatic scaling of variables for segmentation (standardazing the variables) :
+#' # Disabling automatic scaling of variables for segmentation (standardazing
+#' # the variables) :
 #'  res <- segclust(df, Kmax = 30, lmin = 10,
 #'                  seg.var = c("dist","angle"), scale.variable = FALSE)
 #' }
@@ -55,17 +60,28 @@ segclust <- function (x, ...) {
 #' @rdname segclust
 #' @export
 
-segclust.data.frame <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...) {
+segclust.data.frame <-
+  function(x, Kmax, lmin, ncluster,
+           type = "behavior", 
+           seg.var = NULL,
+           diag.var = seg.var, 
+           order.var = seg.var[1], 
+           coord.names = c("x","y"), ...) {
   if (!missing(type)) {
-    warning("Please specify arguments order.var and scale.variable instead of type")
+    warning("Please specify arguments 
+            order.var and scale.variable instead of type")
     
     if (type == "home-range") {
-      if (!missing(seg.var)) warning("Ignoring argument seg.var")
-      if (missing(coord.names)) message("Using default value for coord.names (x and y)")
+      if (!missing(seg.var)){
+        warning("Ignoring argument seg.var")
+      }
+      if (missing(coord.names)){
+        message("Using default value for coord.names (x and y)")
+      } 
       dat <- t(x[,coord.names])
-      seg.var = coord.names
-      diag.var = coord.names
-      order.var = coord.names[1]
+      seg.var <- coord.names
+      diag.var <- coord.names
+      order.var <- coord.names[1]
     } else if ( type == "behavior" ) {
       if (is.null(seg.var)) stop("seg.var missing for behavioral segmentation")
       if ( length(seg.var) == 1 ) {
@@ -100,7 +116,16 @@ segclust.data.frame <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.
   } 
   
   
-  segmented <- segclust_internal(x, seg.var = seg.var, diag.var = diag.var, order.var = order.var, Kmax = Kmax, ncluster = ncluster, lmin = lmin, dat=dat, type=type, ... )
+  segmented <-
+    segclust_internal(
+      x,
+      seg.var = seg.var,
+      diag.var = diag.var, 
+      order.var = order.var,
+      Kmax = Kmax, 
+      ncluster = ncluster, 
+      lmin = lmin,
+      dat=dat, type=type, ... )
   return(segmented)
 }
 
@@ -109,24 +134,35 @@ segclust.data.frame <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.
 #' @export
 
 
-segclust.Move <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
-  if(!requireNamespace("move", quietly = TRUE))
+segclust.Move <-
+  function(x,
+           Kmax, lmin, ncluster,
+           type = "behavior", 
+           seg.var = NULL,
+           diag.var = seg.var, 
+           order.var = seg.var[1], 
+           coord.names = c("x","y"), ...){
+    if(!requireNamespace("move", quietly = TRUE))
     stop("move package required for calling segclust on a Move object.")
   
   if(!missing(type)){
-    warning("Please specify arguments order.var and scale.variable instead of type")
+    warning("Please specify arguments 
+            order.var and scale.variable instead of type")
     if(type == "home-range"){
-      if(!requireNamespace("sp", quietly = TRUE))
-        stop("sp package required for calling segclust (home-range) on a Move object.")
+      if(!requireNamespace("sp", quietly = TRUE)){
+        
+      }
+        stop("sp package required for calling
+             segclust (home-range) on a Move object.")
       dat <- t(sp::coordinates(x))
-      seg.var = coord.names
-      diag.var = coord.names
-      order.var = coord.names[1]
-      x.df = x@data
+      seg.var <- coord.names
+      diag.var <- coord.names
+      order.var <- coord.names[1]
+      x.df <- x@data
       x.df[,coord.names[1]] <- dat[1,]
       x.df[,coord.names[2]] <- dat[2,]
     } else if ( type == "behavior" ){
-      x.df = x@data
+      x.df <- x@data
       if(is.null(seg.var)) stop("seg.var missing for behavioral segmentation")
       if( length(seg.var) == 1 ){
         dat <- t(x.df[,rep(seg.var,2)])
@@ -141,18 +177,20 @@ segclust.Move <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = 
   } else {
     if (!missing(coord.names)) {
       message("Using coordinates as segmentation variables")
-      if(!requireNamespace("sp", quietly = TRUE))
-        stop("sp package required for calling segclust on coordinates of a Move object.")
+      if(!requireNamespace("sp", quietly = TRUE)){
+        stop("sp package required for calling
+             segclust on coordinates of a Move object.")
+      }
       dat <- t(sp::coordinates(x))
-      seg.var = coord.names
-      diag.var = coord.names
-      order.var = coord.names[1]
-      x.df = x@data
+      seg.var <- coord.names
+      diag.var <- coord.names
+      order.var <- coord.names[1]
+      x.df <- x@data
       x.df[,coord.names[1]] <- dat[1,]
       x.df[,coord.names[2]] <- dat[2,]
       
     } else if (!missing(seg.var)) {
-      x.df = x@data
+      x.df <- x@data
       if( length(seg.var) == 1 ){
         dat <- t(x.df[,rep(seg.var,2)])
       } else if ( length(seg.var) == 2 ) {
@@ -162,7 +200,16 @@ segclust.Move <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = 
       stop("Method needs either coord.names or seg.var argument")
     }
   }
-  segmented <- segclust_internal(x.df, seg.var = seg.var, diag.var = diag.var, order.var = order.var, Kmax = Kmax, ncluster = ncluster, lmin = lmin, dat=dat, type=type, ...)
+  segmented <- 
+    segclust_internal(
+      x.df, 
+      seg.var = seg.var,
+      diag.var = diag.var, 
+      order.var = order.var, 
+      Kmax = Kmax,
+      ncluster = ncluster,
+      lmin = lmin,
+      dat=dat, type=type, ...)
   return(segmented)
 }
 
@@ -171,25 +218,33 @@ segclust.Move <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = 
 #' @export
 
 
-segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var = NULL, diag.var = seg.var, order.var = seg.var[1], coord.names = c("x","y"), ...){
+segclust.ltraj <- function(
+  x, Kmax, lmin, ncluster, 
+  type = "behavior",
+  seg.var = NULL, 
+  diag.var = seg.var,
+  order.var = seg.var[1],
+  coord.names = c("x","y"), ...){
   if(!requireNamespace("adehabitatLT", quietly = TRUE))
-    stop("adehabitatLT package required for calling segclust on a ltraj object.")
+    stop("adehabitatLT package required 
+         for calling segclust on a ltraj object.")
   
   if(!missing(type)){
-    warning("Please specify arguments order.var and scale.variable instead of type")
+    warning("Please specify arguments 
+            order.var and scale.variable instead of type")
     
     if(type == "home-range"){
       tmp <- x[[1]]
       dat <- t(cbind(tmp$x,tmp$y))
       if(any(is.na(tmp$x))) stop("Please filter NA from ltraj object")
-      seg.var = coord.names
-      diag.var = coord.names
-      order.var = coord.names[1]
-      x.df =  adehabitatLT::infolocs(x)[[1]]
+      seg.var <- coord.names
+      diag.var <- coord.names
+      order.var <- coord.names[1]
+      x.df <- adehabitatLT::infolocs(x)[[1]]
       x.df[,coord.names[1]] <- dat[1,]
       x.df[,coord.names[2]] <- dat[2,]
     } else if ( type == "behavior" ){
-      x.df = adehabitatLT::infolocs(x)[[1]]
+      x.df <- adehabitatLT::infolocs(x)[[1]]
       if(is.null(seg.var)) stop("seg.var missing for behavioral segmentation")
       if( length(seg.var) == 1 ){
         dat <- t(x.df[,rep(seg.var,2)])
@@ -208,15 +263,15 @@ segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var =
       if (length(x) > 1) warning("Using only first element of ltraj object")
       dat <- t(cbind(tmp$x,tmp$y))
       if (any(is.na(tmp$x))) stop("Please filter NA from ltraj object")
-      seg.var = coord.names
-      diag.var = coord.names
-      order.var = coord.names[1]
-      x.df =  adehabitatLT::infolocs(x)[[1]]
+      seg.var <- coord.names
+      diag.var <- coord.names
+      order.var <- coord.names[1]
+      x.df <- adehabitatLT::infolocs(x)[[1]]
       x.df[,coord.names[1]] <- dat[1,]
       x.df[,coord.names[2]] <- dat[2,]
       
     } else if (!missing(seg.var)) {
-      x.df = adehabitatLT::infolocs(x)[[1]]
+      x.df <- adehabitatLT::infolocs(x)[[1]]
       if( length(seg.var) == 1 ){
         dat <- t(x.df[,rep(seg.var,2)])
       } else if ( length(seg.var) == 2 ) {
@@ -227,7 +282,13 @@ segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var =
     }
   }
   
-  segmented <- segclust_internal(x.df, seg.var = seg.var, diag.var = diag.var, order.var = order.var, Kmax = Kmax, ncluster = ncluster, lmin = lmin, dat=dat, type=type, ...)
+  segmented <-
+    segclust_internal(
+      x.df,
+      seg.var = seg.var, diag.var = diag.var,
+      order.var = order.var, 
+      Kmax = Kmax, ncluster = ncluster, lmin = lmin, 
+      dat=dat, type=type, ...)
   return(segmented)
 }
 
@@ -236,17 +297,25 @@ segclust.ltraj <- function(x, Kmax, lmin, ncluster, type = "behavior", seg.var =
 #' @inheritParams segclust
 #' @inheritParams segmentation_internal
 
-segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NULL, 
-                              scale.variable = NULL, 
-                              Kmax, ncluster = NULL, lmin = NULL, 
-                              dat=NULL, type=NULL, sameSigma = F, 
-                              subsample_over = 1000, subsample_by = NA, subsample = TRUE, ...){
-  
+segclust_internal <- 
+  function(x,
+           seg.var = NULL, diag.var = NULL, order.var = NULL, 
+           scale.variable = NULL, 
+           Kmax, ncluster = NULL, lmin = NULL, 
+           dat=NULL, type=NULL, sameSigma = FALSE, 
+           subsample_over = 1000, subsample_by = NA, subsample = TRUE, ...){
+    
   if(missing(Kmax)){
-    Kmax = floor(0.75 * dim(dat)[2]/lmin)
-    message(paste("Unspecified Kmax, taking 75% of the maximum possible value : Kmax = ",Kmax,". Think about reducing Kmax if running is too slow"))
+    Kmax <- floor(0.75 * dim(dat)[2]/lmin)
+    message(
+      paste("Unspecified Kmax, taking 
+            75% of the maximum possible value :
+            Kmax = ",Kmax,". Think about reducing
+            Kmax if running is too slow"))
   } else if (lmin*Kmax > nrow(x)){
-    stop("lmin*Kmax > number of data. Please reduce lmin (minimum length of segment) or Kmax (maximum number of segment)")
+    stop("lmin*Kmax > number of data. 
+         Please reduce lmin (minimum length of segment) or
+         Kmax (maximum number of segment)")
   }
   if(any(is.na(x[,seg.var]))){
     stop("Variables have missing values, please remove them")
@@ -260,13 +329,17 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
     dat <- dat[,!is.na(x$subsample_ind)]
   } else {
     subsample_by <- 1
-    x$subsample_ind <- 1:nrow(x)
-    x$x_ind <- 1:nrow(x)
+    x$subsample_ind <- seq_len(nrow(x))
+    x$x_ind <- seq_len(nrow(x))
   }
-  if(missing_subsample & subsample_by >1) message("Automatic subsampling for large data. You can disable it with subsample = FALSE")
+  if(missing_subsample & subsample_by >1) {
+    message("Automatic subsampling for large data.
+            You can disable it with subsample = FALSE")
+    }
   
   if(missing(scale.variable)){
-    message("Rescaling variables - you can disable this with scale.variable = FALSE")
+    message("Rescaling variables - 
+            you can disable this with scale.variable = FALSE")
     scale.variable <- TRUE
   }
   
@@ -281,7 +354,11 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
   
   lmin <- floor(lmin/subsample_by)
   if(subsample_by > 1){
-    message(paste("Adjusting lmin to subsampling. New lmin divided by",subsample_by,"and set to",lmin,"."))
+    message(
+      paste("Adjusting lmin to subsampling.
+            New lmin divided by",subsample_by,
+            "and set to",lmin,".")
+      )
   }
   if(lmin < 1){
     stop("lmin should be > 1")
@@ -289,7 +366,11 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
   
   # check that there are no repetitions in the series
   if(check_repetition(dat, lmin)){
-    stop("There are repetitions of identical values in the time series larger than lmin, cannot estimate variance for such segment. This is potentially caused by interpolation of missing values or rounding of values.")
+    stop("There are repetitions of identical values
+         in the time series larger than lmin, 
+         cannot estimate variance for such segment.
+         This is potentially caused by interpolation
+         of missing values or rounding of values.")
   }
   
   segmented <- list("data" = x,
@@ -316,7 +397,10 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
   # res.DynProg <- segTraj::DynProg(CostLoc, Kmax)
   
   outputs <- lapply(1:Kmax,function(k){
-    out <- stat_segm(x, diag.var, order.var, param = res.DynProg, nseg=k, seg.type = "segmentation")
+    out <- stat_segm(x,
+                     diag.var, order.var,
+                     param = res.DynProg, 
+                     nseg=k, seg.type = "segmentation")
     names(out) <- c("segments","states")
     return(out)
   })
@@ -329,16 +413,26 @@ segclust_internal <- function(x, seg.var = NULL, diag.var = NULL, order.var = NU
   segmented$likelihood <- likelihood
   
   for(P in ncluster){
-    # res <- segTraj::hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma)
-    res <- hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin, sameSigma = sameSigma, ...)
+    # res <- segTraj::hybrid_simultanee(dat, P = P, Kmax = Kmax, lmin = lmin,
+    # sameSigma = sameSigma)
+    res <- hybrid_simultanee(dat, P = P,
+                             Kmax = Kmax, lmin = lmin, 
+                             sameSigma = sameSigma, ...)
     outputs <- lapply(P:Kmax,function(k){
-      out <- stat_segm(x, diag.var, order.var, param = res$param[[k]], seg.type = 'segclust')
+      out <- 
+        stat_segm(x,
+                  diag.var, order.var, 
+                  param = res$param[[k]], 
+                  seg.type = 'segclust')
       names(out) <- c("segments","states")
       return(out)
     })
     names(outputs) <- paste(P,"class -",P:Kmax, "segments")
-    likelihood = data.frame(nseg=1:Kmax,likelihood = c(res$Linc),ncluster=P)
-    tmpBIC <- calc_BIC(likelihood$likelihood,ncluster = P, nseg = 1:Kmax, n = dim(x)[1])
+    likelihood <- data.frame(nseg=1:Kmax,likelihood = c(res$Linc),ncluster=P)
+    tmpBIC <- calc_BIC(
+      likelihood$likelihood,
+      ncluster = P, nseg = 1:Kmax, 
+      n = dim(x)[1])
     param <- list(res$param)
     names(param) <- paste(P,"class")
     segmented$likelihood <- rbind(segmented$likelihood,likelihood)

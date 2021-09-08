@@ -1,9 +1,11 @@
 # bisig_plot
-#' bisig_plot draws the plots of the bivaraite signal on the same plot (scale free)
+#' bisig_plot draws the plots of the bivariate signal on the same plot (scale
+#' free)
 #' @param x the signal to be plotted
-#' @param rupt optionnal, if given add vertical lines at change points (rupt should a vector)
-#' @param mu optionnal the mean of each class of segment,
-#' @param pop optionnal the cluster to whom each segment belongs to,
+#' @param rupt optional, if given add vertical lines at change points (rupt
+#'   should a vector)
+#' @param mu optional the mean of each class of segment,
+#' @param pop optional the cluster to whom each segment belongs to,
 #' @param merge.seg should segment be merged ?
 #' @export
 #' @return no value
@@ -12,7 +14,7 @@ bisig_plot<- function(x, rupt=NULL, mu=NULL, pop=NULL, merge.seg=FALSE){
   n <- dim(x)[2]
   if(!is.null(rupt)){
     if(!is.matrix(rupt))
-      rupt       = ruptAsMat(rupt)
+      rupt <- ruptAsMat(rupt)
     K <- dim(rupt)[1]
   }
   m <- rowMeans(x)
@@ -20,10 +22,13 @@ bisig_plot<- function(x, rupt=NULL, mu=NULL, pop=NULL, merge.seg=FALSE){
 
   x.norm <- sweep(x = x, MARGIN = 1, STATS = m)
   x.norm <- sweep(x = x.norm, MARGIN = 1, STATS = s, FUN = '/')
-  graphics::plot(1:n,x.norm[1,], pch=19, col=2, ylab='', xlab = '', xaxt='n', yaxt='n')
+  graphics::plot(1:n,x.norm[1,],
+                 pch=19, col=2,
+                 ylab='', xlab = '', xaxt='n', yaxt='n')
   graphics::points(1:n, x.norm[2,], pch=19, col=3)
   if(!is.null(rupt)&!(merge.seg)){
-    invisible( lapply(1:K, function(d){ graphics::abline(v=rupt[d,1], lwd=1.5)}))
+    invisible( lapply(1:K, function(d){ 
+      graphics::abline(v=rupt[d,1], lwd=1.5)}))
   }
   if(!is.null(rupt)&(merge.seg)){
     change <- which(diff(pop)!=0)
@@ -35,16 +40,19 @@ bisig_plot<- function(x, rupt=NULL, mu=NULL, pop=NULL, merge.seg=FALSE){
     ruptProv[p+1, 2] <- rupt[K,2]
 
     if(p>1){
-      ruptProv[2:p,] <- t(sapply(1:(p-1), function(p_){c(rupt[change[p_]+1,1],
+      ruptProv[2:p,] <- t(vapply(1:(p-1), function(p_){c(rupt[change[p_]+1,1],
                                                        rupt[change[p_+1],2])}))
     }
-    invisible( lapply(1:(p+1), function(d){ graphics::abline(v=ruptProv[d,1], lwd=1.5)}))
+    invisible( lapply(1:(p+1), function(d){ 
+      graphics::abline(v=ruptProv[d,1], lwd=1.5)}))
 
   }
   if(!is.null(mu) & !is.null(pop)){
     invisible( lapply(1:K, function(d){
-      graphics::lines(c(rupt[d,1],rupt[d,2]+1), (rep(mu[1,pop[d]],2)-m[1])/s[1], col=2)
-      graphics::lines(c(rupt[d,1],rupt[d,2]+1), (rep(mu[2,pop[d]],2)-m[2])/s[2], col=3)
+      graphics::lines(c(rupt[d,1],rupt[d,2]+1), 
+                      (rep(mu[1,pop[d]],2)-m[1])/s[1], col=2)
+      graphics::lines(c(rupt[d,1],rupt[d,2]+1),
+                      (rep(mu[2,pop[d]],2)-m[2])/s[2], col=3)
     }))
   }
 }
@@ -52,7 +60,8 @@ bisig_plot<- function(x, rupt=NULL, mu=NULL, pop=NULL, merge.seg=FALSE){
 
 
 # matrixRupt
-#' matrixRupt transforms a vector of change point into a data.frame with start and end of every segment
+#' matrixRupt transforms a vector of change point into a data.frame with start
+#' and end of every segment
 #' @param x the
 #' @param vectorRupt the vector containing the change point
 #'

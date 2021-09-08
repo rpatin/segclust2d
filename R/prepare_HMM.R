@@ -46,14 +46,21 @@
 #'          stepDist=stepDist,angleDist=angleDist,angleMean=angleMean)
 #'          
 #' ### 3. Transform into a segmentation-class object
-#' res.hmm <- prepare_HMM(data=data, hmm.model = m, diag.var = c("step","angle"))
+#' res.hmm <- prepare_HMM(data=data, 
+#' hmm.model = m, diag.var = c("step","angle"))
 #' ### 4. you can now apply the same function than for segclust2d outputs
 #' plot(res.hmm)
 #' segmap(res.hmm)
 #' }
 
-prepare_HMM <- function(data, hmm.model = NULL, diag.var, order.var = diag.var[1]){
-  outputsHMM <- stat_segm_HMM(data = data, hmm.model = hmm.model, diag.var = diag.var, order.var = order.var)
+prepare_HMM <- function(
+  data, hmm.model = NULL, 
+  diag.var, order.var = diag.var[1]
+  ){
+  outputsHMM <- 
+    stat_segm_HMM(
+      data = data,hmm.model = hmm.model,
+      diag.var = diag.var, order.var = order.var)
   names(outputsHMM) <- c("segments","states")
 
   segmented <- list("data" = data,
@@ -74,7 +81,7 @@ prepare_HMM <- function(data, hmm.model = NULL, diag.var, order.var = diag.var[1
 
 stat_segm_HMM <- function(data, hmm.model = NULL, diag.var, order.var = NULL){
   df.segm <- prep_segm_HMM(data,hmm.model)
-  data$indice <- 1:nrow(data)
+  data$indice <- seq_len(nrow(data))
   df.states <- calc_stat_states(data,df.segm,diag.var,order.var)
   return(list(df.segm,df.states))
 }

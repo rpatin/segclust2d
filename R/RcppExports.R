@@ -82,7 +82,7 @@ Gmixt_algo_cpp <- function(zi, lgi, P, mvec, wk, svec, prop) {
 #' @param lmin minimum length of segments
 #' @param prop mixture parameters
 #' @param mu mean parameters
-#' @param s standard deviation paramaters
+#' @param s standard deviation parameters
 Gmixt_simultanee_fullcpp <- function(Don, lmin, prop, mu, s) {
     .Call(`_segclust2d_Gmixt_simultanee_fullcpp`, Don, lmin, prop, mu, s)
 }

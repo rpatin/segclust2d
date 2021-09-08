@@ -29,7 +29,7 @@ devtools::install_github("rpatin/segclust2d")
 ```
 # Examples
 
-The algorithm can perform a [segmentation](#segmentation) of the time-serie into
+The algorithm can perform a [segmentation](#segmentation) of the time-series into
 homogeneous segments. A typical case is the identification of home-range
 behaviour. It can also perform an integrated classification of those segments
 into clusters of homogeneous behaviour through a
@@ -45,13 +45,13 @@ data(simulshift)
 
 `simulshift` is an example dataset containing a simulation of home-range behaviour with two shifts. It is a data.frame with two columns for coordinates : x and y. We can now run a simple segmentation with this dataset to find the different home-ranges. You can specify the variables to be segmented using argument `seg.var`. The function allow rescaling of variable (not recommended for segmentation on coordinates), with argument `scale.variable`.
 
-The segmentation require arguments `lmin`, the minimum length of a segment and `Kmax`, the maximum number of segments. By default `Kmax` will be set to `0.75*floor(n/lmin)`, with `n` the number of observations. However this can considerably slow the calculations so do not hesitate to reduce it to a reasonable value. Be carefull if you want to fix a higher `Kmax` the algorithm tend to over-segment (which you can check by looking at the segmentation or the likelihood curve)
+The segmentation require arguments `lmin`, the minimum length of a segment and `Kmax`, the maximum number of segments. By default `Kmax` will be set to `0.75*floor(n/lmin)`, with `n` the number of observations. However this can considerably slow the calculations so do not hesitate to reduce it to a reasonable value. Be careful if you want to fix a higher `Kmax` the algorithm tend to over-segment (which you can check by looking at the segmentation or the likelihood curve)
 
 ``` r
 shift_seg <- segmentation(simulshift, lmin = 300, Kmax = 25, seg.var = c("x","y"), subsample_by = 60, scale.variable = FALSE)
 ```
 
-Segmentation is performed through a Dynamic Programming algorithm that finds the best segmentation given a number of segment. For each number of segment, the optimal segmentation is associated with a likelihood value. By default, the algorithm choose the number of segment given a criterium developped by Marc Lavielle based on the value of the second derivative of the penalized likelihood. This criterium use a threshold value of `S = 0.75`, but a different threshold can be specified. Argument `subsample_by` controls subsampling and will be explored in section [subsampling](#subsampling)
+Segmentation is performed through a Dynamic Programming algorithm that finds the best segmentation given a number of segment. For each number of segment, the optimal segmentation is associated with a likelihood value. By default, the algorithm choose the number of segment given a criterium developed by Marc Lavielle based on the value of the second derivative of the penalized likelihood. This criterium use a threshold value of `S = 0.75`, but a different threshold can be specified. Argument `subsample_by` controls subsampling and will be explored in section [subsampling](#subsampling)
 
 `segmentation()` returns an object of `segmentation-class` for which several methods are available (see section [exploring outputs](#exploring-outputs)). The most important one is plot.segmentation, that shows the segmented time-series. 
 
@@ -83,7 +83,7 @@ simulmode <- simulmode[!is.na(simulmode$abs_spatial_angle), ]
 
 We can now run a joint segmentation/clustering on this dataset to identify the different behavioural modes. As in `segmentation`, you can specify the variables to be segmented using argument `seg.var`. The function allow rescaling of variable (recommended for segmentation/clustering to identify behavioural state), with argument `scale.variable`.
 
-For a joint segmentation/clustering one has to specify arguments `lmin`, the minimum length of a segment and `Kmax`, the maximum number of segments, and `ncluster` a vector of number of class. By default `Kmax` will be set to `0.75*floor(n/lmin)`, with `n` the number of observations. Be carefull if you want to fix a higher `Kmax` the algorithm tend to over-segment (which you can check by looking at the segmentation or the likelihood curve)
+For a joint segmentation/clustering one has to specify arguments `lmin`, the minimum length of a segment and `Kmax`, the maximum number of segments, and `ncluster` a vector of number of class. By default `Kmax` will be set to `0.75*floor(n/lmin)`, with `n` the number of observations. Be careful if you want to fix a higher `Kmax` the algorithm tend to over-segment (which you can check by looking at the segmentation or the likelihood curve)
 
 
 ``` r
@@ -235,7 +235,7 @@ plot_BIC(mode_segclust)
 # Advanced Options
 ## Subsampling
 
-Computation cost for the algorithm scales non-linearly and can be both memory and time-consuming. Performance depends on computer, but from what we've tested, a segmentation on data of size > 10000 can be quite memory consuming (more than 10Go of RAM) and segmentation-clustering can be quite long for data > 1000 (few minutes to hours). For such dataset we recommand either subsampling if loosing resolution is not a big deal (looking for home-range changes over a year with hourly points might be a lost of time when daily points are sufficient) or if splitting the dataset for very long data. Although for segmentation-clustering, clusters will not be easily comparable between the different part of the dataset, if one provides parts where all cluster are present for sure, there should be ne problem.
+Computation cost for the algorithm scales non-linearly and can be both memory and time-consuming. Performance depends on computer, but from what we've tested, a segmentation on data of size > 10000 can be quite memory consuming (more than 10Go of RAM) and segmentation-clustering can be quite long for data > 1000 (few minutes to hours). For such dataset we recommend either subsampling if loosing resolution is not a big deal (looking for home-range changes over a year with hourly points might be a lost of time when daily points are sufficient) or if splitting the dataset for very long data. Although for segmentation-clustering, clusters will not be easily comparable between the different part of the dataset, if one provides parts where all cluster are present for sure, there should be no problem.
 
 3 different options are available for subsampling. First one can disable subsampling through argument `subsample` : 
 
@@ -285,7 +285,7 @@ Of course the variable names provided must exist as column in `Move_object@data`
 
 # Covariate calculations
 
-The package also includes functions in order to calculate unusual covariates, such as the turning angle at constant step length (here called `spatial_angle`). For the latter, a radius have to be chosen and can be specified through argument `radius`. If no radius is specified, the default one will be the median of the step length distribution. Other covariates calculated are : peristence and turning speed (v_p and v_r) from Gurarie et al (2009), distance travelled between points, speed and smoothed version of the latter. Covariates dependent on time interval (like speed) are by default calculated with hours, but you can change this with argument `units` as in the example below.
+The package also includes functions in order to calculate unusual covariates, such as the turning angle at constant step length (here called `spatial_angle`). For the latter, a radius have to be chosen and can be specified through argument `radius`. If no radius is specified, the default one will be the median of the step length distribution. Other covariates calculated are : persistence and turning speed (v_p and v_r) from Gurarie et al (2009), distance travelled between points, speed and smoothed version of the latter. Covariates dependent on time interval (like speed) are by default calculated with hours, but you can change this with argument `units` as in the example below.
  
 ``` r
 simple_data <- simulmode[,c("dateTime","x","y")]

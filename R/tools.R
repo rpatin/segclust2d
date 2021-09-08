@@ -14,7 +14,11 @@ subsample <- function(x,subsample_over,subsample_by = NA){
   if(is.na(subsample_by)){
     if( x_nrow > subsample_over){
       subsample_by <- ceiling(x_nrow/subsample_over)
-      message(paste("Number of data > ",subsample_over,", subsampling by ",subsample_by,".",sep=""))
+      message(paste0("Number of data > ",
+                    subsample_over,
+                    ", subsampling by ",
+                    subsample_by,
+                    "."))
       keep <- (x_ind %% subsample_by) == 1
       subsample_ind <- ifelse(keep,(x_ind %/% subsample_by)+1,NA)
       x$subsample_ind <- subsample_ind
@@ -27,7 +31,7 @@ subsample <- function(x,subsample_over,subsample_by = NA){
     subsample_ind <- ifelse(keep,(x_ind %/% subsample_by)+1,NA)
     x$subsample_ind <- subsample_ind
   } else {
-    x$subsample_ind <- 1:nrow(x)
+    x$subsample_ind <- seq_len(x)
   }
 
   list(x = x, by = subsample_by)

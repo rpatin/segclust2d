@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // DynProg_algo_cpp
 List DynProg_algo_cpp(arma::mat matD, int Kmax);
 RcppExport SEXP _segclust2d_DynProg_algo_cpp(SEXP matDSEXP, SEXP KmaxSEXP) {

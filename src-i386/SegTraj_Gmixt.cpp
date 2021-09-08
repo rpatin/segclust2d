@@ -61,7 +61,7 @@ arma::mat Gmixt_algo_cpp(arma::vec zi, arma::vec lgi,
 //' @param lmin minimum length of segments
 //' @param prop mixture parameters
 //' @param mu mean parameters
-//' @param s standard deviation paramaters
+//' @param s standard deviation parameters
 // [[Rcpp::export]]
 
 arma::mat Gmixt_simultanee_fullcpp(arma::mat Don,int lmin, arma::rowvec prop, arma::mat mu, arma::mat s){

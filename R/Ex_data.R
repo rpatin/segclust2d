@@ -12,7 +12,9 @@
 
 "simulshift"
 
-# simulshift =   ACS <- read.table("../../These/Segmentation/SegTraj Draft/data/Raw/shift_sensibility/DV_shift_mix_10.txt",
+# simulshift =   ACS <- read.table(
+# "../../These/Segmentation/SegTraj Draft/
+# data/Raw/shift_sensibility/DV_shift_mix_10.txt",
 #                                 col.names = c("indice", "x", "y"))
 # 
 # simulshift$dateTime <- as.POSIXct(simulshift$indice*60, origin = Jan1)
@@ -41,10 +43,12 @@
 
 "simulmode"
 
-# simulmode =   ACS <- read.table("../../These/Segmentation/SegTraj Draft/data/Raw/acs_sensibility/acs3_1_25.txt",
-#                                 col.names = c("indice", "x", "y", "speed", "spatial_angle",
-#                                               "dist", "angle", "vit_p", "vit_r", "vit_p_spa",
-#                                               "vit_r_spa"),
-#                                 na.strings = "9999.000", fill=TRUE)
+# simulmode =   ACS <- read.table(
+#   "../../These/Segmentation/SegTraj Draft/
+# data/Raw/acs_sensibility/acs3_1_25.txt",
+#   col.names = c("indice", "x", "y", "speed", "spatial_angle",
+#                 "dist", "angle", "vit_p", "vit_r", "vit_p_spa",
+#                 "vit_r_spa"),
+#   na.strings = "9999.000", fill=TRUE)
 # simulmode$dateTime <- as.POSIXct(simulmode$indice*60, origin = Jan1)
 # devtools::use_data(simulmode, overwrite = TRUE)

@@ -1,7 +1,9 @@
 # ruptAsMat 
-#' ruptAsMat is an internal function to transform a vector ginvig the change point to matrix 2 columns matrix in whiech each line gives the beginning and the end of a segment
+#' ruptAsMat is an internal function to transform a vector giving the change
+#' point to matrix 2 columns matrix in which each line gives the beginning and
+#' the end of a segment
 #' @param vectRupt the vector of change point
-#' @return the matric containing the semgments
+#' @return the matrix containing the segments
 #' 
 ruptAsMat <- function(vectRupt)
 {
