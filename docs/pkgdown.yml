@@ -1,0 +1,7 @@
+pandoc: 2.11.4
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  segclust: segclust.html
+last_built: 2021-09-08T07:32Z
+
