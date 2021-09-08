@@ -4,13 +4,22 @@
 \alias{plot_segm}
 \title{Plot segmentation on time-serie}
 \usage{
-plot_segm(data, output, interactive = F, diag.var,
-  x_col = "expectTime", html = F, order = F, stationarity = F)
+plot_segm(
+  data,
+  output,
+  interactive = FALSE,
+  diag.var,
+  x_col = "expectTime",
+  html = FALSE,
+  order = FALSE,
+  stationarity = FALSE
+)
 }
 \arguments{
 \item{data}{the data.frame with the different variable}
 
-\item{output}{outputs of the segmentation  or segclust algorithm for one number of segment}
+\item{output}{outputs of the segmentation  or segclust algorithm for one
+number of segment}
 
 \item{interactive}{should graph be interactive through leaflet ?}
 
@@ -18,7 +27,8 @@ plot_segm(data, output, interactive = F, diag.var,
 
 \item{x_col}{column name for time}
 
-\item{html}{should the graph be incorporated in a markdown file through htmltools::tagList()}
+\item{html}{should the graph be incorporated in a markdown file through
+htmltools::tagList()}
 
 \item{order}{should cluster be ordered}
 

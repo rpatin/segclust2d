@@ -2,7 +2,7 @@
 % Please edit documentation in R/segTraj_DynProg.R
 \name{wrap_dynprog_cpp}
 \alias{wrap_dynprog_cpp}
-\title{DynProg RCpp
+\title{DynProg Rcpp
 DynProg computes the change points given a cost matrix matD
 and a maximum number of segments Kmax}
 \usage{
@@ -20,7 +20,7 @@ a list with J.est a vector with Kmax value, the Kth is the minimum
   a model with K segments
 }
 \description{
-DynProg RCpp
+DynProg Rcpp
 DynProg computes the change points given a cost matrix matD
 and a maximum number of segments Kmax
 }

@@ -13,7 +13,10 @@ DynProg(matD, Kmax)
 \item{Kmax}{the maximal number of segments}
 }
 \value{
-a list with J.est a vector with Kmax value, the Kth is the minimum contrast for a model with K segments (-J.est is the log-likelihood) and with  t.test a matrix, line K are the coordinates of the change points for a model with K segments
+a list with J.est a vector with Kmax value, the Kth is the minimum
+  contrast for a model with K segments (-J.est is the log-likelihood) and
+  with  t.test a matrix, line K are the coordinates of the change points for
+  a model with K segments
 }
 \description{
 DynProg computes the change points given a cost matrix matD

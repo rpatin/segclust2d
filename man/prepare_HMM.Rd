@@ -57,7 +57,8 @@ m <- moveHMM::fitHMM(data=data,nbStates=nbStates,stepPar0=stepPar0,
          stepDist=stepDist,angleDist=angleDist,angleMean=angleMean)
          
 ### 3. Transform into a segmentation-class object
-res.hmm <- prepare_HMM(data=data, hmm.model = m, diag.var = c("step","angle"))
+res.hmm <- prepare_HMM(data=data, 
+hmm.model = m, diag.var = c("step","angle"))
 ### 4. you can now apply the same function than for segclust2d outputs
 plot(res.hmm)
 segmap(res.hmm)

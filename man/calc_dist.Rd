@@ -4,7 +4,7 @@
 \alias{calc_dist}
 \title{Calculate distance between locations}
 \usage{
-calc_dist(x, coord.names = c("x", "y"), smoothed = F)
+calc_dist(x, coord.names = c("x", "y"), smoothed = FALSE)
 }
 \arguments{
 \item{x}{data.frame with locations}
@@ -17,7 +17,9 @@ calc_dist(x, coord.names = c("x", "y"), smoothed = F)
 vector of distance
 }
 \description{
-\code{calc_dist} calculate distance between locations, taking a dataframe as input. Distance can also be smoothed over the two steps before and after the each point.
+\code{calc_dist} calculate distance between locations, taking a dataframe as
+input. Distance can also be smoothed over the two steps before and after the
+each point.
 }
 \examples{
 \dontrun{calc_dist(df,coord.names = c("x","y"), smoothed = T)}

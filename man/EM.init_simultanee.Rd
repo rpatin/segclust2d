@@ -2,7 +2,8 @@
 % Please edit documentation in R/segTraj_EM.init_simultanee.R
 \name{EM.init_simultanee}
 \alias{EM.init_simultanee}
-\title{EM.init_simultanee proposes an inial value for the EM algorithm  based on a hierarchical clustering  algorithm (ascending)}
+\title{EM.init_simultanee proposes an initial value for the EM algorithm  based on a
+hierarchical clustering  algorithm (ascending)}
 \usage{
 EM.init_simultanee(x, rupt, K, P)
 }
@@ -19,5 +20,6 @@ EM.init_simultanee(x, rupt, K, P)
 phi0 : candidate for the EM algorithm
 }
 \description{
-EM.init_simultanee proposes an inial value for the EM algorithm  based on a hierarchical clustering  algorithm (ascending)
+EM.init_simultanee proposes an initial value for the EM algorithm  based on a
+hierarchical clustering  algorithm (ascending)
 }

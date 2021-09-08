@@ -19,5 +19,6 @@ calc_BIC(likelihood, ncluster, nseg, n)
 a data.frame with BIC, number of cluster and number of segment
 }
 \description{
-\code{BIC} calculates BIC given log-likelihood, number of segment and number of class
+\code{BIC} calculates BIC given log-likelihood, number of segment and number
+of class
 }

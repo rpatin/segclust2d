@@ -2,7 +2,8 @@
 % Please edit documentation in R/segTraj_Gmixt_simultanee.R
 \name{Gmixt_simultanee}
 \alias{Gmixt_simultanee}
-\title{Gmixt_simultanee calculates the cost matrix for a segmentation/clustering model}
+\title{Gmixt_simultanee calculates the cost matrix 
+for a segmentation/clustering model}
 \usage{
 Gmixt_simultanee(Don, lmin, phi)
 }
@@ -14,10 +15,14 @@ Gmixt_simultanee(Don, lmin, phi)
 \item{phi}{the  parameters of the mixture}
 }
 \value{
-a matrix  G(i,j), the mixture density for segment between points (i+1) to j
-        = \deqn{\sum_{p=1}^P \log (\pi_p f(y^{ij};\theta_p))}{ \sum{p=1 -> P} log( \pi{p} f( y{ij} ; \theta{p} ) ) }
-         Rq: this density if factorized in order to avoid numerical zeros in the log
+a matrix  G(i,j), the mixture density 
+for segment between points (i+1) to j
+G(i,j) = \deqn{\\sum_{p=1}^P \log (\\pi_p f(y^{ij};\\theta_p))}
+{ \\sum{p=1 -> P} log( \\pi{p} f( y{ij} ; \\theta{p} ) ) }
+         Rq: this density if factorized in order to avoid numerical zeros in
+         the log
 }
 \description{
-Gmixt_simultanee calculates the cost matrix for a segmentation/clustering model
+Gmixt_simultanee calculates the cost matrix 
+for a segmentation/clustering model
 }

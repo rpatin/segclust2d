@@ -13,9 +13,15 @@ add_covariates(x, ...)
 
 \method{add_covariates}{ltraj}(x, coord.names = c("x", "y"), ...)
 
-\method{add_covariates}{data.frame}(x, coord.names = c("x", "y"),
-  smoothed = F, timecol = "dateTime", units = "hour",
-  radius = NULL, ...)
+\method{add_covariates}{data.frame}(
+  x,
+  coord.names = c("x", "y"),
+  smoothed = FALSE,
+  timecol = "dateTime",
+  units = "hour",
+  radius = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{movement data}

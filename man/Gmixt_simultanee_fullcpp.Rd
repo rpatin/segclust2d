@@ -15,7 +15,7 @@ Gmixt_simultanee_fullcpp(Don, lmin, prop, mu, s)
 
 \item{mu}{mean parameters}
 
-\item{s}{standard deviation paramaters}
+\item{s}{standard deviation parameters}
 }
 \description{
 C++ function replacing \link{Gmixt_simultanee}

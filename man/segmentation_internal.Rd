@@ -4,10 +4,22 @@
 \alias{segmentation_internal}
 \title{Internal segmentation function}
 \usage{
-segmentation_internal(x, seg.var = NULL, diag.var = NULL,
-  order.var = NULL, scale.variable = NULL, Kmax, lmin = NULL,
-  dat = NULL, type = NULL, sameSigma = F, subsample_over = 10000,
-  subsample = TRUE, subsample_by = NA, ...)
+segmentation_internal(
+  x,
+  seg.var = NULL,
+  diag.var = NULL,
+  order.var = NULL,
+  scale.variable = NULL,
+  Kmax,
+  lmin = NULL,
+  dat = NULL,
+  type = NULL,
+  sameSigma = FALSE,
+  subsample_over = 10000,
+  subsample = TRUE,
+  subsample_by = NA,
+  ...
+)
 }
 \arguments{
 \item{x}{data.frame with observations}
@@ -21,7 +33,8 @@ statistics are calculated.}
 \item{order.var}{for behavioral segmentation: names of the variable with
 which states are ordered.}
 
-\item{scale.variable}{should variables be standardized ? (reduced and centered)}
+\item{scale.variable}{should variables be standardized ? (reduced and
+centered)}
 
 \item{Kmax}{maximum number of segments.}
 
@@ -43,7 +56,7 @@ speed and memory limitations)}
 
 \item{subsample_by}{override subsample_over to adjust manually subsampling}
 
-\item{...}{additionnal parameters given to \link{chooseseg_lavielle}}
+\item{...}{additional parameters given to \link{chooseseg_lavielle}}
 }
 \description{
 Internal segmentation function

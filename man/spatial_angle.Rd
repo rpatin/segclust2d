@@ -17,7 +17,10 @@ spatial_angle(x, coord.names = c("x", "y"), radius = NULL)
 vector of spatial angle.
 }
 \description{
-\code{spatial_angle} calculate spatial angle between locations, taking a dataframe as input. Spatial angle is considered as the angle between the focus point, the first location entering a given circle and the last location inside.
+\code{spatial_angle} calculate spatial angle between locations, taking a
+dataframe as input. Spatial angle is considered as the angle between the
+focus point, the first location entering a given circle and the last location
+inside.
 }
 \examples{
 \dontrun{

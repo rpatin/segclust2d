@@ -4,10 +4,23 @@
 \alias{segclust_internal}
 \title{Internal segmentation/clustering function}
 \usage{
-segclust_internal(x, seg.var = NULL, diag.var = NULL,
-  order.var = NULL, scale.variable = NULL, Kmax, ncluster = NULL,
-  lmin = NULL, dat = NULL, type = NULL, sameSigma = F,
-  subsample_over = 1000, subsample_by = NA, subsample = TRUE, ...)
+segclust_internal(
+  x,
+  seg.var = NULL,
+  diag.var = NULL,
+  order.var = NULL,
+  scale.variable = NULL,
+  Kmax,
+  ncluster = NULL,
+  lmin = NULL,
+  dat = NULL,
+  type = NULL,
+  sameSigma = FALSE,
+  subsample_over = 1000,
+  subsample_by = NA,
+  subsample = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{data used for segmentation. Supported: data.frame, Move object,
@@ -22,7 +35,8 @@ statistics are calculated.}
 \item{order.var}{for behavioral segmentation: names of the variable with
 which states are ordered.}
 
-\item{scale.variable}{should variables be standardized ? (reduced and centered)}
+\item{scale.variable}{should variables be standardized ? (reduced and
+centered)}
 
 \item{Kmax}{maximum number of segments.}
 

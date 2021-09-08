@@ -2,7 +2,9 @@
 % Please edit documentation in R/segTraj_ruptAsMat.R
 \name{ruptAsMat}
 \alias{ruptAsMat}
-\title{ruptAsMat is an internal function to transform a vector ginvig the change point to matrix 2 columns matrix in whiech each line gives the beginning and the end of a segment}
+\title{ruptAsMat is an internal function to transform a vector giving the change
+point to matrix 2 columns matrix in which each line gives the beginning and
+the end of a segment}
 \usage{
 ruptAsMat(vectRupt)
 }
@@ -10,8 +12,10 @@ ruptAsMat(vectRupt)
 \item{vectRupt}{the vector of change point}
 }
 \value{
-the matric containing the semgments
+the matrix containing the segments
 }
 \description{
-ruptAsMat is an internal function to transform a vector ginvig the change point to matrix 2 columns matrix in whiech each line gives the beginning and the end of a segment
+ruptAsMat is an internal function to transform a vector giving the change
+point to matrix 2 columns matrix in which each line gives the beginning and
+the end of a segment
 }

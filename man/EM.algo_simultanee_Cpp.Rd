@@ -2,7 +2,7 @@
 % Please edit documentation in R/SegTraj_EM_cpp.R
 \name{EM.algo_simultanee_Cpp}
 \alias{EM.algo_simultanee_Cpp}
-\title{EM.algo_simultanee caculates the MLE of phi for given change-point instants
+\title{EM.algo_simultanee calculates the MLE of phi for given change-point instants
  and for a fixed number of clusters}
 \usage{
 EM.algo_simultanee_Cpp(x, rupt, P, phi, eps = 1e-06, sameSigma = FALSE)
@@ -10,7 +10,7 @@ EM.algo_simultanee_Cpp(x, rupt, P, phi, eps = 1e-06, sameSigma = FALSE)
 \arguments{
 \item{x}{bivariate signal}
 
-\item{rupt}{ahe sequence of change points}
+\item{rupt}{the sequence of change points}
 
 \item{P}{number of clusters}
 
@@ -21,9 +21,10 @@ EM.algo_simultanee_Cpp(x, rupt, P, phi, eps = 1e-06, sameSigma = FALSE)
 \item{sameSigma}{TRUE if segments have the same variance}
 }
 \value{
-a list with  phi, the MLE, tau =(taukj) the probability for segment k to belong to classe,lvinc = lvinc,empty = empty,dv = dv
+a list with  phi, the MLE, tau =(taukj) the probability for segment k
+  to belong to class,lvinc = lvinc,empty = empty,dv = dv
 }
 \description{
-EM.algo_simultanee caculates the MLE of phi for given change-point instants
+EM.algo_simultanee calculates the MLE of phi for given change-point instants
  and for a fixed number of clusters
 }

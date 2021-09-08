@@ -2,7 +2,8 @@
 % Please edit documentation in R/segTraj_plot_simultanee.R
 \name{matrixRupt}
 \alias{matrixRupt}
-\title{matrixRupt transforms a vector of change point into a data.frame with start and end of every segment}
+\title{matrixRupt transforms a vector of change point into a data.frame with start
+and end of every segment}
 \usage{
 matrixRupt(x, vectorRupt)
 }
@@ -15,5 +16,6 @@ matrixRupt(x, vectorRupt)
 the matrix of change point
 }
 \description{
-matrixRupt transforms a vector of change point into a data.frame with start and end of every segment
+matrixRupt transforms a vector of change point into a data.frame with start
+and end of every segment
 }

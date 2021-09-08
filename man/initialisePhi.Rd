@@ -9,7 +9,7 @@ initialisePhi(P, val = -Inf)
 \arguments{
 \item{P}{number of classes}
 
-\item{val}{the value used for initilisation default is -Inf}
+\item{val}{the value used for initialisation default is -Inf}
 }
 \value{
 a set of parameter phi

@@ -10,7 +10,7 @@ logdens_simultanee_cpp(xk, mu, sigma, prop)
 logdens_simultanee(xk, phi)
 }
 \arguments{
-\item{xk}{the bivaraiate signal}
+\item{xk}{the bivariate signal}
 
 \item{mu}{mean parameter for each signal}
 

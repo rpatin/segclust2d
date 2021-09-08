@@ -2,12 +2,22 @@
 % Please edit documentation in R/function_map_plot.R
 \name{map_segm}
 \alias{map_segm}
-\title{\code{plot_segm} plot segmented traject on a map.}
+\title{\code{plot_segm} plot segmented movement data on a map.}
 \usage{
-map_segm(data, output, interactive = F, html = F, scale = 1,
-  UTMstring = "+proj=longlat +datum=WGS84 +no_defs", width = 400,
-  height = 400, order = NULL, pointsize = 1, linesize = 0.5,
-  coord.names = c("x", "y"))
+map_segm(
+  data,
+  output,
+  interactive = FALSE,
+  html = FALSE,
+  scale = 1,
+  UTMstring = "+proj=longlat +datum=WGS84 +no_defs",
+  width = 400,
+  height = 400,
+  order = NULL,
+  pointsize = 1,
+  linesize = 0.5,
+  coord.names = c("x", "y")
+)
 }
 \arguments{
 \item{data}{the data.frame with the different variable}
@@ -40,7 +50,7 @@ htmltools::tagList()}
 a graph
 }
 \description{
-\code{plot_segm} plot segmented traject on a map.
+\code{plot_segm} plot segmented movement data on a map.
 }
 \examples{
 \dontrun{

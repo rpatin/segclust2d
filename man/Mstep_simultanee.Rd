@@ -11,14 +11,15 @@ Mstep_simultanee(x, rupt, tau, phi, sameSigma = TRUE)
 
 \item{rupt}{the rupture dataframe}
 
-\item{tau}{the K*P matrix containing posterior probabilities of membership to clusters}
+\item{tau}{the K*P matrix containing posterior probabilities of membership
+to clusters}
 
 \item{phi}{the parameters of the mixture}
 
 \item{sameSigma}{TRUE if all segment have the same variance}
 }
 \value{
-phi the updated value of the pramaeters
+phi the updated value of the parameters
 }
 \description{
 Mstep_simultanee computes the MLE within the EM framework

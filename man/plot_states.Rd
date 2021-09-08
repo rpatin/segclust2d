@@ -4,14 +4,16 @@
 \alias{plot_states}
 \title{Plot states statistics}
 \usage{
-plot_states(outputs, diag.var, position_width = 0.3, order = F)
+plot_states(outputs, diag.var, position_width = 0.3, order = FALSE)
 }
 \arguments{
-\item{outputs}{outputs of the segmentation  or segclust algorithm for one number of segment}
+\item{outputs}{outputs of the segmentation or
+segclust algorithm for one number of segment}
 
 \item{diag.var}{names of the variables on which statistics are calculated}
 
-\item{position_width}{width between different model if several models are compared}
+\item{position_width}{width between different model 
+if several models are compared}
 
 \item{order}{should cluster be ordered}
 }
@@ -26,7 +28,9 @@ a graph
 #res.segclust is the results of the segmentation-clustering algorithm 
 ncluster = 3 
 nseg = 10 
-g <- plot_states(output = res.segclust$outputs[[paste(ncluster,"class -",nseg, "segments")]],
+g <- plot_states(output = res.segclust$outputs[[
+  paste(ncluster,"class -",nseg, "segments")
+]],
 diag.var = c("dist","angle2")
 #res.seg is the results of the segmentation-only algorithm 
 nseg = 10 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/segTraj_repmat.R
 \name{repmat}
 \alias{repmat}
-\title{repmap repeats a matrix}
+\title{repmat repeats a matrix}
 \usage{
 repmat(a, n, m)
 }
@@ -14,8 +14,8 @@ repmat(a, n, m)
 \item{m}{number of repetition in columns}
 }
 \value{
-a matrix wth n repeats of a in lines et m in columns
+a matrix with n repeats of a in lines et m in columns
 }
 \description{
-repmap repeats a matrix
+repmat repeats a matrix
 }

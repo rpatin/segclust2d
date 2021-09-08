@@ -2,10 +2,21 @@
 % Please edit documentation in R/segTraj_neighborsbis.R
 \name{neighborsbis}
 \alias{neighborsbis}
-\title{neighbors tests whether neighbors of point k,P can  be used to re-initialize the EM algorithm and to improve the log-likelihood.}
+\title{neighbors tests whether neighbors of point k,P can  be used to re-initialize
+the EM algorithm and to improve the log-likelihood.}
 \usage{
-neighborsbis(kv.hull, x, L, k, param, P, lmin, eps, sameSigma = TRUE,
-  pureR = F)
+neighborsbis(
+  kv.hull,
+  x,
+  L,
+  k,
+  param,
+  P,
+  lmin,
+  eps,
+  sameSigma = TRUE,
+  pureR = FALSE
+)
 }
 \arguments{
 \item{kv.hull}{convex hull of likelihood}
@@ -26,11 +37,13 @@ neighborsbis(kv.hull, x, L, k, param, P, lmin, eps, sameSigma = TRUE,
 
 \item{sameSigma}{should segments have same variance ?}
 
-\item{pureR}{should algorithm use only R functions or benefit from Rcpp faster algorithm}
+\item{pureR}{should algorithm use only R functions or benefit from Rcpp
+faster algorithm}
 }
 \value{
-smoothin likelihood
+smoothing likelihood
 }
 \description{
-neighbors tests whether neighbors of point k,P can  be used to re-initialize the EM algorithm and to improve the log-likelihood.
+neighbors tests whether neighbors of point k,P can  be used to re-initialize
+the EM algorithm and to improve the log-likelihood.
 }

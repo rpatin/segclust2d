@@ -4,8 +4,14 @@
 \alias{stat_segm}
 \title{Calculate statistics on a given segmentation}
 \usage{
-stat_segm(data, diag.var, order.var = NULL, param = NULL,
-  seg.type = NULL, nseg)
+stat_segm(
+  data,
+  diag.var,
+  order.var = NULL,
+  param = NULL,
+  seg.type = NULL,
+  nseg
+)
 }
 \arguments{
 \item{data}{the data.frame with the different variable}
@@ -14,7 +20,7 @@ stat_segm(data, diag.var, order.var = NULL, param = NULL,
 
 \item{order.var}{names of the variable with which states are ordered}
 
-\item{param}{parameters of ouptput segmentation}
+\item{param}{parameters of output segmentation}
 
 \item{seg.type}{either 'hybrid' or 'dynprog'}
 

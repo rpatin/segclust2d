@@ -2,7 +2,8 @@
 % Please edit documentation in R/segTraj_Gmean_simultanee.R
 \name{Gmean_simultanee}
 \alias{Gmean_simultanee}
-\title{Gmean_simultanee  calculates the cost matrix for a segmentation model with changes in the mean and variance for all signals}
+\title{Gmean_simultanee  calculates the cost matrix for a segmentation model with
+changes in the mean and variance for all signals}
 \usage{
 Gmean_simultanee(Don, lmin, sameVar = FALSE)
 }
@@ -14,8 +15,10 @@ Gmean_simultanee(Don, lmin, sameVar = FALSE)
 \item{sameVar}{whether variance is the same for each segment.}
 }
 \value{
-the cost matrix G(i,j) which contains the variance of the data between point (i+1) to point j
+the cost matrix G(i,j) which contains the variance of the data
+  between point (i+1) to point j
 }
 \description{
-Gmean_simultanee  calculates the cost matrix for a segmentation model with changes in the mean and variance for all signals
+Gmean_simultanee  calculates the cost matrix for a segmentation model with
+changes in the mean and variance for all signals
 }

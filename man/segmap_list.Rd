@@ -5,8 +5,14 @@
 \title{\code{segmap_list} create maps with a list of object of \code{segmentation}
 class}
 \usage{
-segmap_list(x_list, ncluster_list = NULL, nseg_list = NULL,
-  pointsize = 1, linesize = 0.5, coord.names = c("x", "y"))
+segmap_list(
+  x_list,
+  ncluster_list = NULL,
+  nseg_list = NULL,
+  pointsize = 1,
+  linesize = 0.5,
+  coord.names = c("x", "y")
+)
 }
 \arguments{
 \item{x_list}{list of segmentation objects for different individuals or path}

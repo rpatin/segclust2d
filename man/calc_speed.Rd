@@ -4,8 +4,13 @@
 \alias{calc_speed}
 \title{Calculate speed along a path}
 \usage{
-calc_speed(x, coord.names = c("x", "y"), timecol = "dateTime",
-  smoothed = F, units = "hour")
+calc_speed(
+  x,
+  coord.names = c("x", "y"),
+  timecol = "dateTime",
+  smoothed = FALSE,
+  units = "hour"
+)
 }
 \arguments{
 \item{x}{data.frame with locations}
@@ -22,7 +27,9 @@ calc_speed(x, coord.names = c("x", "y"), timecol = "dateTime",
 vector of distance
 }
 \description{
-\code{calc_dist} calculate speed between locations, taking a dataframe as input. Speed can also be smoothed over the two steps before and after the each point.
+\code{calc_dist} calculate speed between locations, taking a dataframe as
+input. Speed can also be smoothed over the two steps before and after the
+each point.
 }
 \examples{
 \dontrun{calc_speed(df,coord.names = c("x","y"), timecol = "dateTime",

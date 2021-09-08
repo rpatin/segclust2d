@@ -4,13 +4,15 @@
 \name{simulshift}
 \alias{simulshift}
 \title{Simulations of home-range shift}
-\format{A data frame with 53940 rows and 10 variables:
+\format{
+A data frame with 53940 rows and 10 variables:
 \describe{
   \item{indice}{index of position}
   \item{x}{x coordinates}
   \item{y}{y coordinates}
   \item{dateTime}{arbitrary date in POSIXct format}
-}}
+}
+}
 \usage{
 simulshift
 }

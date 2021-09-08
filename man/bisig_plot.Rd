@@ -2,19 +2,20 @@
 % Please edit documentation in R/segTraj_plot_simultanee.R
 \name{bisig_plot}
 \alias{bisig_plot}
-\title{bisig_plot draws the plots of the bivaraite signal on the same plot (scale free)}
+\title{bisig_plot draws the plots of the bivariate signal on the same plot (scale
+free)}
 \usage{
-bisig_plot(x, rupt = NULL, mu = NULL, pop = NULL,
-  merge.seg = FALSE)
+bisig_plot(x, rupt = NULL, mu = NULL, pop = NULL, merge.seg = FALSE)
 }
 \arguments{
 \item{x}{the signal to be plotted}
 
-\item{rupt}{optionnal, if given add vertical lines at change points (rupt should a vector)}
+\item{rupt}{optional, if given add vertical lines at change points (rupt
+should a vector)}
 
-\item{mu}{optionnal the mean of each class of segment,}
+\item{mu}{optional the mean of each class of segment,}
 
-\item{pop}{optionnal the cluster to whom each segment belongs to,}
+\item{pop}{optional the cluster to whom each segment belongs to,}
 
 \item{merge.seg}{should segment be merged ?}
 }
@@ -22,5 +23,6 @@ bisig_plot(x, rupt = NULL, mu = NULL, pop = NULL,
 no value
 }
 \description{
-bisig_plot draws the plots of the bivaraite signal on the same plot (scale free)
+bisig_plot draws the plots of the bivariate signal on the same plot (scale
+free)
 }

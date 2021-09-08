@@ -4,7 +4,8 @@
 \name{simulmode}
 \alias{simulmode}
 \title{Simulations of behavioural mode}
-\format{A data frame with 302 rows and 10 variables:
+\format{
+A data frame with 302 rows and 10 variables:
 \describe{
   \item{indice}{index of position}
   \item{x}{x coordinates}
@@ -18,7 +19,8 @@
   \item{vit_p_spa}{persistence speed calculated with spatial angles}
   \item{vit_r_spa}{rotation speed calculated with spatial angles}
   \item{dateTime}{arbitrary date in POSIXct format}
-}}
+}
+}
 \usage{
 simulmode
 }

@@ -2,20 +2,25 @@
 % Please edit documentation in R/segTraj_Estep_simultanee.R
 \name{Estep_simultanee}
 \alias{Estep_simultanee}
-\title{Estep_simultanee computes posterior probabilities and incomplete-data  log-likelihood for mixture models}
+\title{Estep_simultanee computes posterior probabilities and incomplete-data
+log-likelihood for mixture models}
 \usage{
 Estep_simultanee(logdensity, phi, eps = 1e-09)
 }
 \arguments{
-\item{logdensity}{is a  K*P matrix containing the conditinal log-densities for each segment}
+\item{logdensity}{is a  K*P matrix containing the conditional log-densities
+for each segment}
 
 \item{phi}{a list containing the parameters of the mixture}
 
 \item{eps}{eps}
 }
 \value{
-a list with tau a K*P matrix, tau kj is the posterior probability for segment k to belong to classe j and lvinc, the incomplete log vrais P(X=x)
+a list with tau a K*P matrix, tau kj is the posterior probability 
+for segment k to belong to class j and
+ lvinc, the incomplete log likelihood P(X=x)
 }
 \description{
-Estep_simultanee computes posterior probabilities and incomplete-data  log-likelihood for mixture models
+Estep_simultanee computes posterior probabilities and incomplete-data
+log-likelihood for mixture models
 }

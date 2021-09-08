@@ -9,17 +9,41 @@
 \usage{
 segmentation(x, ...)
 
-\method{segmentation}{data.frame}(x, Kmax, lmin, type = "home-range",
-  seg.var, diag.var = seg.var, order.var = seg.var[1],
-  coord.names = c("x", "y"), ...)
+\method{segmentation}{data.frame}(
+  x,
+  Kmax,
+  lmin,
+  type = "home-range",
+  seg.var,
+  diag.var = seg.var,
+  order.var = seg.var[1],
+  coord.names = c("x", "y"),
+  ...
+)
 
-\method{segmentation}{Move}(x, Kmax, lmin, type = "home-range",
-  seg.var = NULL, diag.var = seg.var, order.var = seg.var[1],
-  coord.names = c("coords.x1", "coords.x2"), ...)
+\method{segmentation}{Move}(
+  x,
+  Kmax,
+  lmin,
+  type = "home-range",
+  seg.var = NULL,
+  diag.var = seg.var,
+  order.var = seg.var[1],
+  coord.names = c("coords.x1", "coords.x2"),
+  ...
+)
 
-\method{segmentation}{ltraj}(x, Kmax, lmin, type = "home-range",
-  seg.var = NULL, diag.var = seg.var, order.var = seg.var[1],
-  coord.names = c("x", "y"), ...)
+\method{segmentation}{ltraj}(
+  x,
+  Kmax,
+  lmin,
+  type = "home-range",
+  seg.var = NULL,
+  diag.var = seg.var,
+  order.var = seg.var[1],
+  coord.names = c("x", "y"),
+  ...
+)
 }
 \arguments{
 \item{x}{data used for segmentation. Supported: data.frame, Move object,
@@ -45,7 +69,8 @@ statistics are calculated.}
 \item{order.var}{for behavioral segmentation: names of the variable with
 which states are ordered.}
 
-\item{coord.names}{for home-range segmentation and data.frame, names of coordinates. Default x and y. Not needed for move and ltraj objects}
+\item{coord.names}{for home-range segmentation and data.frame, names of
+coordinates. Default x and y. Not needed for move and ltraj objects}
 }
 \value{
 a \code{\link{segmentation-class}} object
@@ -60,7 +85,8 @@ locating rupture in the penalized likelihood.
 \examples{
 df <-  test_data()$data
 #' # data is a data.frame with column 'x' and 'y'
-# Simple segmentation with automatic subsampling if data has more than 1000 rows:
+# Simple segmentation with automatic subsampling
+# if data has more than 1000 rows:
 res <- segmentation(df, Kmax = 30, lmin = 10, coord.names = c("x","y"), 
 type = 'home-range')
  # Plot results

@@ -3,7 +3,6 @@
 \docType{package}
 \name{segclust2d}
 \alias{segclust2d}
-\alias{segclust2d-package}
 \title{segclust2d: tools for segmentation of animal GPS movement data}
 \description{
 Provides two methods for segmentation and joint segmentation/clustering of
@@ -20,25 +19,26 @@ dynamic programming for efficient segmentation.
 The segmentation/clustering method alternates steps of dynamic programming
 with an Expectation-Maximization algorithm. This is an extension of Picard et
 al (2007) method (formerly available in cghseg package) to the bivariate
-case.
+case. 
 
 The full description of the method is not published yet.
 
 References:
 
-Lavielle, M. (1999) Detection of multiple changes in a sequence of
-dependent variables. \emph{Stochastic Processes and their
- Applications}, \bold{83}: 79--102.
+Lavielle, M. (1999) Detection of multiple changes in a sequence of dependent
+variables. \emph{Stochastic Processes and their Applications}, \bold{83}:
+79--102.
 
-Lavielle, M. (2005) Using penalized contrasts for the change-point
-problem. Report number 5339, Institut national de recherche en
-informatique et en automatique.
+Lavielle, M. (2005) Using penalized contrasts for the change-point problem.
+Report number 5339, Institut national de recherche en informatique et en
+automatique.
 
-Patin, R., Etienne, M. P., Lebarbier, E., Chamaill{\'e}-Jammes, S., Benhamou, S.
-(2018). Identifying stationary phases in multivariate time-series for
-highlighting behavioural modes and home range settlements. \emph{bioRxiv}, 444794.
+Patin, R., Etienne, M. P., Lebarbier, E., Chamaill{\'e}-Jammes, S., Benhamou,
+S. (2018). Identifying stationary phases in multivariate time-series for
+highlighting behavioural modes and home range settlements. \emph{bioRxiv},
+444794.
 
 Picard, F., Robin, S., Lebarbier, E. and Daudin, J.-J. (2007), A
-Segmentation/Clustering Model for the Analysis of Array CGH Data. \emph{Biometrics},
-63: 758-766. doi:10.1111/j.1541-0420.2006.00729.x
+Segmentation/Clustering Model for the Analysis of Array CGH Data.
+\emph{Biometrics}, 63: 758-766. doi:10.1111/j.1541-0420.2006.00729.x
 }
