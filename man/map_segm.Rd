@@ -16,7 +16,8 @@ map_segm(
   order = NULL,
   pointsize = 1,
   linesize = 0.5,
-  coord.names = c("x", "y")
+  coord.names = c("x", "y"),
+  ...
 )
 }
 \arguments{
@@ -45,9 +46,11 @@ htmltools::tagList()}
 \item{linesize}{size of lines}
 
 \item{coord.names}{names of coordinates}
+
+\item{...}{additionnal arguments}
 }
 \value{
-a graph
+a ggplot object
 }
 \description{
 \code{plot_segm} plot segmented movement data on a map.

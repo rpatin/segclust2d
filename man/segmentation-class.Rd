@@ -19,15 +19,7 @@
 \usage{
 \method{print}{segmentation}(x, max.level = 1, ...)
 
-\method{plot}{segmentation}(
-  x,
-  nseg = NULL,
-  ncluster = NULL,
-  interactive = FALSE,
-  xcol = "indice",
-  order,
-  ...
-)
+\method{plot}{segmentation}(x, nseg, ncluster, interactive = FALSE, xcol = "indice", order, ...)
 
 \method{likelihood}{segmentation}(x, ...)
 
@@ -52,13 +44,13 @@ segment(x, nseg = NULL, ncluster = NULL)
 segmap(
   x,
   interactive = FALSE,
-  nseg = NULL,
-  ncluster = NULL,
+  nseg,
+  ncluster,
   html = FALSE,
   scale = 1,
   width = 400,
   height = 400,
-  order = NULL,
+  order,
   pointsize = 1,
   linesize = 0.5,
   ...

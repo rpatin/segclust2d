@@ -6,19 +6,14 @@
 \usage{
 segclust_internal(
   x,
-  seg.var = NULL,
-  diag.var = NULL,
-  order.var = NULL,
-  scale.variable = NULL,
+  seg.var,
+  diag.var,
+  order.var,
   Kmax,
-  ncluster = NULL,
-  lmin = NULL,
-  dat = NULL,
-  type = NULL,
+  ncluster,
+  lmin,
+  scale.variable,
   sameSigma = FALSE,
-  subsample_over = 1000,
-  subsample_by = NA,
-  subsample = TRUE,
   ...
 )
 }
@@ -29,14 +24,10 @@ ltraj object}
 \item{seg.var}{for behavioral segmentation: names of the variables used for
 segmentation (either one or two names).}
 
-\item{diag.var}{for behavioral segmentation: names of the variables on which
+\item{diag.var}{names of the variables on which
 statistics are calculated.}
 
-\item{order.var}{for behavioral segmentation: names of the variable with
-which states are ordered.}
-
-\item{scale.variable}{should variables be standardized ? (reduced and
-centered)}
+\item{order.var}{names of the variable with which states are ordered.}
 
 \item{Kmax}{maximum number of segments.}
 
@@ -45,21 +36,10 @@ be a vector if one want to test several number of clusters.}
 
 \item{lmin}{minimum length of segments.}
 
-\item{dat}{bivariate data (one signal per row)}
-
-\item{type}{type of segmentation. Either "home-range" or "behavior". Changes
-default values of arguments order, scale.variable in the different
-functions used on the output. Default for segmentation: "home-range";
-default for segmentation/clustering : "behavior".}
+\item{scale.variable}{TRUE or FALSE for automatic scaling of variables
+(reduction and  centering)}
 
 \item{sameSigma}{does segments have same variance ?}
-
-\item{subsample_over}{over which size should subsampling begin (depending on
-speed and memory limitations)}
-
-\item{subsample_by}{override subsample_over to adjust manually subsampling}
-
-\item{subsample}{if FALSE disable subsample}
 
 \item{...}{additional arguments given to \code{\link{chooseseg_lavielle}}}
 }

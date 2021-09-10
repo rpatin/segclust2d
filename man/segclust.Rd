@@ -9,44 +9,11 @@
 \usage{
 segclust(x, ...)
 
-\method{segclust}{data.frame}(
-  x,
-  Kmax,
-  lmin,
-  ncluster,
-  type = "behavior",
-  seg.var = NULL,
-  diag.var = seg.var,
-  order.var = seg.var[1],
-  coord.names = c("x", "y"),
-  ...
-)
+\method{segclust}{data.frame}(x, ...)
 
-\method{segclust}{Move}(
-  x,
-  Kmax,
-  lmin,
-  ncluster,
-  type = "behavior",
-  seg.var = NULL,
-  diag.var = seg.var,
-  order.var = seg.var[1],
-  coord.names = c("x", "y"),
-  ...
-)
+\method{segclust}{Move}(x, ...)
 
-\method{segclust}{ltraj}(
-  x,
-  Kmax,
-  lmin,
-  ncluster,
-  type = "behavior",
-  seg.var = NULL,
-  diag.var = seg.var,
-  order.var = seg.var[1],
-  coord.names = c("x", "y"),
-  ...
-)
+\method{segclust}{ltraj}(x, ...)
 }
 \arguments{
 \item{x}{data used for segmentation. Supported: data.frame, Move object,
@@ -54,29 +21,8 @@ ltraj object}
 
 \item{...}{additional parameters given to \code{\link{segclust_internal}}.}
 
-\item{Kmax}{maximum number of segments.}
-
-\item{lmin}{minimum length of segments.}
-
 \item{ncluster}{number of cluster into which segments should be grouped. Can
 be a vector if one want to test several number of clusters.}
-
-\item{type}{type of segmentation. Either "home-range" or "behavior". Changes
-default values of arguments order, scale.variable in the different
-functions used on the output. Default for segmentation: "home-range";
-default for segmentation/clustering : "behavior".}
-
-\item{seg.var}{for behavioral segmentation: names of the variables used for
-segmentation (either one or two names).}
-
-\item{diag.var}{for behavioral segmentation: names of the variables on which
-statistics are calculated.}
-
-\item{order.var}{for behavioral segmentation: names of the variable with
-which states are ordered.}
-
-\item{coord.names}{for home-range segmentation and data.frame, names of
-coordinates. Default x and y. Not needed for move and ltraj objects}
 }
 \value{
 a \code{\link{segmentation-class}} object

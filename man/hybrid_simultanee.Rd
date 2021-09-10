@@ -14,7 +14,8 @@ hybrid_simultanee(
   sameVar.init = FALSE,
   eps = 1e-06,
   lissage = TRUE,
-  pureR = FALSE
+  pureR = FALSE,
+  ...
 )
 }
 \arguments{

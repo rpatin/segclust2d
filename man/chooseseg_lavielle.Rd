@@ -4,13 +4,15 @@
 \alias{chooseseg_lavielle}
 \title{Internal Function for choosing optimal number of segment}
 \usage{
-chooseseg_lavielle(J, S = 0.75)
+chooseseg_lavielle(J, S = 0.75, ...)
 }
 \arguments{
 \item{J}{likelihood for each number of segment}
 
 \item{S}{threshold for choosing the number of segment. See
 adehabitatLT::chooseseg}
+
+\item{...}{additional arguments}
 }
 \value{
 a list with optimal number of segment and full data.frame of the

@@ -21,7 +21,7 @@ with an Expectation-Maximization algorithm. This is an extension of Picard et
 al (2007) method (formerly available in cghseg package) to the bivariate
 case. 
 
-The full description of the method is not published yet.
+The full description of the method is published in Patin et al. (2020).
 
 References:
 
@@ -33,10 +33,12 @@ Lavielle, M. (2005) Using penalized contrasts for the change-point problem.
 Report number 5339, Institut national de recherche en informatique et en
 automatique.
 
-Patin, R., Etienne, M. P., Lebarbier, E., Chamaill{\'e}-Jammes, S., Benhamou,
-S. (2018). Identifying stationary phases in multivariate time-series for
-highlighting behavioural modes and home range settlements. \emph{bioRxiv},
-444794.
+Patin, R., Etienne, M. P., Lebarbier, E., Chamaill{\'e}‐Jammes, S., 
+& Benhamou, S. (2020). Identifying stationary phases in
+multivariate time series for highlighting behavioural modes 
+and home range settlements. \emph{Journal of Animal Ecology}, 
+89(1), 44-56.
+
 
 Picard, F., Robin, S., Lebarbier, E. and Daudin, J.-J. (2007), A
 Segmentation/Clustering Model for the Analysis of Array CGH Data.

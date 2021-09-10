@@ -9,41 +9,11 @@
 \usage{
 segmentation(x, ...)
 
-\method{segmentation}{data.frame}(
-  x,
-  Kmax,
-  lmin,
-  type = "home-range",
-  seg.var,
-  diag.var = seg.var,
-  order.var = seg.var[1],
-  coord.names = c("x", "y"),
-  ...
-)
+\method{segmentation}{data.frame}(x, ...)
 
-\method{segmentation}{Move}(
-  x,
-  Kmax,
-  lmin,
-  type = "home-range",
-  seg.var = NULL,
-  diag.var = seg.var,
-  order.var = seg.var[1],
-  coord.names = c("coords.x1", "coords.x2"),
-  ...
-)
+\method{segmentation}{Move}(x, ...)
 
-\method{segmentation}{ltraj}(
-  x,
-  Kmax,
-  lmin,
-  type = "home-range",
-  seg.var = NULL,
-  diag.var = seg.var,
-  order.var = seg.var[1],
-  coord.names = c("x", "y"),
-  ...
-)
+\method{segmentation}{ltraj}(x, ...)
 }
 \arguments{
 \item{x}{data used for segmentation. Supported: data.frame, Move object,
@@ -51,26 +21,27 @@ ltraj object}
 
 \item{...}{additional parameters given to \code{\link{segmentation_internal}}}
 
+\item{seg.var}{for behavioral segmentation: names of the variables used for
+segmentation (either one or two names).}
+
 \item{Kmax}{maximum number of segments.}
 
 \item{lmin}{minimum length of segments.}
 
-\item{type}{type of segmentation. Either "home-range" or "behavior". Changes
-default values of arguments order, scale.variable in the different
-functions used on the output. Default for segmentation: "home-range";
-default for segmentation/clustering : "behavior".}
-
-\item{seg.var}{for behavioral segmentation: names of the variables used for
-segmentation (either one or two names).}
-
-\item{diag.var}{for behavioral segmentation: names of the variables on which
+\item{diag.var}{names of the variables on which
 statistics are calculated.}
 
-\item{order.var}{for behavioral segmentation: names of the variable with
-which states are ordered.}
+\item{order.var}{names of the variable with which states are ordered.}
 
-\item{coord.names}{for home-range segmentation and data.frame, names of
-coordinates. Default x and y. Not needed for move and ltraj objects}
+\item{scale.variable}{TRUE or FALSE for automatic scaling of variables
+(reduction and  centering)}
+
+\item{subsample_over}{over which size should subsampling begin (depending on
+speed and memory limitations)}
+
+\item{subsample}{if FALSE disable subsample}
+
+\item{subsample_by}{override subsample_over to adjust manually subsampling}
 }
 \value{
 a \code{\link{segmentation-class}} object
