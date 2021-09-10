@@ -147,7 +147,8 @@
   order <span class='op'>=</span> <span class='cn'>NULL</span>,
   pointsize <span class='op'>=</span> <span class='fl'>1</span>,
   linesize <span class='op'>=</span> <span class='fl'>0.5</span>,
-  coord.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>
+  coord.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>,
+  <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -203,11 +204,15 @@ htmltools::tagList()</p></td>
       <th>coord.names</th>
       <td><p>names of coordinates</p></td>
     </tr>
+    <tr>
+      <th>...</th>
+      <td><p>additionnal arguments</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a graph</p>
+    <p>a ggplot object</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>

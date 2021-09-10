@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>segclust2d: tools for segmentation of animal GPS movement data — segclust2d • segclust2d</title>
+<title>Check for argument 'ncluster' and 'nseg' — argcheck_segclust • segclust2d</title>
 
 
 <!-- jquery -->
@@ -39,12 +39,9 @@
 
 
 
-<meta property="og:title" content="segclust2d: tools for segmentation of animal GPS movement data — segclust2d" />
-<meta property="og:description" content="Provides two methods for segmentation and joint segmentation/clustering of
-bivariate time-series. Originally intended for ecological segmentation
-(home-range and behavioural modes) but easily applied on other series, the
-package also provides tools for analysing outputs from R packages moveHMM
-and marcher." />
+<meta property="og:title" content="Check for argument 'ncluster' and 'nseg' — argcheck_segclust" />
+<meta property="og:description" content="Check whether argument 'ncluster' and 'nseg' were provided.
+ If not, propose default value based on BIC." />
 
 
 
@@ -130,47 +127,43 @@ and marcher." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>segclust2d: tools for segmentation of animal GPS movement data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rpatin/segclust2d/blob/master/R/segclust2d.R'><code>R/segclust2d.R</code></a></small>
-    <div class="hidden name"><code>segclust2d.Rd</code></div>
+    <h1>Check for argument 'ncluster' and 'nseg'</h1>
+    <small class="dont-index">Source: <a href='https://github.com/rpatin/segclust2d/blob/master/R/function_checks.R'><code>R/function_checks.R</code></a></small>
+    <div class="hidden name"><code>argcheck_segclust.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Provides two methods for segmentation and joint segmentation/clustering of
-bivariate time-series. Originally intended for ecological segmentation
-(home-range and behavioural modes) but easily applied on other series, the
-package also provides tools for analysing outputs from R packages moveHMM
-and marcher.</p>
+    <p>Check whether argument 'ncluster' and 'nseg' were provided.
+ If not, propose default value based on BIC.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>argcheck_segclust</span><span class='op'>(</span><span class='va'>ncluster</span>, <span class='va'>nseg</span>, <span class='va'>ncluster.BIC</span>, <span class='va'>Kopt.BIC</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>ncluster</th>
+      <td><p>number of cluster</p></td>
+    </tr>
+    <tr>
+      <th>nseg</th>
+      <td><p>number of segment</p></td>
+    </tr>
+    <tr>
+      <th>ncluster.BIC</th>
+      <td><p>optimal number of cluster selected by BIC</p></td>
+    </tr>
+    <tr>
+      <th>Kopt.BIC</th>
+      <td><p>optimal number of segment selected by BIC for 
+each number of cluster</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The segmentation method is a bivariate extension of Lavielle's method
-available in adehabitatLT (Lavielle 1999; and 2005). This method rely on
-dynamic programming for efficient segmentation.</p>
-<p>The segmentation/clustering method alternates steps of dynamic programming
-with an Expectation-Maximization algorithm. This is an extension of Picard et
-al (2007) method (formerly available in cghseg package) to the bivariate
-case.</p>
-<p>The full description of the method is published in Patin et al. (2020).</p>
-<p>References:</p>
-<p>Lavielle, M. (1999) Detection of multiple changes in a sequence of dependent
-variables. <em>Stochastic Processes and their Applications</em>, <b>83</b>:
-79--102.</p>
-<p>Lavielle, M. (2005) Using penalized contrasts for the change-point problem.
-Report number 5339, Institut national de recherche en informatique et en
-automatique.</p>
-<p>Patin, R., Etienne, M. P., Lebarbier, E., Chamaill\'e‐Jammes, S., 
-&amp; Benhamou, S. (2020). Identifying stationary phases in
-multivariate time series for highlighting behavioural modes 
-and home range settlements. <em>Journal of Animal Ecology</em>, 
-89(1), 44-56.</p>
-
-<p>Picard, F., Robin, S., Lebarbier, E. and Daudin, J.-J. (2007), A
-Segmentation/Clustering Model for the Analysis of Array CGH Data.
-<em>Biometrics</em>, 63: 758-766. doi:10.1111/j.1541-0420.2006.00729.x</p>
+    <p>a list with two integers</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -189,15 +189,7 @@ information of a <code>segmentation</code> object</p>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, max.level <span class='op'>=</span> <span class='fl'>1</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for segmentation</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>
-  <span class='va'>x</span>,
-  nseg <span class='op'>=</span> <span class='cn'>NULL</span>,
-  ncluster <span class='op'>=</span> <span class='cn'>NULL</span>,
-  interactive <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  xcol <span class='op'>=</span> <span class='st'>"indice"</span>,
-  <span class='va'>order</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>nseg</span>, <span class='va'>ncluster</span>, interactive <span class='op'>=</span> <span class='cn'>FALSE</span>, xcol <span class='op'>=</span> <span class='st'>"indice"</span>, <span class='va'>order</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for segmentation</span>
 <span class='fu'><a href='likelihood.html'>likelihood</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
@@ -226,13 +218,13 @@ information of a <code>segmentation</code> object</p>
 <span class='fu'>segmap</span><span class='op'>(</span>
   <span class='va'>x</span>,
   interactive <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  nseg <span class='op'>=</span> <span class='cn'>NULL</span>,
-  ncluster <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>nseg</span>,
+  <span class='va'>ncluster</span>,
   html <span class='op'>=</span> <span class='cn'>FALSE</span>,
   scale <span class='op'>=</span> <span class='fl'>1</span>,
   width <span class='op'>=</span> <span class='fl'>400</span>,
   height <span class='op'>=</span> <span class='fl'>400</span>,
-  order <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>order</span>,
   pointsize <span class='op'>=</span> <span class='fl'>1</span>,
   linesize <span class='op'>=</span> <span class='fl'>0.5</span>,
   <span class='va'>...</span>

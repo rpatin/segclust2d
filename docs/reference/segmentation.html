@@ -146,43 +146,13 @@ locating rupture in the penalized likelihood.</p>
     <pre class="usage"><span class='fu'>segmentation</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>segmentation</span><span class='op'>(</span>
-  <span class='va'>x</span>,
-  <span class='va'>Kmax</span>,
-  <span class='va'>lmin</span>,
-  type <span class='op'>=</span> <span class='st'>"home-range"</span>,
-  <span class='va'>seg.var</span>,
-  diag.var <span class='op'>=</span> <span class='va'>seg.var</span>,
-  order.var <span class='op'>=</span> <span class='va'>seg.var</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,
-  coord.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span>
+<span class='fu'>segmentation</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for Move</span>
-<span class='fu'>segmentation</span><span class='op'>(</span>
-  <span class='va'>x</span>,
-  <span class='va'>Kmax</span>,
-  <span class='va'>lmin</span>,
-  type <span class='op'>=</span> <span class='st'>"home-range"</span>,
-  seg.var <span class='op'>=</span> <span class='cn'>NULL</span>,
-  diag.var <span class='op'>=</span> <span class='va'>seg.var</span>,
-  order.var <span class='op'>=</span> <span class='va'>seg.var</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,
-  coord.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"coords.x1"</span>, <span class='st'>"coords.x2"</span><span class='op'>)</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span>
+<span class='fu'>segmentation</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for ltraj</span>
-<span class='fu'>segmentation</span><span class='op'>(</span>
-  <span class='va'>x</span>,
-  <span class='va'>Kmax</span>,
-  <span class='va'>lmin</span>,
-  type <span class='op'>=</span> <span class='st'>"home-range"</span>,
-  seg.var <span class='op'>=</span> <span class='cn'>NULL</span>,
-  diag.var <span class='op'>=</span> <span class='va'>seg.var</span>,
-  order.var <span class='op'>=</span> <span class='va'>seg.var</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,
-  coord.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span></pre>
+<span class='fu'>segmentation</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -197,6 +167,11 @@ ltraj object</p></td>
       <td><p>additional parameters given to <code><a href='segmentation_internal.html'>segmentation_internal</a></code></p></td>
     </tr>
     <tr>
+      <th>seg.var</th>
+      <td><p>for behavioral segmentation: names of the variables used for
+segmentation (either one or two names).</p></td>
+    </tr>
+    <tr>
       <th>Kmax</th>
       <td><p>maximum number of segments.</p></td>
     </tr>
@@ -205,31 +180,31 @@ ltraj object</p></td>
       <td><p>minimum length of segments.</p></td>
     </tr>
     <tr>
-      <th>type</th>
-      <td><p>type of segmentation. Either "home-range" or "behavior". Changes
-default values of arguments order, scale.variable in the different
-functions used on the output. Default for segmentation: "home-range";
-default for segmentation/clustering : "behavior".</p></td>
-    </tr>
-    <tr>
-      <th>seg.var</th>
-      <td><p>for behavioral segmentation: names of the variables used for
-segmentation (either one or two names).</p></td>
-    </tr>
-    <tr>
       <th>diag.var</th>
-      <td><p>for behavioral segmentation: names of the variables on which
+      <td><p>names of the variables on which
 statistics are calculated.</p></td>
     </tr>
     <tr>
       <th>order.var</th>
-      <td><p>for behavioral segmentation: names of the variable with
-which states are ordered.</p></td>
+      <td><p>names of the variable with which states are ordered.</p></td>
     </tr>
     <tr>
-      <th>coord.names</th>
-      <td><p>for home-range segmentation and data.frame, names of
-coordinates. Default x and y. Not needed for move and ltraj objects</p></td>
+      <th>scale.variable</th>
+      <td><p>TRUE or FALSE for automatic scaling of variables
+(reduction and  centering)</p></td>
+    </tr>
+    <tr>
+      <th>subsample_over</th>
+      <td><p>over which size should subsampling begin (depending on
+speed and memory limitations)</p></td>
+    </tr>
+    <tr>
+      <th>subsample</th>
+      <td><p>if FALSE disable subsample</p></td>
+    </tr>
+    <tr>
+      <th>subsample_by</th>
+      <td><p>override subsample_over to adjust manually subsampling</p></td>
     </tr>
     </table>
 

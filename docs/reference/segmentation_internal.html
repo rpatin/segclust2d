@@ -137,18 +137,13 @@
 
     <pre class="usage"><span class='fu'>segmentation_internal</span><span class='op'>(</span>
   <span class='va'>x</span>,
-  seg.var <span class='op'>=</span> <span class='cn'>NULL</span>,
-  diag.var <span class='op'>=</span> <span class='cn'>NULL</span>,
-  order.var <span class='op'>=</span> <span class='cn'>NULL</span>,
-  scale.variable <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>seg.var</span>,
+  <span class='va'>diag.var</span>,
+  <span class='va'>order.var</span>,
+  <span class='va'>lmin</span>,
   <span class='va'>Kmax</span>,
-  lmin <span class='op'>=</span> <span class='cn'>NULL</span>,
-  dat <span class='op'>=</span> <span class='cn'>NULL</span>,
-  type <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>scale.variable</span>,
   sameSigma <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  subsample_over <span class='op'>=</span> <span class='fl'>10000</span>,
-  subsample <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  subsample_by <span class='op'>=</span> <span class='cn'>NA</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -166,54 +161,29 @@ segmentation (either one or two names).</p></td>
     </tr>
     <tr>
       <th>diag.var</th>
-      <td><p>for behavioral segmentation: names of the variables on which
+      <td><p>names of the variables on which
 statistics are calculated.</p></td>
     </tr>
     <tr>
       <th>order.var</th>
-      <td><p>for behavioral segmentation: names of the variable with
-which states are ordered.</p></td>
-    </tr>
-    <tr>
-      <th>scale.variable</th>
-      <td><p>should variables be standardized ? (reduced and
-centered)</p></td>
-    </tr>
-    <tr>
-      <th>Kmax</th>
-      <td><p>maximum number of segments.</p></td>
+      <td><p>names of the variable with which states are ordered.</p></td>
     </tr>
     <tr>
       <th>lmin</th>
       <td><p>minimum length of segments.</p></td>
     </tr>
     <tr>
-      <th>dat</th>
-      <td><p>bivariate data (one signal per row)</p></td>
+      <th>Kmax</th>
+      <td><p>maximum number of segments.</p></td>
     </tr>
     <tr>
-      <th>type</th>
-      <td><p>type of segmentation. Either "home-range" or "behavior". Changes
-default values of arguments order, scale.variable in the different
-functions used on the output. Default for segmentation: "home-range";
-default for segmentation/clustering : "behavior".</p></td>
+      <th>scale.variable</th>
+      <td><p>TRUE or FALSE for automatic scaling of variables
+(reduction and  centering)</p></td>
     </tr>
     <tr>
       <th>sameSigma</th>
       <td><p>does segments have same variance ?</p></td>
-    </tr>
-    <tr>
-      <th>subsample_over</th>
-      <td><p>over which size should subsampling begin (depending on
-speed and memory limitations)</p></td>
-    </tr>
-    <tr>
-      <th>subsample</th>
-      <td><p>if FALSE disable subsample</p></td>
-    </tr>
-    <tr>
-      <th>subsample_by</th>
-      <td><p>override subsample_over to adjust manually subsampling</p></td>
     </tr>
     <tr>
       <th>...</th>
