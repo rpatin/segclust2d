@@ -32,7 +32,7 @@ add_covariates.Move <- function(x, coord.names = c("x","y"), ...){
     stop("sp package required for calling 
          segclust (home-range) on a Move object.")
   x.dat <- x@data
-    if(! all(coord.names %in% colnames(x.dat))){
+  if(! all(coord.names %in% colnames(x.dat))){
     dat <- data.frame(sp::coordinates(x))
     colnames(dat) <- coord.names
     x.dat <- cbind(dat,x.dat)
@@ -49,11 +49,11 @@ add_covariates.ltraj <- function(x, coord.names = c("x","y"), ...){
   if(!requireNamespace("adehabitatLT", quietly = TRUE)){
     stop("adehabitatLT package required 
          for calling segclust on a ltraj object.")
-    }
-
-
+  }
+  
+  
   x.dat <- adehabitatLT::infolocs(x)[[1]]
-
+  
   if(! all(coord.names %in% colnames(x.dat))){
     tmp <- x[[1]]
     if(any(is.na(tmp$x))) stop("Please filter NA from ltraj object")
@@ -88,43 +88,43 @@ add_covariates.data.frame <-
   function(x, coord.names = c("x","y"), 
            smoothed = FALSE, timecol = "dateTime",
            units = "hour", radius = NULL, ...){
-  if(any(is.na(x[,timecol]))) stop("time should not contain NA")
-  if(any(is.na(x[,coord.names[1]]))) stop("x should not contain NA")
-  if(any(is.na(x[,coord.names[2]]))) stop("y should not contain NA")
-  if(missing(units)) {
-    message("Using hours as default time unit. 
+    if(any(is.na(x[,timecol]))) stop("time should not contain NA")
+    if(any(is.na(x[,coord.names[1]]))) stop("x should not contain NA")
+    if(any(is.na(x[,coord.names[2]]))) stop("y should not contain NA")
+    if(missing(units)) {
+      message("Using hours as default time unit. 
             You can change this with argument units.")
-  }
-  x_dist <- calc_dist(x, coord.names = coord.names, smoothed = FALSE)
-  x_dist_smoothed <-
-    zoo::rollapply(x_dist, 2, mean,
-                   by.column = FALSE, 
-                   fill = NA, align = "right")
-  n <- nrow(x)
-  tmptime  <- as.numeric(
-    difftime(x[2:n,timecol],
-             x[1:(n-1),timecol], 
-             units = units)
+    }
+    x_dist <- calc_dist(x, coord.names = coord.names, smoothed = FALSE)
+    x_dist_smoothed <-
+      zoo::rollapply(x_dist, 2, mean,
+                     by.column = FALSE, 
+                     fill = NA, align = "right")
+    n <- nrow(x)
+    tmptime  <- as.numeric(
+      difftime(x[2:n,timecol],
+               x[1:(n-1),timecol], 
+               units = units)
     )
-  x_speed <- x_dist/c(tmptime,NA)
-  x_speed_smoothed <-
-    zoo::rollapply(x_speed, 2, mean,
-                   by.column = FALSE,
-                   fill = NA, align = "right")
-  x_ang_spa <- spatial_angle(x, coord.names = coord.names, radius = radius)
-  x_vit_p <- x_speed*cos(x_ang_spa)
-  x_vit_r <- x_speed*sin(x_ang_spa)
-  x$angular_speed <- angular_speed(x, coord.names = coord.names)/c(tmptime,NA)
-  x$angle <- angular_speed(x, coord.names = coord.names)
-  x$dist <- x_dist
-  x$dist_smoothed <- x_dist_smoothed
-  x$speed <- x_speed
-  x$speed_smoothed <- x_speed_smoothed
-  x$spatial_angle <- x_ang_spa
-  x$vit_p <- x_vit_p
-  x$vit_r <- x_vit_r
-  return(x)
-}
+    x_speed <- x_dist/c(tmptime,NA)
+    x_speed_smoothed <-
+      zoo::rollapply(x_speed, 2, mean,
+                     by.column = FALSE,
+                     fill = NA, align = "right")
+    x_ang_spa <- spatial_angle(x, coord.names = coord.names, radius = radius)
+    x_vit_p <- x_speed*cos(x_ang_spa)
+    x_vit_r <- x_speed*sin(x_ang_spa)
+    x$angular_speed <- angular_speed(x, coord.names = coord.names)/c(tmptime,NA)
+    x$angle <- angular_speed(x, coord.names = coord.names)
+    x$dist <- x_dist
+    x$dist_smoothed <- x_dist_smoothed
+    x$speed <- x_speed
+    x$speed_smoothed <- x_speed_smoothed
+    x$spatial_angle <- x_ang_spa
+    x$vit_p <- x_vit_p
+    x$vit_r <- x_vit_r
+    return(x)
+  }
 
 #' Calculate distance between locations
 #'
@@ -180,23 +180,23 @@ calc_speed <-
            coord.names = c("x","y"),
            timecol = "dateTime",
            smoothed = FALSE, units = "hour"
-           ){
-  tmpdist  <- calc_dist(x, coord.names = coord.names)
-  n <- nrow(x)
-  tmptime  <- as.numeric(
-    difftime(x[2:n,timecol],
-             x[1:(n-1),timecol],
-             units = units)
+  ){
+    tmpdist  <- calc_dist(x, coord.names = coord.names)
+    n <- nrow(x)
+    tmptime  <- as.numeric(
+      difftime(x[2:n,timecol],
+               x[1:(n-1),timecol],
+               units = units)
     )
-  tmpspeed  <- tmpdist/c(tmptime,NA)
-  if(smoothed){
-    tmpspeed <-
-      zoo::rollapply(tmpspeed, 2, mean,
-                     by.column = FALSE, 
-                     fill = NA, align = "right")
+    tmpspeed  <- tmpdist/c(tmptime,NA)
+    if(smoothed){
+      tmpspeed <-
+        zoo::rollapply(tmpspeed, 2, mean,
+                       by.column = FALSE, 
+                       fill = NA, align = "right")
+    }
+    return(tmpspeed)
   }
-  return(tmpspeed)
-}
 
 
 #' Calculate spatial angle along a path
@@ -257,7 +257,7 @@ spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
         s <- (yy[j]-yy[j-1])/tmpdist[j-1] # sinus
         rd <- ( dxp*c + dyp*s+ 
                   sqrt( radius2-(dyp*c-dxp*s)^2 ) 
-                )/tmpdist[j-1] # beware the change in coordinate system 
+        )/tmpdist[j-1] # beware the change in coordinate system 
         ard <- 1-rd
         xinter <- xx[j-1]*ard+xx[j]*rd
         yinter <- yy[j-1]*ard+yy[j]*rd
@@ -287,7 +287,7 @@ spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
         s <- (yy[j]-yy[j+1])/tmpdist[j] # sinus
         rd <- (dxp*c+dyp*s+
                  sqrt(radius2-(dyp*c-dxp*s)^2)
-               )/tmpdist[j] # attention au changement de repere.
+        )/tmpdist[j] # attention au changement de repere.
         ard <- 1-rd
         xinter <- xx[j+1]*ard+xx[j]*rd
         yinter <- yy[j+1]*ard+yy[j]*rd
@@ -302,7 +302,7 @@ spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
       tmp <- atan2(ss*cp-cs*sp,cp*cs+sp*ss)
     }
     angle_spa <- c(angle_spa,tmp)
-
+    
   }
   angle_spa <- c(angle_spa,NA)
   return(angle_spa)
@@ -320,12 +320,17 @@ spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
 #' @author Remi Patin, Simon Benhamou.
 
 angular_speed <- function(x, coord.names = c("x","y")){
-
+  
   xx <- diff(x[,coord.names[1]])
   yy <- diff(x[,coord.names[2]])
   b<-sign(xx)
   b[b==0] <- 1  #corrects for the fact that sign(0) == 0
   bearings <- b*(yy<0)*pi+atan(xx/yy)
-
-  c(NA,diff(bearings),NA)
+  current_angular_speed <- diff(bearings)
+  current_angular_speed <- ifelse(current_angular_speed < -pi,
+                                  current_angular_speed + 2*pi,
+                                  ifelse(current_angular_speed > pi,
+                                         current_angular_speed -2*pi, 
+                                         current_angular_speed))
+  angular_speed <- c(NA,current_angular_speed,NA)
 }
