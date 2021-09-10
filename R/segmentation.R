@@ -8,18 +8,19 @@
 #'
 #' @param x data used for segmentation. Supported: data.frame, Move object,
 #' ltraj object
-#' @param type type of segmentation. Either "home-range" or "behavior". Changes
-#'   default values of arguments order, scale.variable in the different
-#'   functions used on the output. Default for segmentation: "home-range";
-#'   default for segmentation/clustering : "behavior".
 #' @param seg.var for behavioral segmentation: names of the variables used for
 #'   segmentation (either one or two names).
-#' @param diag.var for behavioral segmentation: names of the variables on which
-#'   statistics are calculated.
-#' @param order.var for behavioral segmentation: names of the variable with
-#'   which states are ordered.
 #' @param Kmax maximum number of segments.
 #' @param lmin minimum length of segments.
+#' @param diag.var names of the variables on which
+#'   statistics are calculated.
+#' @param order.var names of the variable with which states are ordered.
+#' @param scale.variable TRUE or FALSE for automatic scaling of variables
+#'  (reduction and  centering)
+#' @param subsample_over over which size should subsampling begin (depending on
+#'   speed and memory limitations)
+#' @param subsample if FALSE disable subsample
+#' @param subsample_by override subsample_over to adjust manually subsampling
 #' @param ... additional parameters given to \code{\link{segmentation_internal}}
 #' @return  a \code{\link{segmentation-class}} object
 #'
@@ -69,79 +70,16 @@ segmentation <- function(x, ...) {
 
 
 #' Segmentation function for data.frame
-#' @param coord.names for home-range segmentation and data.frame, names of
-#'   coordinates. Default x and y. Not needed for move and ltraj objects
 #' @rdname segmentation
 #' @export
 
 segmentation.data.frame <-
-  function(x,
-           Kmax, lmin, 
-           type = "home-range", 
-           seg.var,
-           diag.var = seg.var,
-           order.var = seg.var[1],
-           coord.names = c("x","y"),
-           ...){
-  
-  if (!missing(type)) {
-    warning("Please specify arguments
-            order.var and scale.variable instead of type")
+  function(x, ...){
     
-    if (type == "home-range") {
-      if (!missing(seg.var)) warning("Ignoring argument seg.var")
-      if (missing(coord.names)){
-        message("Using default value for coord.names (x and y)")
-      } 
-      dat <- t(x[,coord.names])
-      seg.var <- coord.names
-      diag.var <- coord.names
-      order.var <- coord.names[1]
-    } else if ( type == "behavior" ) {
-      if (is.null(seg.var)) stop("seg.var missing for behavioral segmentation")
-      if ( length(seg.var) == 1 ) {
-        dat <- t(x[,rep(seg.var,2)])
-      } else if ( length(seg.var) == 2 ) {
-        dat <- t(x[,seg.var])
-      } else {
-        stop("seg.var must contains either one or two column names")
-      }
-    } else {
-      stop("type must be either home-range or behavior")
-    }
-  } else {
-    if(!missing(coord.names)){
-      if(missing(seg.var)){
-        warning("Please specify argument seg.var instead of coord.names")
-        seg.var <- coord.names
-      } else {
-        warning("Ignoring argument coord.names and using seg.var instead")
-      }
-    }
-    
-    if(missing(seg.var)) stop("seg.var missing for behavioral segmentation")
-    
-    if( length(seg.var) == 1 ){
-      dat <- t(x[,rep(seg.var,2)])
-    } else if ( length(seg.var) == 2 ) {
-      dat <- t(x[,seg.var])
-    } else {
-      stop("seg.var must contains either one or two column names")
-    }
-  } 
-  
-  message("Segmentation on ",paste(seg.var,collapse = " and "))
   segmented <-
-    segmentation_internal(
-      x,
-      seg.var = seg.var,
-      diag.var = diag.var, 
-      order.var = order.var, 
-      Kmax = Kmax, lmin = lmin, 
-      dat=dat, type=type, 
-      ...)
-  return(segmented)
-}
+      segmentation_internal(x, ...)
+    return(segmented)
+  }
 
 
 #' Segmentation function for move objects
@@ -149,174 +87,49 @@ segmentation.data.frame <-
 #' @export
 
 segmentation.Move <- 
-  function(
-    x,
-    Kmax, lmin,
-    type = "home-range", 
-    seg.var = NULL, 
-    diag.var = seg.var, 
-    order.var = seg.var[1],
-    coord.names = c("coords.x1","coords.x2"), 
-    ...){
+  function(x,  ...){
     
-  if(!requireNamespace("move", quietly = TRUE))
-    stop("move package required for calling segclust on a Move object.")
-  
-  if(!missing(type)){
-    warning("Please specify arguments order.var
-            and scale.variable instead of type")
-    if(type == "home-range"){
-      if(!requireNamespace("sp", quietly = TRUE))
-        stop("sp package required for calling 
-             segmentation (home-range) on a Move object.")
-      dat <- t(sp::coordinates(x))
-      seg.var <- coord.names
-      diag.var <- coord.names
-      order.var <- coord.names[1]
-      x.df <- x@data
-      x.df[,coord.names[1]] <- dat[1,]
-      x.df[,coord.names[2]] <- dat[2,]
-    } else if ( type == "behavior" ){
-      x.df <- x@data
-      if(is.null(seg.var)) stop("seg.var missing for behavioral segmentation")
-      if( length(seg.var) == 1 ){
-        dat <- t(x.df[,rep(seg.var,2)])
-      } else if ( length(seg.var) == 2 ) {
-        dat <- t(x.df[,seg.var])
-      } else {
-        stop("seg.var must contains either one or two column names")
-      }
-    } else {
-      stop("type must be either home-range or behavior")
+    if(!requireNamespace("move", quietly = TRUE)){
+      cli::cli_alert_danger(
+        "move package not found.
+        Please run install.packages('move')")
+      stop("move package required for calling segclust on a Move object.")
     }
-  } else {
-    if (!missing(coord.names)) {
-      message("Using coordinates as segmentation variables")
-      if(!requireNamespace("sp", quietly = TRUE))
-        stop("sp package required for calling
-             segmentation on coordinates of a Move object.")
-      dat <- t(sp::coordinates(x))
-      seg.var <- coord.names
-      diag.var <- coord.names
-      order.var <- coord.names[1]
-      x.df <- x@data
-      x.df[,coord.names[1]] <- dat[1,]
-      x.df[,coord.names[2]] <- dat[2,]
-      
-    } else if (!missing(seg.var)) {
-      x.df <- x@data
-      if( length(seg.var) == 1 ){
-        dat <- t(x.df[,rep(seg.var,2)])
-      } else if ( length(seg.var) == 2 ) {
-        dat <- t(x.df[,seg.var])
-      }
-    } else {
-      stop("Method needs either coord.names or seg.var argument")
-    }
+    
+    segmented <-
+      segmentation_internal(x, ...)
+    return(segmented)
   }
-  
-  segmented <-
-    segmentation_internal(
-      x.df,
-      seg.var = seg.var, diag.var = diag.var, order.var = order.var,
-      Kmax = Kmax, lmin = lmin, 
-      dat=dat, type=type, ...
-    )
-  return(segmented)
-}
 
 #' Segmentation function for ltraj objects
 #' @rdname segmentation
 #' @export
 
 segmentation.ltraj <- 
-  function(x, Kmax, lmin,
-           type = "home-range",
-           seg.var = NULL,
-           diag.var = seg.var,
-           order.var = seg.var[1],
-           coord.names = c("x","y"), ...){
-
-  if(!requireNamespace("adehabitatLT", quietly = TRUE))
-    stop("adehabitatLT package required 
-         for calling segclust on a ltraj object.")
-  
-  if(!missing(type)){
-    warning("Please specify arguments 
-            order.var and scale.variable instead of type")
+  function(x, ...){
     
-    if(type == "home-range"){
-      tmp <- x[[1]]
-      dat <- t(cbind(tmp$x,tmp$y))
-      if(any(is.na(tmp$x))) stop("Please filter NA from ltraj object")
-      seg.var <- coord.names
-      diag.var <- coord.names
-      order.var <- coord.names[1]
-      x.df <- adehabitatLT::infolocs(x)[[1]]
-      x.df[,coord.names[1]] <- dat[1,]
-      x.df[,coord.names[2]] <- dat[2,]
-    } else if ( type == "behavior" ){
-      x.df <- adehabitatLT::infolocs(x)[[1]]
-      if(is.null(seg.var)) stop("seg.var missing for behavioral segmentation")
-      if( length(seg.var) == 1 ){
-        dat <- t(x.df[,rep(seg.var,2)])
-      } else if ( length(seg.var) == 2 ) {
-        dat <- t(x.df[,seg.var])
-      } else {
-        stop("seg.var must contains either one or two column names")
-      }
-    } else {
-      stop("type must be either home-range or behavior")
+    if(!requireNamespace("adehabitatLT", quietly = TRUE))
+      cli::cli_alert_danger(
+        "adehabitatLT package not found.
+        Please run install.packages('adehabitatLT')")
+    stop("adehabitatLT package required for calling segmentation 
+         on a ltraj object.")
+    if (length(x) > 1){
+      cli::cli_alert_warning(
+        "segmentation() cannot handle multi-individual ltraj objects")
+      cli::cli_alert("running segmentation only on the first individual")
     }
-  } else {
-    if (!missing(coord.names)) {
-      message("Using coordinates as segmentation variables")
-      tmp <- x[[1]]
-      if (length(x) > 1) warning("Using only first element of ltraj object")
-      dat <- t(cbind(tmp$x,tmp$y))
-      if (any(is.na(tmp$x))) stop("Please filter NA from ltraj object")
-      seg.var <- coord.names
-      diag.var <- coord.names
-      order.var <- coord.names[1]
-      x.df <- adehabitatLT::infolocs(x)[[1]]
-      x.df[,coord.names[1]] <- dat[1,]
-      x.df[,coord.names[2]] <- dat[2,]
-      
-    } else if (!missing(seg.var)) {
-      x.df <- adehabitatLT::infolocs(x)[[1]]
-      if( length(seg.var) == 1 ){
-        dat <- t(x.df[,rep(seg.var,2)])
-      } else if ( length(seg.var) == 2 ) {
-        dat <- t(x.df[,seg.var])
-      }
-    } else {
-      stop("Method needs either coord.names or seg.var argument")
-    }
+
+      segmented <-
+      segmentation_internal(
+        x, ...)
+    return(segmented)
   }
-  
-  segmented <-
-    segmentation_internal(
-      x.df,
-      seg.var = seg.var,
-      diag.var = diag.var,
-      order.var = order.var,
-      Kmax = Kmax, lmin = lmin, 
-      dat=dat,type=type, ...
-    )
-  return(segmented)
-}
 
 
 #' Internal segmentation function
 #' @param x data.frame with observations
-#' @param dat bivariate data (one signal per row)
 #' @param sameSigma does segments have same variance ?
-#' @param scale.variable should variables be standardized ? (reduced and
-#'   centered)
-#' @param subsample_over over which size should subsampling begin (depending on
-#'   speed and memory limitations)
-#' @param subsample if FALSE disable subsample
-#' @param subsample_by override subsample_over to adjust manually subsampling
 #' @param ... additional parameters given to \link{chooseseg_lavielle}
 #' @inheritParams segmentation
 #'
@@ -325,107 +138,170 @@ segmentation.ltraj <-
 
 segmentation_internal <-
   function(x,
-           seg.var = NULL, diag.var = NULL, order.var = NULL,
-           scale.variable = NULL, 
-           Kmax, lmin = NULL,
-           dat=NULL, type=NULL,
-           sameSigma = FALSE, 
-           subsample_over = 10000, subsample = TRUE, subsample_by = NA, 
+           seg.var, diag.var, order.var,
+           lmin, Kmax,
+           scale.variable, 
+           sameSigma = FALSE,
            ...){
+   
 
-  x_nrow <- nrow(x)
-  if(missing(Kmax)){
-    Kmax <- floor(0.75 * dim(dat)[2]/lmin)
-    message(
-      paste("Unspecified Kmax, taking 
-            75% of the maximum possible value :
-            Kmax = ",Kmax,". Think about
-            reducing Kmax if running is too slow"))
-  }
-  missing_subsample <- missing(subsample)
-  missing_subsample_by <- missing(subsample_by)
-  missing_subsample_over <- missing(subsample_over)
-  if(subsample){
+# Checking arguments ------------------------------------------------------
+
+    
+    cli::cli_h1("Checking arguments")
+    # check deprecated argument 'type' and 'coord.names'
+    argcheck_type_coord(...)
+    # check seg.var
+    tmp <- argcheck_seg.var(x, seg.var, is_segclust = FALSE)
+    seg.var <- tmp$seg.var
+    x <- tmp$x.df
+    # format signal to be segmented for further functions
+    # one signal per row
+    dat <- t(x[,seg.var]) 
+    
+    # check lmin argumenet
+    argcheck_lmin(lmin, is_segclust = FALSE)
+    
+    # check Kmax
+    Kmax <- argcheck_Kmax(Kmax, lmin, dim(dat)[2])
+    
+    # check scale.variable
+    scale.variable <- 
+      argcheck_scale.variable(scale.variable, is_segclust = FALSE)
+    
+    # check diag.var
+    diag.var <- 
+      argcheck_diag.var(diag.var, seg.var)
+    # check order.var
+    order.var <- 
+      argcheck_order.var(order.var, diag.var)
+
+# Subsampling and checks -------------------------------------------------------------
+    cli::cli_h1("Preparing and checking data")
+    
+    cli::cli_h2("Subsampling")
     x_nrow <- nrow(x)
-    tmp <- subsample(x,subsample_over, subsample_by)
-    x <- tmp$x
-    subsample_by <- tmp$by
-    dat <- dat[,!is.na(x$subsample_ind)]
-  } else {
-    subsample_by <- 1
-    x$subsample_ind <- seq_len(nrow(x))
-  }
-  if(missing_subsample &
-     missing_subsample_by & 
-     missing_subsample_over & 
-     subsample_by >1) {
-    message("Automatic subsampling for large data.
-            You can disable it with subsample = FALSE")
+    x <- apply_subsampling(x, is_segclust = FALSE, ...)
+    
+    subsample_by <- attr(x,'subsample_by')
+    if(subsample_by != 1){
+      dat <- dat[,!is.na(x$subsample_ind)]
+      lmin <- max(floor(lmin/subsample_by),5)
+      cli::cli_alert_success(
+        "Adjusting lmin to subsampling. 
+        {cli::col_grey('Dividing lmin by ',subsample_by,', with a minimum of 5')}")
+      cli::cli_alert("After subsampling, {cli::col_green('lmin = ', lmin)}. 
+                    {cli::col_grey('Corresponding to lmin = ',lmin*subsample_by,
+                     ' on the original time scale')}")
+      
     }
-  
-  if(missing(scale.variable)){
-    message("Rescaling variables - 
-            you can disable this with scale.variable = FALSE")
-    scale.variable <- TRUE
-  } 
-  
-  if(scale.variable) {
-    dat[1,] <- scale(dat[1,])
-    dat[2,] <- scale(dat[2,])
-  } else {
-    dat[1,] <- scale(dat[1,], center = TRUE, scale = FALSE)
-    dat[2,] <- scale(dat[2,], center = TRUE, scale = FALSE)
+    if(Kmax*lmin*subsample_by > x_nrow){
+      Kmax <- min(Kmax, floor( x_nrow / ( lmin*subsample_by ) ) )
+      if(Kmax >= 2){
+        cli::cli_alert_success(
+          "Adjusting Kmax so that lmin*Kmax < nrow(x). \\
+      {cli::col_green('Kmax = ', Kmax)}")
+      } else {
+        cli::cli_alert_danger(
+          "lmin*Kmax > nrow(x) and Kmax cannot be adjusted. \\
+          Please provide lower values for lmin")
+        stop("lmin*Kmax > nrow(x)")
+      }
+      
+      }
+    
+    cli::cli_h2("Scaling and final data check")
+    
+    if(scale.variable){
+      cli::cli_alert_success(
+      "Rescaling variables.
+      {cli::col_grey('To desactivate, use scale.variable = FALSE')}")
+      dat[1,] <- scale(dat[1,])
+      dat[2,] <- scale(dat[2,])
+    } else {
+      cli::cli_alert_success(
+      "No variable rescaling.
+      {cli::col_grey('To activate, use scale.variable = TRUE')}")
+      dat[1,] <- scale(dat[1,], center = TRUE, scale = FALSE)
+      dat[2,] <- scale(dat[2,], center = TRUE, scale = FALSE)
+    }
+    
+    
+    
+    
+    # check that there are no repetitions in the series
+    if(check_repetition(dat, lmin)){
+      cli::cli_alert_danger(
+        "Data have repetition of nearly-identical \\
+        values longer than lmin. 
+        {cli::col_grey('The algorithm cannot estimate variance \\
+        for segment with repeated values. \\
+        This is potentially caused by interpolation \\
+         of missing values or rounding of values.')}
+        {cli::symbol$arrow_right} Please check for repeated \\
+        or very similar values of {seg.var}")
+      
+      stop("There are repetitions of identical values in the time series larger than lmin.")
+    } else {
+      cli::cli_alert_success(
+        "Data have no repetition of \\
+        nearly-identical values larger than lmin")
+    }
+    
+    cli::cli_h1("Running segmentation algorithm")
+    cli::cli_alert_info("Running segmentation \\
+                        with lmin = {lmin} and Kmax = {Kmax}")
+    sb <- cli::cli_status("{cli::symbol$arrow_right} Calculating cost matrix")
+    CostLoc <- Gmean_simultanee(dat, lmin = lmin,sameVar = sameSigma)
+    cli::cli_alert_success("Cost matrix calculated")
+    cli::cli_status_update(id = sb,
+                      "{cli::symbol$arrow_right} Dynamic Programming")
+    res.DynProg <- wrap_dynprog_cpp(CostLoc, Kmax)
+    cli::cli_alert_success(
+      "Optimal segmentation calculated \\
+      for all number of segments <= {Kmax}")
+    # CostLoc <- segTraj::Gmean_simultanee(dat, lmin = lmin)
+    # res.DynProg <- segTraj::DynProg(CostLoc, Kmax)
+    cli::cli_status_update(id = sb,
+                      "{cli::symbol$arrow_right} Calculating segment statistics")
+    outputs <- lapply(1:Kmax,function(k){
+      # print(k)
+      out <- stat_segm(x, 
+                       diag.var = diag.var, order.var = order.var,
+                       param = res.DynProg, 
+                       seg.type = 'segmentation', nseg=k)
+      names(out) <- c("segments","states")
+      return(out)
+    })
+    
+    names(outputs) <- paste(1:Kmax, "segments")
+    output_lavielle <- chooseseg_lavielle(res.DynProg$J.est, ...)
+    # stationarity = test_stationarity(dat,outputs,Kmax)
+    # seg_var = test_var(dat,outputs,Kmax)
+    # seg_mean = test_mean(dat,outputs,Kmax)
+    cli::cli_status_clear(id = sb)
+    cli::cli_alert_success("Best segmentation estimated with \\
+                      {output_lavielle$Kopt} segments, \\
+                      according to Lavielle's criterium")
+    cli::cli_text(cli::col_grey(
+    'Other number of segment may be selected 
+      by looking for likelihood breaks with plot_likelihood()'))
+    cli::cli_text(cli::col_grey(
+    'Results of the segmentation may be explored with plot() and segmap()'))
+    segmented <- 
+      list("data" = x,
+           "seg.type" = "segmentation",
+           "outputs" = outputs,
+           "likelihood" = 
+             data.frame(nseg=1:Kmax,
+                        likelihood=-res.DynProg$J.est),
+           "Segmented variables" = seg.var,
+           "Diagnostic variables" = diag.var,
+           "Order variable" = order.var,
+           "param"= list("lmin"=lmin,
+                         "Kmax"=Kmax),
+           "Kopt.lavielle" = output_lavielle["Kopt"][[1]],
+           "df.lavielle" = output_lavielle["lavielle"][[1]])
+    class(segmented) <- "segmentation"
+    return(segmented)
   }
-  lmin <- max(floor(lmin/subsample_by),2)
-  Kmax <- min(Kmax, floor( x_nrow / ( lmin*subsample_by ) ) )
-  
-  # check that there are no repetitions in the series
-  if(check_repetition(dat, lmin)){
-    stop("There are repetitions of identical values
-         in the time series larger than lmin,
-         cannot estimate variance for such segment. 
-         This is potentially caused by interpolation
-         of missing values or rounding of values.")
-  }
-  # dat[1,] <- dat[1,]-mean(dat[1,])
-  # dat[2,] <- dat[2,]-mean(dat[2,])
-  CostLoc <- Gmean_simultanee(dat, lmin = lmin,sameVar = sameSigma)
-  res.DynProg <- DynProg(CostLoc, Kmax)
-  
-  # CostLoc <- segTraj::Gmean_simultanee(dat, lmin = lmin)
-  # res.DynProg <- segTraj::DynProg(CostLoc, Kmax)
-  
-  outputs <- lapply(1:Kmax,function(k){
-    # print(k)
-    out <- stat_segm(x, 
-                     diag.var = diag.var, order.var = order.var,
-                     param = res.DynProg, 
-                     seg.type = 'segmentation', nseg=k)
-    names(out) <- c("segments","states")
-    return(out)
-  })
-  
-  names(outputs) <- paste(1:Kmax, "segments")
-  output_lavielle <- chooseseg_lavielle(res.DynProg$J.est, ...)
-  # stationarity = test_stationarity(dat,outputs,Kmax)
-  # seg_var = test_var(dat,outputs,Kmax)
-  # seg_mean = test_mean(dat,outputs,Kmax)
-  
-  segmented <- 
-    list("data" = x,
-         "type" = type,
-         "seg.type" = "segmentation",
-         "outputs" = outputs,
-         "likelihood" = 
-           data.frame(nseg=1:Kmax,
-                      likelihood=-res.DynProg$J.est),
-         "Segmented variables" = seg.var,
-         "Diagnostic variables" = diag.var,
-         "Order variable" = order.var,
-         "param"= list("lmin"=lmin,
-                       "Kmax"=Kmax),
-         "Kopt.lavielle" = output_lavielle["Kopt"][[1]],
-         "df.lavielle" = output_lavielle["lavielle"][[1]])
-  class(segmented) <- "segmentation"
-  return(segmented)
-}

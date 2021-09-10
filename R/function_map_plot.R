@@ -14,7 +14,8 @@
 #' @param scale for dividing coordinates to have compatibility with leaflet
 #' @param UTMstring projection of the coordinates
 #' @param coord.names names of coordinates
-#' @return a graph
+#' @param ... additionnal arguments
+#' @return a ggplot object
 #'
 #' @importFrom magrittr "%>%"
 #' @export
@@ -35,7 +36,8 @@
 map_segm <- function(data,output,interactive=FALSE,html=FALSE, scale=1,
                      UTMstring="+proj=longlat +datum=WGS84 +no_defs",
                      width=400,height=400,order=NULL,
-                     pointsize = 1, linesize = 0.5, coord.names = c("x","y")){
+                     pointsize = 1, linesize = 0.5, coord.names = c("x","y"),
+                     ...){
   # print("test")
   df.segm <- dplyr::left_join(output[[1]],output[[2]],by="state")
   data$indice <- seq_len(nrow(data))

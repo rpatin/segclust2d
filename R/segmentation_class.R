@@ -37,59 +37,50 @@ print.segmentation <- function(x, max.level = 1, ...) {
 #' }
 #'
 plot.segmentation <-
-  function(x, nseg = NULL, 
-           ncluster = NULL, interactive = FALSE,
+  function(x, nseg, 
+           ncluster, interactive = FALSE,
            xcol = "indice", order, ...) {
-  if (missing(order)) {
-    if (x$type == "home-range") order <- FALSE
-    if (x$type == "behavior") order <- TRUE
-  }
-  if (x$seg.type == "segclust") {
-    if (is.null(ncluster)) {
-      ncluster <- x$ncluster.BIC
-      nseg <- x$Kopt.BIC[ncluster]
-      message(
-        paste0("BIC-selected number of class : ", ncluster, 
-               " class.\nBIC-selected number of segment : ", nseg)
-        )
-    } else if (is.null(nseg)) {
-      nseg <- x$Kopt.BIC[ncluster]
-      message(
-        paste0("User-specified number of class :", ncluster,
-               "\nBIC-selected number of segment : ", nseg)
-        )
+    
+    order <- argcheck_ordering(order, x$seg.type,
+                               x$`Order variable`)
+    
+    if (x$seg.type == "segclust") {
+      selected_param <- argcheck_segclust(ncluster, 
+                                          nseg, 
+                                          x$ncluster.BIC,
+                                          x$Kopt.BIC)
+      ncluster <- selected_param$ncluster
+      nseg <- selected_param$nseg
+      outputs <- x$outputs[[paste(ncluster, "class -", nseg, "segments")]]
+      g <-
+        plot_segm(data = x$data,
+                  output = outputs, 
+                  interactive = interactive, 
+                  diag.var = x$`Diagnostic variables`, 
+                  x_col = xcol, order = order, ...)
+    } else if (x$seg.type == "segmentation") {
+      nseg <- argcheck_segmentation(nseg, 
+                                    x$Kopt.lavielle)
+      
+      outputs <- x$outputs[[paste(nseg, "segments")]]
+      
+      g <- plot_segm(
+        data = x$data,
+        output = outputs,
+        interactive = interactive,
+        diag.var = x$`Diagnostic variables`,
+        x_col = xcol,
+        order = order, ...
+      )
+    } else if (x$seg.type == "HMM" | 
+               x$seg.type == "shiftfit" |
+               x$seg.type == "depmixS4") {
+      g <- plot_segm(data = x$data, output = x$outputs,
+                     diag.var = x$`Diagnostic variables`,
+                     x_col = xcol, order = order, ...)
     }
-    g <-
-      plot_segm(data = x$data,
-                output = x$outputs[[
-                  paste(ncluster, "class -", nseg, "segments")
-                ]], 
-                interactive = interactive, 
-                diag.var = x$`Diagnostic variables`, 
-                x_col = xcol, order = order, ...)
-  } else if (x$seg.type == "segmentation") {
-    if (is.null(nseg)) {
-      nseg <- x$Kopt.lavielle
-      message(paste("Lavielle-selected number of segment : ", nseg, sep = ""))
-    }
-
-    g <- plot_segm(
-      data = x$data,
-      output = x$outputs[[paste(nseg, "segments")]],
-      interactive = interactive,
-      diag.var = x$`Diagnostic variables`,
-      x_col = xcol,
-      order = order, ...
-    )
-  } else if (x$seg.type == "HMM" | 
-             x$seg.type == "shiftfit" |
-             x$seg.type == "depmixS4") {
-    g <- plot_segm(data = x$data, output = x$outputs,
-                   diag.var = x$`Diagnostic variables`,
-                   x_col = xcol, order = order, ...)
+    return(g)
   }
-  return(g)
-}
 
 
 
@@ -145,9 +136,10 @@ plot_likelihood <- function(x) {
     nudgeX <- (max(x$likelihood$nseg, na.rm = TRUE) -
                  min(x$likelihood$nseg, na.rm = TRUE)) / 6
     g <-
-      ggplot2::ggplot(x$likelihood,
-                      ggplot2::aes_string(x = "nseg", y = "likelihood")
-                      ) +
+      ggplot2::ggplot(
+        x$likelihood,
+        ggplot2::aes_string(x = "nseg", y = "likelihood")
+      ) +
       ggplot2::geom_point() +
       ggplot2::geom_line() +
       ggplot2::xlab("Number of segments") +
@@ -221,7 +213,7 @@ plot_BIC <- function(x) {
          min(likedat$BIC[is.finite(likedat$BIC)], na.rm = TRUE)) / 20
     nudgeX <- (max(likedat$nseg, na.rm = TRUE) -
                  min(likedat$nseg, na.rm = TRUE)) / 6
-
+    
     ncluster.BIC <- 2:max(likedat$ncluster)
     Kopt.BIC <- x$Kopt.BIC[-1]
     SegOpt <- data.frame(ncluster = ncluster.BIC, nseg = Kopt.BIC)
@@ -272,41 +264,30 @@ BIC.segmentation <- function(object, ...) {
 #' stateplot(res.segclust)
 #' stateplot(res.seg)
 #' }
-stateplot <- function(x, nseg = NULL, ncluster = NULL, order = NULL) {
-  if (is.null(order)) {
-    if (x$type == "home-range") order <- FALSE
-    if (x$type == "behavior") order <- TRUE
-  }
+stateplot <- function(x, nseg, ncluster, order) {
+  order <- argcheck_ordering(order, x$seg.type,
+                             x$`Order variable`)
+  
   if (x$seg.type == "segclust") {
-    if (is.null(ncluster)) {
-      ncluster <- x$ncluster.BIC
-      nseg <- x$Kopt.BIC[ncluster]
-      message(
-        paste0("BIC-selected number of class : ", ncluster, 
-              " class.\nBIC-selected number of segment : ", nseg)
-        )
-    } else if (is.null(nseg)) {
-      nseg <- x$Kopt.BIC[ncluster]
-      message(
-        paste0("User-specified number of class :", ncluster,
-               "\nBIC-selected number of segment : ", nseg)
-        )
-    }
+    selected_param <- argcheck_segclust(ncluster, 
+                                        nseg, 
+                                        x$ncluster.BIC,
+                                        x$Kopt.BIC)
+    ncluster <- selected_param$ncluster
+    nseg <- selected_param$nseg
+    outputs <- x$outputs[[paste(ncluster, "class -", nseg, "segments")]]
     g <- plot_states(
-      x$outputs[[
-        paste(ncluster, "class -", nseg, "segments")
-        ]], 
+      outputs,
       x$`Diagnostic variables`,
       order = order)
   } else if (x$seg.type == "segmentation") {
-    if (is.null(nseg)) {
-      nseg <- x$Kopt.lavielle
-      message(
-        paste0("Lavielle-selected number of segment : ", nseg)
-        )
-    }
+    nseg <- argcheck_segmentation(nseg, 
+                                  x$Kopt.lavielle)
+    
+    outputs <- x$outputs[[paste(nseg, "segments")]]
+    
     g <- plot_states(
-      x$outputs[[paste(nseg, "segments")]], 
+      outputs, 
       x$`Diagnostic variables`, order = order)
   } else if (x$seg.type == "HMM" |
              x$seg.type == "shiftfit" |
@@ -328,39 +309,23 @@ stateplot <- function(x, nseg = NULL, ncluster = NULL, order = NULL) {
 #' states(res.seg)
 #' }
 #'
-states <- function(x, nseg = NULL, ncluster = NULL) {
+states <- function(x, nseg, ncluster) {
   if (x$seg.type == "segclust") {
-    if (is.null(order)) {
-      if (x$type == "home-range") order <- FALSE
-      if (x$type == "behavior") order <- TRUE
-    }
-    if (is.null(ncluster)) {
-      ncluster <- x$ncluster.BIC
-      nseg <- x$Kopt.BIC[ncluster]
-      message(
-        paste0("BIC-selected number of class : ", ncluster,
-              " class.\nBIC-selected number of segment : ", nseg)
-        )
-    } else if (is.null(nseg)) {
-      nseg <- x$Kopt.BIC[ncluster]
-      message(
-        paste0("User-specified number of class :", ncluster, 
-               "\nBIC-selected number of segment : ", nseg)
-      )
-    }
-    return(x$outputs[[
-      paste(ncluster, "class -", nseg, "segments")
-      ]]$states)
+    selected_param <- argcheck_segclust(ncluster, 
+                                        nseg, 
+                                        x$ncluster.BIC,
+                                        x$Kopt.BIC)
+    ncluster <- selected_param$ncluster
+    nseg <- selected_param$nseg
+    outputs <- x$outputs[[paste(ncluster, "class -", nseg, "segments")]]
+    return(outputs)
   } else if (x$seg.type == "segmentation") {
-    if (is.null(nseg)) {
-      nseg <- x$Kopt.lavielle
-      message(
-        paste0("Lavielle-selected number of segment : ", nseg)
-        )
-    }
-    return(x$outputs[[
-      paste(nseg, "segments")
-      ]]$states)
+    nseg <- argcheck_segmentation(nseg, 
+                                  x$Kopt.lavielle)
+    
+    outputs <- x$outputs[[paste(nseg, "segments")]]
+    return(outputs)
+    
   } else if (x$seg.type == "HMM" | 
              x$seg.type == "shiftfit" |
              x$seg.type == "depmixS4") {
@@ -379,39 +344,26 @@ states <- function(x, nseg = NULL, ncluster = NULL) {
 #' segment(res.seg)
 #' segment(res.seg, nseg = 4)
 #' }
-segment <- function(x, nseg = NULL, ncluster = NULL) {
+segment <- function(x, nseg, ncluster) {
   if (x$seg.type == "segclust") {
-    if (is.null(ncluster)) {
-      ncluster <- x$ncluster.BIC
-      nseg <- x$Kopt.BIC[ncluster]
-      message(
-        paste0("BIC-selected number of class : ", ncluster, 
-              " class.\nBIC-selected number of segment : ", nseg)
-      )
-    } else if (is.null(nseg)) {
-      nseg <- x$Kopt.BIC[ncluster]
-      message(
-        paste0("User-specified number of class :", ncluster, 
-               "\nBIC-selected number of segment : ", nseg)
-      )
-    }
-    statesdf <- 
-      x$outputs[[
-        paste(ncluster, "class -", nseg, "segments")
-      ]]$states
-    segmentdf <-
-      x$outputs[[
-        paste(ncluster, "class -", nseg, "segments")
-      ]]$segments
+    selected_param <- argcheck_segclust(ncluster, 
+                                        nseg, 
+                                        x$ncluster.BIC,
+                                        x$Kopt.BIC)
+    ncluster <- selected_param$ncluster
+    nseg <- selected_param$nseg
+    outputs <- x$outputs[[paste(ncluster, "class -", nseg, "segments")]]
+    statesdf <- outputs$states
+    segmentdf <- outputs$segments
     totdf <- dplyr::left_join(segmentdf, statesdf, by = "state")
     return(totdf)
   } else if (x$seg.type == "segmentation") {
-    if (is.null(nseg)) {
-      nseg <- x$Kopt.lavielle
-      message(paste("Lavielle-selected number of segment : ", nseg, sep = ""))
-    }
-    statesdf <- x$outputs[[paste(nseg, "segments")]]$states
-    segmentdf <- x$outputs[[paste(nseg, "segments")]]$segments
+    nseg <- argcheck_segmentation(nseg, 
+                                  x$Kopt.lavielle)
+    
+    outputs <- x$outputs[[paste(nseg, "segments")]]
+    statesdf <- outputs$states
+    segmentdf <-outputs$segments
     totdf <- dplyr::left_join(segmentdf, statesdf, by = "state")
     return(totdf)
   } else if (x$seg.type == "HMM" |
@@ -438,58 +390,50 @@ segment <- function(x, nseg = NULL, ncluster = NULL) {
 #' }
 augment.segmentation <- 
   function(x, 
-           nseg = NULL, ncluster = NULL,
+           nseg, ncluster,
            colname_state = "state", ...) {
     if (any(colnames(x$data) == colname_state)) {
-    stop(paste(colname_state,
-               "already exists as 
-               column names of the data.frame. 
-               Cannot erase"))
+      cli::cli_alert_danger(
+        "{colname_state} already exists as column names of the \\
+        original data.frame. Please provide argument colname_state \\
+        with the name for the new state column.")
+      stop("cannot erase already existing column name")
     }
-
-  if (x$seg.type == "segclust") {
-    if (is.null(ncluster)) {
-      ncluster <- x$ncluster.BIC
-      nseg <- x$Kopt.BIC[ncluster]
-      message(
-        paste0("BIC-selected number of class : ", ncluster,
-              " class.\nBIC-selected number of segment : ", nseg)
-        )
-    } else if (is.null(nseg)) {
-      nseg <- x$Kopt.BIC[ncluster]
-      message(
-        paste0("User-specified number of class :", ncluster,
-              "\nBIC-selected number of segment : ", nseg)
-        )
+    if (x$seg.type == "segclust") {
+        selected_param <- argcheck_segclust(ncluster, 
+                                            nseg, 
+                                            x$ncluster.BIC,
+                                            x$Kopt.BIC)
+        ncluster <- selected_param$ncluster
+        nseg <- selected_param$nseg
+        outputs <- x$outputs[[paste(ncluster, "class -", nseg, "segments")]]
+        statesdf <- outputs$states
+        df.segm <- suppressMessages(segment(x, nseg = nseg))
+      } else if (x$seg.type == "segmentation") {
+        nseg <- argcheck_segmentation(nseg, 
+                                      x$Kopt.lavielle)
+        
+        outputs <- x$outputs[[paste(nseg, "segments")]]
+        statesdf <- outputs$states
+        df.segm <- suppressMessages(segment(x, nseg = nseg))
+      } else if (x$seg.type == "HMM" |
+               x$seg.type == "shiftfit" |
+               x$seg.type == "depmixS4") {
+      statesdf <- states(x)
+      df.segm <- suppressMessages(segment(x))
     }
-    statesdf <- x$outputs[[paste(ncluster, "class -", nseg, "segments")]]$states
-
-    df.segm <- segment(x, nseg = nseg, ncluster = ncluster)
-  } else if (x$seg.type == "segmentation") {
-    if (is.null(nseg)) {
-      nseg <- x$Kopt.lavielle
-      message(paste("Lavielle-selected number of segment : ", nseg, sep = ""))
-    }
-    statesdf <- x$outputs[[paste(nseg, "segments")]]$states
-    df.segm <- segment(x, nseg = nseg)
-  } else if (x$seg.type == "HMM" |
-             x$seg.type == "shiftfit" |
-             x$seg.type == "depmixS4") {
-    statesdf <- states(x)
-    df.segm <- segment(x)
+    x$data$indice <- seq_len(nrow(x$data))
+    data <- x$data
+    data[, colname_state] <- 
+      df.segm[findInterval(data$indice,
+                           df.segm$begin,
+                           rightmost.closed = FALSE, 
+                           left.open = FALSE),
+              "state"]
+    totdf <- dplyr::left_join(data, statesdf, by = "state")
+    
+    return(totdf)
   }
-  x$data$indice <- seq_len(nrow(x$data))
-  data <- x$data
-  data[, colname_state] <- 
-    df.segm[findInterval(data$indice,
-                         df.segm$begin,
-                         rightmost.closed = FALSE, 
-                         left.open = FALSE),
-            "state"]
-  totdf <- dplyr::left_join(data, statesdf, by = "state")
-
-  return(totdf)
-}
 
 
 
@@ -508,36 +452,27 @@ augment.segmentation <-
 #' }
 segmap <- function(
   x, interactive = FALSE,
-  nseg = NULL, ncluster = NULL, 
+  nseg, ncluster, 
   html = FALSE,
   scale = 1, width = 400, height = 400, 
-  order = NULL,
+  order,
   pointsize = 1, linesize = 0.5, ...) {
-  if (is.null(order)) {
-    if (x$type == "home-range") order <- FALSE
-    if (x$type == "behavior") order <- TRUE
-  }
+  
+  order <- argcheck_ordering(order, x$seg.type,
+                             x$`Order variable`)
+  
   if (x$seg.type == "segclust") {
-    if (is.null(ncluster)) {
-      ncluster <- x$ncluster.BIC
-      nseg <- x$Kopt.BIC[ncluster]
-      message(
-        paste0("BIC-selected number of class : ", ncluster,
-              " class.\nBIC-selected number of segment : ", nseg)
-        )
-    } else if (is.null(nseg)) {
-      nseg <- x$Kopt.BIC[ncluster]
-      message(
-        paste0("User-specified number of class :", ncluster,
-              "\nBIC-selected number of segment : ", nseg)
-        )
-    }
+    selected_param <- argcheck_segclust(ncluster, 
+                                        nseg, 
+                                        x$ncluster.BIC,
+                                        x$Kopt.BIC)
+    ncluster <- selected_param$ncluster
+    nseg <- selected_param$nseg
     outputs <- x$outputs[[paste(ncluster, "class -", nseg, "segments")]]
-  } else if (x$seg.type == "segmentation") {
-    if (is.null(nseg)) {
-      nseg <- x$Kopt.lavielle
-      message(paste("Lavielle-selected number of segment : ", nseg, sep = ""))
-    }
+  }  else if (x$seg.type == "segmentation") {
+    nseg <- argcheck_segmentation(nseg, 
+                                  x$Kopt.lavielle)
+    
     outputs <- x$outputs[[paste(nseg, "segments")]]
   } else if (x$seg.type == "HMM" |
              x$seg.type == "shiftfit" | 
@@ -549,6 +484,6 @@ segmap <- function(
                   scale = scale, width = width, height = height, 
                   order = order,
                   pointsize = pointsize, linesize = linesize, ...)
-
+  
   return(map)
 }

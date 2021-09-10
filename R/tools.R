@@ -1,42 +1,93 @@
 
 #' Internal function for subsampling
 #'
-#' if nrow(x) > subsample_over, subsample with the minimum needed to get a
+#' if subsample = FALSE do nothing.
+#' 
+#' else if subsample_by is missing, subsample only 
+#' if nrow(x) > subsample_over,
+#' then it subsample with the minimum needed to get a
 #' data.frame smaller than subsample_over
+#' 
+#' if subsample_by is provided, use it to subsample.
+#' 
 #' @param x data.frame to be subsampled
+#' @param subsample if FALSE disable subsample
 #' @param subsample_over maximum number of row accepted
 #' @param subsample_by subsampling parameters
-#'
-subsample <- function(x,subsample_over,subsample_by = NA){
-  x_nrow <- nrow(x)
-  x_ind <-  1:x_nrow
-  x$x_ind <- x_ind
-  if(is.na(subsample_by)){
-    if( x_nrow > subsample_over){
-      subsample_by <- ceiling(x_nrow/subsample_over)
-      message(paste0("Number of data > ",
-                    subsample_over,
-                    ", subsampling by ",
-                    subsample_by,
-                    "."))
-      keep <- (x_ind %% subsample_by) == 1
-      subsample_ind <- ifelse(keep,(x_ind %/% subsample_by)+1,NA)
-      x$subsample_ind <- subsample_ind
-    } else {
-      subsample_by <- 1
-      x$subsample_ind <- x_ind
-    }
-  } else if (subsample_by != 1) {
-    keep <- (x_ind %% subsample_by) == 1
-    subsample_ind <- ifelse(keep,(x_ind %/% subsample_by)+1,NA)
-    x$subsample_ind <- subsample_ind
-  } else {
-    x$subsample_ind <- seq_len(x)
-  }
+#' @return a data.frame
 
-  list(x = x, by = subsample_by)
-  
-}
+apply_subsampling <-
+  function(x, is_segclust, subsample, subsample_over, subsample_by){
+    
+    if(!hasArg(subsample)){
+      cli::cli_alert_warning("Subsampling automatically activated. To disable it, provide {cli::col_yellow('subsample = FALSE')}")
+      subsample <- TRUE
+    } else {
+      if(subsample){
+        cli::cli_alert_success("Subsampling was activated with \\
+                           {cli::col_green('subsample = TRUE')}")
+      }
+    }
+    x_nrow <- nrow(x)
+    x_ind <-  seq_len(x_nrow)
+    x$x_ind <- x_ind
+    
+    if(subsample){
+      if(!hasArg(subsample_by)){
+        if(!hasArg(subsample_over)){
+          if(is_segclust){
+            subsample_over <- 1000
+          } else {
+            subsample_over <- 10000
+          }
+          cli::cli_alert_info(
+            "Argument {cli::col_cyan('subsample_over')} was not provided")
+          cli::cli_text(cli::col_grey(
+            "Taking default value for 
+          {ifelse(is_segclust,'segclust()','segmentation()')}"))
+          cli::cli_text(cli::col_grey(
+            "Setting subsample_over = {subsample_over}"))
+        } else {
+          cli::cli_alert_success(
+            "Using {cli::col_green('subsample_over = ', subsample_over )}") 
+        }
+        if( x_nrow > subsample_over){
+          subsample_by <- ceiling(x_nrow/subsample_over)
+          cli::cli_alert_success(
+            "nrow(x) > subsample_over, \\
+          {cli::col_green('subsampling by ',subsample_by)}")
+          keep <- (x_ind %% subsample_by) == 1
+          subsample_ind <- ifelse(keep,(x_ind %/% subsample_by)+1,NA)
+          x$subsample_ind <- subsample_ind
+        } else {
+          subsample_by <- 1
+          x$subsample_ind <- x_ind
+          cli::cli_alert_success(
+            "nrow(x) < subsample_over, no subsample needed")
+        }
+      } else {
+        cli::cli_alert_success(
+          "Using {cli::col_green('subsample_by = ', subsample_by )}") 
+        if(subsample_by != 1){
+          keep <- (x_ind %% subsample_by) == 1
+          subsample_ind <- ifelse(keep,(x_ind %/% subsample_by)+1,NA)
+          x$subsample_ind <- subsample_ind
+          cli::cli_alert_success(
+            "{cli::col_green('subsampling by ',subsample_by)}")
+        } else {
+          cli::cli_alert_success(
+            "subsample_by set to {subsample_by}. No subsampling required.")
+        }
+      } # end if(missing(subsample_by))
+    } else {
+      x$subsample_ind <- x_ind
+      subsample_by <- 1
+      cli::cli_alert_success("Subsampling was desactivated with \\
+                           {cli::col_green('subsample = FALSE')}")
+    } # end if(subsample)
+    attr(x,'subsample_by') <- subsample_by
+    return(x)
+  }
 
 #' Internal function for subsampling
 #'

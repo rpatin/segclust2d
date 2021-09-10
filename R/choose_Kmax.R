@@ -5,13 +5,14 @@
 #' @param J likelihood for each number of segment
 #' @param S threshold for choosing the number of segment. See
 #'   adehabitatLT::chooseseg
+#' @param ... additional arguments
 #' @return  a list with optimal number of segment and full data.frame of the
 #'   calculus
 #'
 #' @export
 #'
 
-chooseseg_lavielle <- function(J, S=0.75)
+chooseseg_lavielle <- function(J, S=0.75, ...)
 {
   Kmax <-  length(J)
   Kseq <-  seq_len(Kmax)

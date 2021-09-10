@@ -27,7 +27,7 @@
 hybrid_simultanee <- function(x, P, Kmax, lmin = 3,
                               sameSigma = TRUE, sameVar.init = FALSE, 
                               eps = 1e-6, lissage = TRUE,
-                              pureR = FALSE) {
+                              pureR = FALSE, ...) {
   Linc <- matrix(-Inf, nrow = Kmax, ncol = 1)
   n <- dim(x)[2]
   param <- list()
@@ -45,15 +45,27 @@ hybrid_simultanee <- function(x, P, Kmax, lmin = 3,
     # proportions for each component of the mixture
     
   } else {
-
-    # Rq: lmin=2 for the initialization step because of the hierarchical
+    
+    # Rq: lmin=5 for the initialization step because of the hierarchical
     # clustering
+    hybrid_sb <- cli::cli_status(
+      "{cli::symbol$arrow_right} Calculating initial \\
+      segmentation without clustering")
+    
     G <- Gmean_simultanee(x, 5, sameVar = sameVar.init)
     out <- DynProg(G, Kmax = Kmax)
 
-    message("Segmenting - ", P, " class")
-
+    # message("Segmenting - ", P, " class")
+    
+    # cli_progress_message("Segmentation-Clustering for ncluster = {P} and nseg = {K}/{Kmax}")
+    
     for (K in Kmin:Kmax) {
+      # cli_progress_update()
+      cli::cli_status_update(
+        id = hybrid_sb,
+        "{cli::symbol$arrow_right} Segmentation-Clustering for \\
+        ncluster = {P} and nseg = {K}/{Kmax}")
+      
       j <- 0
       delta <- Inf
       empty <- 0
@@ -172,9 +184,17 @@ hybrid_simultanee <- function(x, P, Kmax, lmin = 3,
   #   } # end while
   #
   #
-
+  cli::cli_alert_success(
+    "Segmentation-Clustering successful \\
+    for ncluster = {P} and nseg = {P}:{Kmax}")
+  
   if (lissage) {
-    message("Smoothing  - ", P, " class")
+    cli::cli_status_update(
+      id = hybrid_sb,
+      "{cli::symbol$arrow_right} Smoothing likelihood for \\
+        ncluster = {P}. This step can be lengthy.")
+
+    # message("Smoothing  - ", P, " class")
     Ltmp <- rep(-Inf, Kmax)
     # graphics::plot(1:length(Linc),Linc,col=1)
     # cat("tracking local maxima for P =",P,"\n")
@@ -246,7 +266,12 @@ hybrid_simultanee <- function(x, P, Kmax, lmin = 3,
       # Linc           = out.neighbors$L
       # lines(1:length(Ltmp),Ltmp,col=2)
     } # end while
+    cli::cli_alert_success(
+      "Smoothing successful \\
+    for ncluster = {P}")
+    
   }
-
+  cli::cli_status_clear(id = hybrid_sb)
+  
   invisible(list(Linc = Linc, param = param))
 } # end function
