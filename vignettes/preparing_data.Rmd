@@ -10,7 +10,7 @@ vignette: >
 ---
 
 
-```{r, echo = FALSE}
+```{r option chunk, echo = FALSE}
 knitr::opts_chunk$set(
   fig.width = 8,
   fig.height = 5,
@@ -19,35 +19,48 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, fig.show='hold'}
+```{r library and data, fig.show='hold'}
 library(segclust2d)
 data(simulshift)
 data(simulmode)
+simulmode$abs_spatial_angle <- abs(simulmode$spatial_angle)
+simulmode <- simulmode[!is.na(simulmode$abs_spatial_angle), ]
 ```
+
+This summary provides information on:
+
+- [The type of data accepted by the function](#type-of-data-accepted-and-content-required-to-run-segmentation-or-segclust-)
+- [Advice on subsampling](#limitations-on-data-size-and-subsampling-1)
+- [Guide to covariate calculations](#covariate-calculations-1)
+- [Advice on data preprocessing](#advice-on-data-pre-processing-1), with an emphasis on typical errors that may arise due to data interpolation.
 
 # Type of data accepted and content required to run segmentation() or segclust()
 
+Right now, the function in `segclust2d` package accept three different kind of input data:
+
+- [data.frame](#data-frame)
+- [Move](#move) objects based on package [`move`](https://cran.r-project.org/web/packages/move/index.html)
+- [ltraj](#ltraj) objects based on package [`adehabitatLT`](https://cran.r-project.org/web/packages/adehabitatLT/index.html)
+
+Future version may provide support for `sftraj` objects as well.
+
 ## data.frame
 
-## move
+data.frame is the format natively supported by `segmentation()` and `segclust()`.
+If `x_data.frame` is a data frame, the syntax is simply:
 
-We have shown examples for using data.frames but one can also segment data from `ltraj` and `Move` object that contains a single individual.
-
-### Concerning segmentation
-
-For a simple segmentation, the algorithm will assume a home-range segmentation and use coordinates directly.
-
-```{r, fig.show='hold', eval = FALSE}
-segmentation(ltraj_object, lmin = 5, Kmax = 25)
-segmentation(Move_object, lmin = 5, Kmax = 25)
+```{r ex df, eval = FALSE}
+segmentation(x_data.frame, lmin = 5, Kmax = 25)
 ```
-### Concerning segclust
 
-For a segmentation/clustering, one has to provide the variables used for segmentation
 
-```{r, fig.show='hold', eval = FALSE}
-segmentation(ltraj_object, lmin = 5, Kmax = 25, ncluster = c(2,3), seg.var = c("speed","abs_spatial_angle"))
-segmentation(Move_object, lmin = 5, Kmax = 25, ncluster = c(2,3), seg.var = c("speed","abs_spatial_angle"))
+## Move
+
+`Move` object can alternatively provided to the function. If using `segmentation()`, the user may omit `seg.var` argument and the algorithm will use the movement coordinates as segmentation variables. Alternatively if the user specify the segmented variable with argument `seg.var`, those variables must be present in the data associated to the `Move` object `x_move@data`
+If `x_move` is a `Move` object, the syntax is simply:
+
+```{r ex Move, eval = FALSE}
+segmentation(x_move, lmin = 5, Kmax = 25)
 ```
 
 Of course the variable names provided must exist as column in `Move_object@data` and `adehabitatLT::infolocs(ltraj_object[1])`.
@@ -55,48 +68,140 @@ Of course the variable names provided must exist as column in `Move_object@data`
 
 ## ltraj
 
+`ltraj` object can alternatively provided to the function. If using `segmentation()`, the user may omit `seg.var` argument and the algorithm will use the movement coordinates as segmentation variables. Alternatively if the user specify the segmented variable with argument `seg.var`, those variables must be present in the data associated to the `ltraj` object `x_ltraj@data`
+If `x_ltraj` is a `ltraj` object, the syntax is simply:
+
+```{r ex ltraj, eval = FALSE}
+segmentation(x_ltraj, lmin = 5, Kmax = 25)
+```
+
 ## sftraj
 
-# Limitations on data size, subsampling \& smoothing
-
-## Subsampling
+`sftraj` objects are not supported for the moment.
 
 
+# Limitations on data size and subsampling
 
-Computation cost for the algorithm scales non-linearly and can be both memory and time-consuming. Performance depends on computer, but from what we've tested, a segmentation on data of size > 10000 can be quite memory consuming (more than 10Go of RAM) and segmentation-clustering can be quite long for data > 1000 (few minutes to hours). For such dataset we recommend either subsampling if loosing resolution is not a big deal (looking for home-range changes over a year with hourly points might be a lost of time when daily points are sufficient) or if splitting the dataset for very long data. Although for segmentation-clustering, clusters will not be easily comparable between the different part of the dataset, if one provides parts where all cluster are present for sure, there should be no problem.
+Computation cost for the algorithm scales non-linearly and can be both memory and time-consuming. Performance depends on computer, but from what we have ve tested, a segmentation on data of size > 10000 can be quite memory intensive (more than 10Go of RAM) and segmentation-clustering can be quite long for data > 1000 (few minutes to hours). For such dataset we recommend either subsampling if loosing resolution is not a big deal (looking for home-range changes over a year with hourly points might be a lost of time when daily points are sufficient) or splitting the dataset for very long data. Although for segmentation-clustering, clusters will not be easily comparable between the different part of the dataset, if one provides parts where all cluster are present for sure, there should be no problem.
 
-3 different options are available for subsampling. First one can disable subsampling through argument `subsample` : 
+## Subsampling options
 
-```{r, fig.show='hold', eval = FALSE }
-mode_segclust <- segclust(simulmode, Kmax = 30, lmin=5, ncluster = c(2,3,4), type = "behavior", seg.var = c("speed","abs_spatial_angle"), subsample = FALSE)
+### Disabling automatic subsampling
+
+Subsampling is automatically enabled in the function to avoid unwanted memory saturation or very long computation time. By default argument `subsample` is set to `TRUE`. In order to totally disable subsampling you have to provide argument `subsample` : 
+
+```{r disabling subsampling, fig.show='hold', eval = FALSE }
+shiftseg <- segmentation(simulshift,
+                         Kmax = 30, lmin=5, 
+                         seg.var = c("x","y"), 
+                         subsample = FALSE)
+
+mode_segclust <- segclust(simulmode, 
+                          Kmax = 30, lmin=5, ncluster = c(2,3,4),
+                          seg.var = c("speed","abs_spatial_angle"),
+                          subsample = FALSE)
 ```
 
-By default subsampling is allowed (subsample = TRUE) and subsampling will occur if the number of data exceed a threshold (10000 for segmentation, 1000 for segmentation-clustering). The function will subsample by the lower factor (by 2, 3, 4...) for which the dataset will fall below the threshold once subsampled. For instance a 2500 rows dataset for segmentation-clustering would be subsampled by 3 to fall below 1000 rows. The threshold can be changed through argument `subsample_over`.
+### Automatic subsampling
 
-```{r, fig.show='hold', eval = FALSE}
-mode_segclust <- segclust(simulmode, Kmax = 30, lmin=5, ncluster = c(2,3,4), type = "behavior", seg.var = c("speed","abs_spatial_angle"), subsample_over = 1000)
+By default subsampling is allowed (`subsample = TRUE`) and subsampling will occur if the number of data exceed a threshold (10000 for segmentation, 1000 for segmentation-clustering). The function will subsample by the lower factor (by 2, 3, 4...) for which the dataset will fall below the threshold once subsampled. For instance a 2500 rows dataset for segmentation-clustering would be subsampled by 3 to fall below 1000 rows. The threshold can be changed through argument `subsample_over`.
+
+```{r automatic subsampling, fig.show='hold', eval = FALSE}
+shiftseg <- segmentation(simulshift,
+                         Kmax = 30, lmin=5, 
+                         seg.var = c("x","y"), 
+                         subsample_over = 2000)
+
+mode_segclust <- segclust(simulmode, 
+                          Kmax = 30, lmin=5, ncluster = c(2,3,4),
+                          seg.var = c("speed","abs_spatial_angle"),
+                          subsample_over = 500)
 ```
+
+### Manual subsampling
 
 One can also override this automatic subsampling by selecting directly the subsampling factor through argument `subsample_by`.
 
-```{r, fig.show='hold', eval = FALSE}
-mode_segclust <- segclust(simulmode, Kmax = 30, lmin=5, ncluster = c(2,3,4), type = "behavior", seg.var = c("speed","abs_spatial_angle"), subsample_by = 2)
+```{r manual subsampling, fig.show='hold', eval = FALSE}
+shiftseg <- segmentation(simulshift,
+                         Kmax = 30, lmin=5, 
+                         seg.var = c("x","y"), 
+                         subsample_by = 60)
+
+mode_segclust <- segclust(simulmode, 
+                          Kmax = 30, lmin=5, ncluster = c(2,3,4),
+                          seg.var = c("speed","abs_spatial_angle"),
+                          subsample_by = 2)
 ```
 
-Beware that subsampling will also divide your lmin argument. If subsampling by 2, lmin will be divided by 2. It is important that lmin stays larger than 3 and if possible than 5, for better variance estimations.
+## Consequences of subsampling on `lmin`
 
-Note that subsampling has been implemented in such way that outputs will show all points but segmentation is calculated only on subsampled points. Points used in segmentation can be retrieved through `augment` in data column `subsample_ind` (The subsample indices for kept points and NA for ignored points).
+Beware that subsampling will also affect your `lmin` argument. If subsampling by 2, `lmin` will be divided by 2. The function will tell about the value of lmin and its adjustment with subsampling with different messages:
 
+```{r lmin and subsampling, include = FALSE}
+lmin <-  240
+subsample_by  <-  60
+  cli::cli_alert_success("Using {cli::col_green('lmin = ', lmin )}") 
+lmin <- max(lmin/subsample_by,5)
+
+      cli::cli_alert_success(
+        "Adjusting lmin to subsampling. 
+        {cli::col_grey('Dividing lmin by ',subsample_by,', with a minimum of 5')}")
+      cli::cli_alert("After subsampling, {cli::col_green('lmin = ', lmin)}. 
+                    {cli::col_grey('Corresponding to lmin = ',lmin*subsample_by,
+                     ' on the original time scale')}")
+
+```
+
+
+## Best practice with subsampling
+
+In addition to reducing computation time, subsampling may also help the algorithm. Considering movement at the scale of hours when looking for home-ranges at the scale of months may blur the signal and for such analysis, one data per day may be sufficient. For all analysis, the user should think about the appropriate temporal resolution, with the idea that the finest temporal resolution may not always be appropriate.
+
+*Note that subsampling has been implemented in such way that outputs will show all points but segmentation is calculated only on subsampled points. Points used in segmentation can be retrieved through `augment` in data column `subsample_ind` (The subsample indices for kept points and NA for ignored points).*
+
+*Outputs may be more easily explored if subsampling is done before providing the data to `segclust2d` functions*
 
 # Covariate calculations
 
-The package also includes functions in order to calculate unusual covariates, such as the turning angle at constant step length (here called `spatial_angle`). For the latter, a radius have to be chosen and can be specified through argument `radius`. If no radius is specified, the default one will be the median of the step length distribution. Other covariates calculated are : persistence and turning speed (v_p and v_r) from Gurarie et al (2009), distance travelled between points, speed and smoothed version of the latter. Covariates dependent on time interval (like speed) are by default calculated with hours, but you can change this with argument `units` as in the example below.
+The package also includes functions in order to calculate unusual covariates, such as the turning angle at constant step length (here called `spatial_angle`, see Patin et al. 2020 for more details). For the latter, a radius have to be chosen and can be specified through argument `radius`. If no radius is specified, the default one will be the median of the step length distribution. Other covariates calculated are : persistence and turning speed (v_p and v_r) from Gurarie et al (2009), distance travelled between points, speed and smoothed version of the latter. Covariates dependent on time interval (like speed) are by default calculated with hours, but you can change this with argument `units` as in the example below.
  
-```{r, fig.show='hold', eval = FALSE}
+```{r calculate covariate, fig.show='hold', eval = FALSE}
 simple_data <- simulmode[,c("dateTime","x","y")]
-full_data   <- add_covariates(simple_data, coord.names = c("x","y"), timecol = "dateTime",smoothed = TRUE, units ="min")
+full_data   <- add_covariates(simple_data, 
+                              coord.names = c("x","y"), 
+                              timecol = "dateTime",
+                              smoothed = TRUE, 
+                              units ="min")
 head(full_data)
 ```
 
-# Advise on data pre-processing
+# Advice on data pre-processing
 
+When pre-processing movement data before segmentation/clustering it is common to use interpolation of trajectory to correct for missing data points. This may however cause problem if this lead to repetition of values. This can also arise if the individual have a very stable speed (i.e. a boat or a bird deriving on the sea) leading to very similar values.
+
+When the repetition of identical or very similar values are longer than parameter `lmin`, there are segments with null variance, which cannot be accounted for by the algorithm. Should such cases arises, the algorithm will not fail and tell you about it:
+
+```{r example repeated, eval = FALSE}
+df <- data.frame(x = rep(1,500), y = rep(2, 500))
+segclust(df, 
+         seg.var = c("x","y"),
+         lmin = 50, ncluster = 3 )
+```
+
+```{r example repeated message, echo = FALSE}
+seg.var <- c("x","y")
+      cli::cli_alert_danger(
+        "Data have repetition of nearly-identical \\
+        values longer than lmin. 
+        {cli::col_grey('The algorithm cannot estimate variance \\
+        for segment with repeated values. \\
+        This is potentially caused by interpolation \\
+         of missing values or rounding of values.')}
+        {cli::symbol$arrow_right} Please check for repeated \\
+        or very similar values of {seg.var}")
+```
+
+To avoid this problem interpolation should be done rather on the covariates to be segmented rather than the coordinates. Alternatively small and rare gaps of data could be ignored. If the gap is too large there is also the possibility to split the dataset.
+
+Dataset with naturally occurring repetition of similar values (a boat at constant speed) are generally difficult to process with our segmentation/clustering algorithm.

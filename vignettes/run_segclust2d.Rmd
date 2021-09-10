@@ -23,7 +23,11 @@ knitr::opts_chunk$set(
 library(cli)
 ```
 
-The package provides access to two different method:
+```{r load segclust2d}
+library(segclust2d)
+```
+
+The package `segclust2d` provides access to two different method:
 
 - It can perform a [segmentation](#segmentation) of the time-series into
 homogeneous segments. A typical case is the identification of home-range
@@ -33,15 +37,13 @@ into clusters of homogeneous behaviour through a
 [segmentation/clustering](#segmentation-clustering) algorithm. 
 This is generally used to identify behavioural modes. 
 
-Input data is here a `data.frame` (shown in the first examples), but it can also be a `Move` object, a `ltraj` object (from package `adehabitatLT`) or a `sftraj` object, both shown in section [Preparing data for Segmentation/Clustering with segclust2d](https://rpatin.github.io/segclust2d/articles/preparing_data.html)
+Input data are here `data.frame` (shown in the first examples), but it can also be a `Move` object, a `ltraj` object (from package `adehabitatLT`) or a `sftraj` object, both shown in section [Preparing data for Segmentation/Clustering with segclust2d](https://rpatin.github.io/segclust2d/articles/preparing_data.html)
 
+# Presentation of data sets
 
-# Segmentation
+## simulshift: three successive home-range shifts
 
-## Loading data set
-
-```{r load package and data, fig.show='hold'}
-library(segclust2d)
+```{r load simulshift, fig.show='hold'}
 data(simulshift)
 ```
 
@@ -56,9 +58,31 @@ ggplot(tmpdf)+
   geom_point(aes(x= x, y = y, col = factor(class)))+
   scale_color_discrete("home-range")+
   theme(legend.position= "top")
-
 ```
 
+## simulmode: a simulation with three movement modes
+
+```{r load simulmode, fig.show='hold'}
+data(simulmode)
+simulmode$abs_spatial_angle <- abs(simulmode$spatial_angle)
+simulmode <- simulmode[!is.na(simulmode$abs_spatial_angle), ]
+```
+
+`simulmode` is an example dataset containing a movement simulation with three different movement mode. It is a data.frame with 11 columns, with coordinates and several covariates. In addition to loading we calculated here the absolute value for the turning angle at constant step length (here called `spatial_angle`). We also checked the data for missing value.
+
+```{r map simulmode, echo = FALSE, fig.width = 5,  fig.height = 4, fig.cap = "`simulmode`: simulation of movement with three different behavioural modes."}
+
+library(ggplot2)
+tmpdf <- simulmode
+tmpdf$class <- factor(rep(c(1,2,3), each = 20, 5))
+ggplot(tmpdf)+
+  geom_path(aes(x = x, y = y))+
+  geom_point(aes(x= x, y = y, col = factor(class)))+
+  scale_color_discrete("behavioural mode")+
+  theme(legend.position= "top")
+```
+
+# Segmentation
 
 ## Setting `segmentation()` parameters.
 
@@ -66,86 +90,242 @@ ggplot(tmpdf)+
 
 To run the `segmentation()` function, argument `lmin` needs to be provided. `lmin` is the minimum length of a segment. It is has to be set not only to speed up the algorithm, but also, more fundamentally, to prevent over‐segmenting, based on biological considerations. For example, setting `lmin` to a value of a few weeks when analysing locational time series will prevent the algorithm from considering an area exploited only for a few days, corresponding to foray outside the usual home range or to stopover during migration, as a distinct home range. Similarly, setting `lmin` to a value long enough (depending on the species) when looking for changes of behavioural modes will force the algorithm to assign a given behavioural bout to a given mode even when it is interspersed by ephemeral events related to another behaviour (e.g. a long transit with opportunistic short feeding events on the move will be considered as a single transit phase).
 
-Statistically, `lmin` cannot be `<5`, because of the need to estimate variances for each segment. In such case the program should throw an error message like this:
-
-```{r error small lmin, error = TRUE}
-shift_seg <- segmentation(simulshift, lmin = 4,Kmax = 25, seg.var = c("x","y"), subsample_by = 60, scale.variable = FALSE)
-```
-
-Note that you can get this error even if you provided lmin>5. Indeed, if subsampling is allowed (see [data preparation](https://rpatin.github.io/segclust2d/articles/preparing_data.html)), either automatically (`subsampling = TRUE` or `subsample_over = 1000`) or manually (`subsample_by = 60`), the value of lmin provided is divided by the subsampling interval and the value used by the function may then become <5:
-
-```{r error small lmin subsampling, error = TRUE}
-shift_seg <- segmentation(simulshift, lmin = 240,Kmax = 25, seg.var = c("x","y"), subsample_by = 60, scale.variable = FALSE)
-```
-
-To avoid such situation, you should be carefull to provide `lmin` large enough so that subsampling will not cause this error. Alternatively you can also do the subsampling outside of the function to have a clearer control over `lmin`
+Statistically, `lmin` cannot be `<5`, because of the need to estimate variances for each segment. To avoid such case, the program will fix lmin to a minimum of `5`.
 
 ### Optional: `Kmax`: the maximum number of segments.
 
-By default, `Kmax` will be set to `0.75*floor(n/lmin)`, with `n` the number of observations, so you can omit this argument. You can however provide a different value with the following advices:
-- `Kmax` should be limited to values lower than `0.75*floor(n/lmin)`. Larger values may produce instability.
-- `Kmax` should be large enough so that there is a clear cut in the likelihood plot (see section [Optimal number of segment](#optimal))
-- `Kmax` too large can considerably slow the calculations.
+By default, `Kmax` will be set to `0.75*floor(n/lmin)`, with `n` the number of observations, so you can omit this argument. You can however provide a different value, as large value may compromise speed or selection of optimal number of segments. See section [Changing Kmax](#changing-kmax-1) for more advices.
 
-### Optional `seg.var`
+### Optional: `seg.var`
  
- You can specify the variables to be segmented using argument `seg.var`. 
+You can specify the variables to be segmented using argument `seg.var`. By default, function segmentation will use variables `x` and `y` for a data.frame or use the coordinates for `move`, `ltraj` and `sftraj` objects.
  
 ### Optional: `scale.variable`
-The function allow rescaling of variable (not recommended for segmentation on coordinates), with argument `scale.variable`.
+
+The function allow rescaling of variable with argument `scale.variable`. Rescaling sets variable in `seg.var` to a mean of 0 and a variance of 1. It is recommended if variables chosen for segmentation are of different nature (e.g. speed and turning angle). It is therefore inadvisable for segmentation of coordinates to identify home-ranges. By default `segmentation()` disable rescaling and sets `scale.variable = FALSE`.
+
+### Optional: `diag.var`
+
+`segmentation()` use variables provided in `seg.var` and automatically produces summary statistics for each variable and each segments (mean and standard deviation). In case you want summary statistics for other variables than `seg.var` you can specify them in `diag.var`. By default `diag.var` is set to `seg.var`.
+
+### Optional: `order.var`
+
+`order.var` through which variables segments should be ordered when asked so in some of the output functions (see section [Exploring Outputs from segclust2d](https://rpatin.github.io/segclust2d/articles/explore_outputs.html) for details.). By default `order.var` is set to `seg.var[1]`
+
+### Deprecated: `type`, `coord.names`
+
+Older version of `segclust2d` had different arguments, now deprecated. `type` was either `"home-range"` or `"behaviour"`, which provided different default arguments:
+
+- `type = "home-range"` was associated with `scale.variable = FALSE` and performed a segmentation based on the variables proposed as `coord.names`. Default value was `coord.names = c("x","y")`.
+- `type = "behaviour"` was associated with, `scale.variable = TRUE` and performed a segmentation based on the variables proposed as `seg.var`, with no default value.
+
+From version 0.3.0 and forward, those argument were removed so that the functions now work only with arguments `scale.variable` and `seg.var`. Using the arguments `type` makes the function fail and triggers message explaining the required changes:
+
+```{r wrong type argument call, eval = FALSE}
+df.seg <- segmentation(simulshift, 
+                       type = "home-range",
+                       lmin = 300, Kmax = 10,
+                       subsample_by = 60)
+```
+
+```{r wrong type argument message, echo=FALSE, results='asis'}
+        cli::cli_alert_danger("Argument {cli::col_red('type')} \\
+                     is deprecated and should not be used")
+        cli::cli_alert_danger("Argument {cli::col_red('coord.names')} \\
+                     is deprecated and should not be used")
+        coord.names <- c("x","y")
+        cli::cli_alert("Please use instead \\
+                    {.field seg.var = {deparse(coord.names)}} and \\
+                    {.field scale.variable = FALSE}")
+```
 
 
-# Running `segmentation()`
+## Running `segmentation()`
 
-Segmentation is performed through a Dynamic Programming algorithm that finds the best segmentation given a number of segment. For each number of segment, the optimal segmentation is associated with a likelihood value. 
+`segmentation()` uses a Dynamic Programming algorithm that finds the best segmentation given a number of segment. The function runs the dynamic programming for each number of segment `<Kmax`. As a result, the optimal segmentation is associated with a likelihood value for each number of segment. Section [Different running configurations](#different-running-configurations) show several exemples of running `segmentation()` with different options. Section [Selecting the number of segments](#selecting-the-number-of-segments) discuss about the selection of the number of segments using either Lavielle's criterium or graphical explorations.
+
+### Different running configurations
+
+In this section we will try different ways of calling the `segmentation()` function. Minimal call should countains the data concerned (here the dataframe `simulshift`) and argument `lmin`. The function will automatically complete the missing argument with default values and communicate about it (not shown here). 
+
+*`subsample_by` argument is described in section [Subsampling](https://rpatin.github.io/segclust2d/articles/preparing_data.html#subsampling)*
+
+```{r minimal segmentation call, eval = FALSE, message = FALSE}
+shift_seg <- segmentation(simulshift, 
+                          lmin = 240,
+                          subsample_by = 60)
+```
+
+It is however advised to give a more reasonable 'Kmax' value to decrease calculation time.
+
+```{r Kmax segmentation call, eval = TRUE, message = FALSE}
+shift_seg <- segmentation(simulshift,
+                          lmin = 240, Kmax = 25,
+                          subsample_by = 60)
+```
+
+There is a check to ensure that `lmin*Kmax < n` with `n` the number of data. If you provided inadequate values, `Kmax` will be adjusted to an appropriate value if possible and you should get a message like this:
+
+```{r segmentation warning lmin*Kmax, echo=FALSE, results='asis'}
+Kmax = 25
+      cli::cli_alert_warning(
+        "Adjusting Kmax so that lmin*Kmax < nrow(x). Now, \\
+      {cli::col_yellow('Kmax = ', Kmax)}")
+    
+```
+
+If not possible you will get an error and this message:
+
+```{r segmentation error lmin*Kmax, error = TRUE, echo=FALSE, results='asis'}
+        cli::cli_alert_danger(
+          "lmin*Kmax > nrow(x) and Kmax cannot be adjusted. \\
+          Please provide lower values for lmin")
+   stop("lmin*Kmax > nrow(x)")
+```
+
+By default the function is looking for column `c(x,y)` or the coordinates (in the case of a `Move` or a `ltraj` object). Alternatively the user can provide its own variable, depending on its aim:
+
+```{r providing seg.var, eval = FALSE, message = FALSE}
+shift_seg <- segmentation(simulshift,
+                          seg.var = c("x","y"),
+                          lmin = 240, Kmax = 25,
+                          subsample_by = 60)
+```
 
 
+### Selecting the number of segments
 
-By default, the algorithm choose the number of segment given a criterium developed by Marc Lavielle based on the value of the second derivative of the penalized likelihood. This criterium use a threshold value of `S = 0.75`, but a different threshold can be specified. 
+Once the segmentation have been successfully run. A summary like this will appear:
+```{r segmentation summary, echo = FALSE, results = 'asis'}
+    cli::cli_alert_success("Best segmentation estimated with \\
+                      {shift_seg$Kopt.lavielle} segments, \\
+                      according to Lavielle's criterium")
+    cli::cli_text(cli::col_grey(
+    'Other number of segment may be selected 
+      by looking for likelihood breaks with plot_likelihood()'))
+    cli::cli_text(cli::col_grey(
+    'Results of the segmentation may be explored with plot() and segmap()'))
 
-The second important method is `plot_likelihood` that shows the log-likelihood of the best segmentation versus the number of segments and highlights the one chosen with Lavielle's criterium. The likelihood should show an increasing curve with a clear breakpoints for the optimal number of segment. Note that with real data breaks are often less clear than for that example. An artifactual decrease of likelihood can happen for large number of segment when Kmax is too high (close to `n/lmin`) and correspond generally to an oversegmentation.
+```
+
+By default, the algorithm choose the number of segment given a criterium developed by Marc Lavielle based on the value of the second derivative of the penalized likelihood. This criterium use a threshold value of `S = 0.75`, but a different threshold can be specified to `segmentation()` if need be. 
+
+As stated it is important to check that the number of segment selected correspond to a clear break in log-likelihood and if it is not the case to select a better value. This can be checked with `plot_likelihood` that shows the log-likelihood of the best segmentation versus the number of segments and highlights the one chosen with Lavielle's criterium. The likelihood should show an increasing curve with a clear breakpoints for the optimal number of segment. Note that with real data breaks are often less clear than for that example. An artifactual decrease of likelihood can happen for large number of segment when Kmax is too high (close to `n/lmin`) and correspond generally to an oversegmentation (in such case, Kmax should be decreased).
 
 
-```{r, fig.show='hold'}
+```{r plot_likelihood example, fig.show = 'hold', fig.width = 4, fig.height = 3}
 plot_likelihood(shift_seg)
 ```
 
+Another exemple on the `simulmode` dataset show a situation where the number of segment automatically selected by Lavielle's criterium is 1, despite a (relatively) clear break in the likelihood at `nseg = 15`. In such case it is of paramount importance to explore the log-likelihood to confirm or select an appropriate number of segments.
 
+*Note that in this case the problem in the selection of the number of segment would have been avoided by setting `Kmax = 25`. For Lavielle's criterium to work properly `Kmax` should be larger enough than your expected number of segment.*
 
+```{r plot_likelihood mode_seg, fig.show = 'hold', fig.width = 4, fig.height = 3, message = FALSE}
 
-## Segmentation-Clustering
+mode_seg <- segmentation(simulmode,
+                          lmin = 10, Kmax = 20,
+                         seg.var = c("speed","abs_spatial_angle"),
+                          scale.variable = TRUE)
 
-```{r, fig.show='hold'}
-data(simulmode)
-simulmode$abs_spatial_angle <- abs(simulmode$spatial_angle)
-simulmode <- simulmode[!is.na(simulmode$abs_spatial_angle), ]
-```
-
-`simulmode` is an example dataset containing a movement simulation with three different movement mode. It is a data.frame with 11 columns, with coordinates and several covariates. Be careful to check your dataset for missing value.
-
-We can now run a joint segmentation/clustering on this dataset to identify the different behavioural modes. As in `segmentation`, you can specify the variables to be segmented using argument `seg.var`. The function allow rescaling of variable (recommended for segmentation/clustering to identify behavioural state), with argument `scale.variable`.
-
-For a joint segmentation/clustering one has to specify arguments `lmin`, the minimum length of a segment and `Kmax`, the maximum number of segments, and `ncluster` a vector of number of class. By default `Kmax` will be set to `0.75*floor(n/lmin)`, with `n` the number of observations. Be carefull if you want to fix a higher `Kmax` the algorithm tend to over-segment (which you can check by looking at the segmentation or the likelihood curve)
-
-
-```{r, fig.show='hold'}
-mode_segclust <- segclust(simulmode, Kmax = 20, lmin=10, ncluster = c(2,3), seg.var = c("speed","abs_spatial_angle"), scale.variable = TRUE)
-
+plot_likelihood(mode_seg)
 ```
 
 
-One can also inspect the BIC-based penalized log-likelihood through functions `plot_BIC()`. Best-case scenario is as below, the BIC show a steep increase up to a maximum and a slow decrease after the optimum and one number of cluster is clearly above the others. With real data it also happens that more cluster always improve the penalized-likelihood but so we generally advise to choose the number of cluster based on expectation and biological knowledge.
+# Segmentation-Clustering
+
+We will now run the joint segmentation/clustering `segclust()` function on the simulmode data to identify the different behavioural modes. As with `segmentation()`, you can specify the variables to be segmented using argument `seg.var`.
 
 
-```{r, fig.show='hold'}
+
+## Setting `segclust()` parameters.
+
+`segclust()` share most of its parameter with `segmentation()` so you can read section [Setting `segmentation()` parameters.](#setting-segmentation-parameters--1) for the parameters missing description here. The only additional parameter is the number of cluster to be tested.
+
+### Required: `ncluster`: the number of cluster
+
+`ncluster` is an argument required for `segclust()`. The user can provide a vector of values or a single value. The algorithm provides a BIC-criterium to select the number of cluster, although it is advised to select it based on biological knowledge.
+
+## Running `segclust()`
+
+### Different running configurations
+
+In this section we will try different ways of calling the `segclust()` function. Minimal call should contains the data concerned (here the dataframe `simulmode`) as well as argument `lmin` and `ncluster` and `seg.var`. The function will automatically complete the missing argument with default values and communicate about it (not shown here). 
+
+
+```{r simulmode segclust default, fig.show='hold', message = FALSE}
+mode_segclust <- segclust(simulmode,
+                          Kmax = 20, lmin=10, 
+                          ncluster = c(2,3),
+                          seg.var = c("speed","abs_spatial_angle"))
+```
+
+Additionally it is advised to scale the variables used to a mean of 0 and a variance of 1. This will automatically be done for `segclust()`, but can also be specified explicitly:
+
+
+```{r simulmode segclust scale variable, fig.show='hold', eval = FALSE}
+mode_segclust <- segclust(simulmode,
+                          Kmax = 20, lmin=10, 
+                          ncluster = c(2,3),
+                          seg.var = c("speed","abs_spatial_angle"),
+                          scale.variable = TRUE)
+```
+
+
+### Selecting the number of cluster and segment.
+
+
+Once the segmentation/clustering have been successfully run. A summary like this will appear:
+```{r segclust summary, echo = FALSE, results = 'asis'}
+  cli::cli_alert_success(
+    "Best segmentation/clustering estimated with \\
+    {mode_segclust$ncluster.BIC} cluster and \\
+    {mode_segclust$Kopt.BIC[mode_segclust$ncluster.BIC]} segments according to BIC")
+  cli::cli_text(cli::col_grey(
+    '{cli::symbol$arrow_right} Number of cluster should preferentially be selected 
+    according to biological knowledge. Exploring the BIC plot with plot_BIC()
+    can also provide advice to select the number of cluster.'))
+  cli::cli_text(cli::col_grey(
+    '{cli::symbol$arrow_right} Once number of cluster is selected, \\
+    the number of segment should be selected according to BIC.'))
+  
+  cli::cli_text(cli::col_grey(
+    '{cli::symbol$arrow_right} Results of the segmentation/clustering
+    may further be explored with plot() and segmap()'))
+  
+```
+
+As stated, the number of cluster should preferentially be selected based on biological knowledge. Exploration of the BIC-based penalized log-likelihood can also help selecting an appropriate number of cluster, with the function `plot_BIC()`. Best-case scenario is as below, the BIC show a steep increase up to a maximum and a slow decrease after the optimum and one number of cluster is clearly above the others. 
+
+
+```{r plot_BIC, fig.show='hold', message = FALSE}
 plot_BIC(mode_segclust)
 ```
 
+With real data it also happens that more cluster always improve the penalized-likelihood so it will be a poor indication of the appropriate number of cluster. Such situation may be shown with our dataset `simulmode` indeed, if we allow the number of cluster to be tested between 2 and 5 instead of a maximum at three, we obtain the following BIC curve:
 
-## Advice for choosing lmin, Kmax and ncluster
+```{r simulmode plot BIC cluster 2-5, fig.show='hold', message = FALSE}
+mode_segclust <- segclust(simulmode,
+                          Kmax = 20, lmin=10, 
+                          ncluster = 2:5,
+                          seg.var = c("speed","abs_spatial_angle"),
+                          scale.variable = TRUE)
 
-`lmin` is the minimum length of a segment. For home range it is the duration for which we consider a stationary use to be a home-range. For behaviour it is the minimum time for a behaviour not to be considered anecdotical.
+plot_BIC(mode_segclust)
+```
 
-`Kmax` is by default fixed to the maximum but for performance we advise on setting a smaller Kmax. If the selected number of segment is too close to Kmax, think about increasing Kmax, that might be limiting the number of segment. As noted before, when Kmax is to close to the maximum (`n/lmin`) the algorithm may oversegment and we advise to look carefully at the likelihood curve when using `Kmax > 0.75*n/lmin`
+In the curve above we see that the optimum number of cluster selected is 4, despite the difference being relatively small compared to `ncluster = 2` and to the evolution with the number of segment. In addition, if we look at the results of the segmentation we can see identical segment distribution, the only difference is that state 2 in the segmentation with 3 cluster is divided into state 2 and 3 in the segmentation with 4 cluster:
 
-By default `ncluster` is chosen by maximizing a BIC-based penalized log-likelihood. When segmentation-clustering is reliable, the selected optimum should the maximum just before a linear drop of the penalized log-Likelihood. Also even though higher number of cluster may have higher penalized log-Likelihood the difference between them should not be too large. Also, as in this example, if the selected number of segment for a higher number of cluster is the same, then the lower number should be preferred. Not that this selection of number of cluster is mostly a suggestion and should not be trusted. Best practice should rely on biological information to fix a priori the number of states.
+```{r 3 clusters, fig.show='hold', message = FALSE}
+plot(mode_segclust, ncluster = 3)
+```
+
+
+```{r 4 clusters, fig.show='hold', message = FALSE}
+plot(mode_segclust, ncluster = 4)
+```
+
+More generally, as in this example, if the selected number of segment for a higher number of cluster is the same, then the lower number of cluster should be favored.
+
+Once the number of cluster have been selected, the number of segment should be selected with the BIC criterium. When the segmentation-clustering is reliable, the selected optimum should the maximum just before a linear drop of the penalized log-Likelihood as in the examples above. With real data the signal is seldom as clear and may require adjustment based on exploration of the realized segmentation/clustering.
+

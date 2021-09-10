@@ -1,12 +1,13 @@
-
-# segclust2d : segmentation and joint segmentation/clustering methods for R.
+segclust2d : segmentation and joint segmentation/clustering methods for
+R.
+================
 
 [![](https://www.r-pkg.org/badges/version/segclust2d?color=orange)](https://cran.r-project.org/package=segclust2d)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/segclust2d?color=yellow)](https://cran.r-project.org/package=segclust2d)
 [![](https://img.shields.io/badge/devel%20version-0.3.0-blue.svg)](https://github.com/rpatin/segclust2d)
 [![](https://img.shields.io/github/last-commit/rpatin/segclust2d.svg)](https://github.com/rpatin/segclust2d/commits/master)
 
-## Introduction
+# Introduction
 
 `segclust2d` provides R code for two methods of segmentation and joint
 segmentation/clustering of bivariate time-series. It was originally
@@ -15,24 +16,26 @@ but can be easily applied on other type of time-series. The package also
 provides tools for analysing outputs from R packages `moveHMM` and
 `marcher`.
 
-## Website
+# Website
 
 Full documentation for segclust2d is available on its website:
 <https://rpatin.github.io/segclust2d/>
 
 Three differents topic are discussed there, and are also available as
-vignettes in the R package: - [First, preparation of data to be analysed
-with segmentation/clustering algorithm, including covariate
-calculations, subsampling and guidelines to prepare movement
-data.](https://rpatin.github.io/segclust2d/articles/preparing_data.html)
-- [Second, a guide to run the segmentation and segmentation/clustering
-method, including advise on setting
-parameters.](https://rpatin.github.io/segclust2d/articles/run_segclust2d.html)
-- [Finally, an overview of the possible outputs that can be generated
-with the
-package.](https://rpatin.github.io/segclust2d/articles/explore_outputs.html)
+vignettes in the R package:
 
-## Installation
+-   [First, preparation of data to be analysed with
+    segmentation/clustering algorithm, including covariate calculations,
+    subsampling and guidelines to prepare movement
+    data.](https://rpatin.github.io/segclust2d/articles/preparing_data.html)
+-   [Second, a guide to run the segmentation and segmentation/clustering
+    method, including advise on setting
+    parameters.](https://rpatin.github.io/segclust2d/articles/run_segclust2d.html)
+-   [Finally, an overview of the possible outputs that can be generated
+    with the
+    package.](https://rpatin.github.io/segclust2d/articles/explore_outputs.html)
+
+# Installation
 
 For the CRAN version :
 
