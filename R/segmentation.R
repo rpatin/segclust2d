@@ -29,8 +29,7 @@
 #' #' # data is a data.frame with column 'x' and 'y'
 #' # Simple segmentation with automatic subsampling
 #' # if data has more than 1000 rows:
-#' res <- segmentation(df, Kmax = 30, lmin = 10, coord.names = c("x","y"), 
-#' type = 'home-range')
+#' res <- segmentation(df, Kmax = 30, lmin = 10, seg.var = c("x","y"))
 #'  # Plot results
 #'  plot(res)
 #'  segmap(res)
@@ -40,26 +39,25 @@
 #' \dontrun{
 #' # Advanced options:
 #' # Run with automatic subsampling if df has more than 500 rows:
-#' res <- segmentation(df, Kmax = 30, lmin = 10, coord.names = c("x","y"), 
-#' type = 'home-range', subsample_over = 500)
+#' res <- segmentation(df, Kmax = 30, lmin = 10,
+#'  seg.var = c("x","y"),  subsample_over = 500)
 #' 
 #' # Run with subsampling by 2:
-#' res <- segmentation(df, Kmax = 30, lmin = 10, coord.names = c("x","y"),
-#'  type = 'home-range', subsample_by = 2)
+#' res <- segmentation(df, Kmax = 30, lmin = 10, 
+#' seg.var = c("x","y"), subsample_by = 2)
 #'  
 #' # Disable subsampling:
-#' res <- segmentation(df, Kmax = 30, lmin = 10, coord.names = c("x","y"), 
-#' type = 'home-range', subsample = FALSE)
+#' res <- segmentation(df, Kmax = 30, lmin = 10,
+#'  seg.var = c("x","y"), subsample = FALSE)
 #' 
 #' # Run on other kind of variables : 
-#'  res <- segmentation(df, Kmax = 30, lmin = 10, seg.var = c("dist","angle"), 
-#'  type = 'behavior')
+#'  res <- segmentation(df, Kmax = 30, lmin = 10, seg.var = c("dist","angle"))
 #'  
 #' # Automatic scaling of variables for segmentation 
 #' (set a mean of 0 and a standard deviation of 1 for both variables)
 #' 
-#'  res <- segmentation(df, Kmax = 30, lmin = 10, seg.var = c("dist","angle"),
-#'   type = 'behavior', scale.variable = TRUE)
+#'  res <- segmentation(df, Kmax = 30, lmin = 10, 
+#'  seg.var = c("dist","angle"), scale.variable = TRUE)
 #'  
 #' }
 #' @export

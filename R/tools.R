@@ -19,7 +19,7 @@
 apply_subsampling <-
   function(x, is_segclust, subsample, subsample_over, subsample_by){
     
-    if(!hasArg(subsample)){
+    if(!methods::hasArg(subsample)){
       cli::cli_alert_warning("Subsampling automatically activated. To disable it, provide {cli::col_yellow('subsample = FALSE')}")
       subsample <- TRUE
     } else {
@@ -33,8 +33,8 @@ apply_subsampling <-
     x$x_ind <- x_ind
     
     if(subsample){
-      if(!hasArg(subsample_by)){
-        if(!hasArg(subsample_over)){
+      if(!methods::hasArg(subsample_by)){
+        if(!methods::hasArg(subsample_over)){
           if(is_segclust){
             subsample_over <- 1000
           } else {

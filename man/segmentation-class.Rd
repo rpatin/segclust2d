@@ -33,13 +33,13 @@ plot_BIC(x)
 
 \method{BIC}{segmentation}(object, ...)
 
-stateplot(x, nseg = NULL, ncluster = NULL, order = NULL)
+stateplot(x, nseg, ncluster, order)
 
-states(x, nseg = NULL, ncluster = NULL)
+states(x, nseg, ncluster)
 
-segment(x, nseg = NULL, ncluster = NULL)
+segment(x, nseg, ncluster)
 
-\method{augment}{segmentation}(x, nseg = NULL, ncluster = NULL, colname_state = "state", ...)
+\method{augment}{segmentation}(x, nseg, ncluster, colname_state = "state", ...)
 
 segmap(
   x,

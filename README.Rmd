@@ -1,5 +1,5 @@
 ---
-title: "segclust2d : segmentation and joint segmentation/clustering methods for R."
+title: "segclust2d: segmentation and joint segmentation/clustering methods for R"
 output: github_document
 ---
 

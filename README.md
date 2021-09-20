@@ -1,5 +1,4 @@
-segclust2d : segmentation and joint segmentation/clustering methods for
-R.
+segclust2d: segmentation and joint segmentation/clustering methods for R
 ================
 
 [![](https://www.r-pkg.org/badges/version/segclust2d?color=orange)](https://cran.r-project.org/package=segclust2d)

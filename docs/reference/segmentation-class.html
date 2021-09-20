@@ -120,13 +120,13 @@ segmap create maps with object of segmentation class
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/explore_outputs.html">Exploring Outputs from segclust2d</a>
+      <a href="../articles/1_preparing_data.html">1 - Preparing data for Segmentation/Clustering with segclust2d</a>
     </li>
     <li>
-      <a href="../articles/preparing_data.html">Preparing data for Segmentation/Clustering with segclust2d</a>
+      <a href="../articles/2_run_segclust2d.html">2 - Running Segmentation/Clustering with segclust2d</a>
     </li>
     <li>
-      <a href="../articles/run_segclust2d.html">Running Segmentation/Clustering with segclust2d</a>
+      <a href="../articles/3_explore_outputs.html">3 - Exploring Outputs from segclust2d</a>
     </li>
   </ul>
 </li>
@@ -206,14 +206,14 @@ information of a <code>segmentation</code> object</p>
 <span class='co'># S3 method for segmentation</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/AIC.html'>BIC</a></span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>stateplot</span><span class='op'>(</span><span class='va'>x</span>, nseg <span class='op'>=</span> <span class='cn'>NULL</span>, ncluster <span class='op'>=</span> <span class='cn'>NULL</span>, order <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+<span class='fu'>stateplot</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>nseg</span>, <span class='va'>ncluster</span>, <span class='va'>order</span><span class='op'>)</span>
 
-<span class='fu'>states</span><span class='op'>(</span><span class='va'>x</span>, nseg <span class='op'>=</span> <span class='cn'>NULL</span>, ncluster <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+<span class='fu'>states</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>nseg</span>, <span class='va'>ncluster</span><span class='op'>)</span>
 
-<span class='fu'>segment</span><span class='op'>(</span><span class='va'>x</span>, nseg <span class='op'>=</span> <span class='cn'>NULL</span>, ncluster <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+<span class='fu'>segment</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>nseg</span>, <span class='va'>ncluster</span><span class='op'>)</span>
 
 <span class='co'># S3 method for segmentation</span>
-<span class='fu'><a href='augment.html'>augment</a></span><span class='op'>(</span><span class='va'>x</span>, nseg <span class='op'>=</span> <span class='cn'>NULL</span>, ncluster <span class='op'>=</span> <span class='cn'>NULL</span>, colname_state <span class='op'>=</span> <span class='st'>"state"</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'><a href='augment.html'>augment</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>nseg</span>, <span class='va'>ncluster</span>, colname_state <span class='op'>=</span> <span class='st'>"state"</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='fu'>segmap</span><span class='op'>(</span>
   <span class='va'>x</span>,

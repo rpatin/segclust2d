@@ -1,10 +1,10 @@
 ---
-title: "Preparing data for Segmentation/Clustering with segclust2d"
+title: "1 - Preparing data for Segmentation/Clustering with segclust2d"
 author: "R. Patin"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Preparing data for Segmentation/Clustering with segclust2d}
+  %\VignetteIndexEntry{1 - Preparing data for Segmentation/Clustering with segclust2d}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

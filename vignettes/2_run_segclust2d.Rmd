@@ -1,10 +1,10 @@
 ---
-title: "Running Segmentation/Clustering with segclust2d"
+title: "2 - Running Segmentation/Clustering with segclust2d"
 author: "R. Patin"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Running Segmentation/Clustering with segclust2d}
+  %\VignetteIndexEntry{2 - Running Segmentation/Clustering with segclust2d}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -19,9 +19,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r load cli, include = FALSE}
-library(cli)
-```
+
 
 ```{r load segclust2d}
 library(segclust2d)

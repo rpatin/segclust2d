@@ -4,7 +4,7 @@
 \alias{argcheck_ordering}
 \title{Check for argument 'order'}
 \usage{
-argcheck_ordering(order, seg.type)
+argcheck_ordering(order, seg.type, order.var)
 }
 \arguments{
 \item{order}{TRUE or FALSE depending on whether cluster be ordered}

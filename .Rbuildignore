@@ -3,3 +3,4 @@
 ^\.git$
 ^doc$
 ^Meta$
+^README.Rmd$

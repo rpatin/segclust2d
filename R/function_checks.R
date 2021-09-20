@@ -10,12 +10,12 @@
 
 argcheck_type_coord <-
   function(...){
-    if (hasArg(type)) {
+    if (methods::hasArg(type)) {
       type <- list(...)$type
       cli::cli_alert_danger("Argument {cli::col_red('type')} \\
                      is deprecated and should not be used")
       if(type == "home-range"){
-        if(!hasArg(coord.names)){
+        if(!methods::hasArg(coord.names)){
           coord.names <- c("x","y")
         } else {
           coord.names <- list(...)$coord.names
@@ -34,7 +34,7 @@ argcheck_type_coord <-
       stop("argument 'type' is deprecated and should not be used")
     } else {
       # check coord.names
-      if(hasArg(coord.names)){
+      if(methods::hasArg(coord.names)){
         coord.names <- list(...)$coord.names
         cli::cli_alert_danger("Argument {cli::col_red('coord.names')} \\
                      is deprecated and should not be used")
@@ -71,7 +71,7 @@ argcheck_seg.var <- function(x, seg.var, is_segclust){
   } else if (class(x) == "Move") {
     x.df <- x@data
   } else if (class(x) == "ltraj") {
-    x.infolocs <- adehabitatLT::infolocs(ltrajshift)[[1]]
+    x.infolocs <- adehabitatLT::infolocs(x)[[1]]
     x.df <- cbind(x.infolocs,
                   dplyr::select(x[[1]],
                                 - dplyr::any_of(colnames(x.infolocs)))

@@ -1,10 +1,10 @@
 ---
-title: "Exploring Outputs from segclust2d"
+title: "3 - Exploring Outputs from segclust2d"
 author: "R. Patin"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Exploring Outputs from segclust2d}
+  %\VignetteIndexEntry{3 - Exploring Outputs from segclust2d}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

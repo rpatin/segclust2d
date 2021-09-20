@@ -7,7 +7,6 @@ test_that("Test of segmentation", {
   test_seg <- segmentation(data, 
                            Kmax = 10, lmin=5,
                            scale.variable = TRUE, 
-                           type = "home-range",
                            seg.var = c("x","y"))
   # test_seg <- segmentation(data,Kmax = 10,lmin=5,scale.variable = T,
   # type = "home-range",seg.var = c("x","y"),subsample_over = 100)
@@ -24,7 +23,6 @@ test_that("Test of segmentation/clustering", {
   test_segclust <- segclust(data,
                             Kmax = 10, lmin = 5, ncluster = 3,
                             scale.variable = TRUE,
-                            type = "behavior",
                             seg.var = c("x","y"),
                             subsample_over = 1000)
   test_res <- augment(test_segclust)$state
