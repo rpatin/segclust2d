@@ -4,3 +4,5 @@
 ^doc$
 ^Meta$
 ^README.Rmd$
+^_pkgdown\.yml$
+^pkgdown$
