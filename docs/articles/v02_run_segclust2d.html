@@ -104,7 +104,7 @@
 <li>It can perform a <a href="#segmentation">segmentation</a> of the time-series into homogeneous segments. A typical case is the identification of home-range behaviour.</li>
 <li>It can also perform an integrated classification of those segments into clusters of homogeneous behaviour through a <a href="#segmentation-clustering">segmentation/clustering</a> algorithm. This is generally used to identify behavioural modes.</li>
 </ul>
-<p>Input data are here <code>data.frame</code> (shown in the first examples), but it can also be a <code>Move</code> object, a <code>ltraj</code> object (from package <code>adehabitatLT</code>) or a <code>sftraj</code> object, both shown in section <a href="https://rpatin.github.io/segclust2d/articles/preparing_data.html">Preparing data for Segmentation/Clustering with segclust2d</a></p>
+<p>Input data are here <code>data.frame</code> (shown in the first examples), but it can also be a <code>Move</code> object, a <code>ltraj</code> object (from package <code>adehabitatLT</code>) or a <code>sftraj</code> object, both shown in section <a href="https://rpatin.github.io/segclust2d/articles/v01_preparing_data.html">Preparing data for Segmentation/Clustering with segclust2d</a></p>
 <div id="presentation-of-data-sets" class="section level1">
 <h1 class="hasAnchor">
 <a href="#presentation-of-data-sets" class="anchor"></a>Presentation of data sets</h1>
@@ -174,7 +174,7 @@
 <h3 class="hasAnchor">
 <a href="#optional-order-var" class="anchor"></a>Optional: <code>order.var</code>
 </h3>
-<p><code>order.var</code> through which variables segments should be ordered when asked so in some of the output functions (see section <a href="https://rpatin.github.io/segclust2d/articles/explore_outputs.html">Exploring Outputs from segclust2d</a> for details.). By default <code>order.var</code> is set to <code>seg.var[1]</code></p>
+<p><code>order.var</code> through which variables segments should be ordered when asked so in some of the output functions (see section <a href="https://rpatin.github.io/segclust2d/articles/v03_explore_outputs.html">Exploring Outputs from segclust2d</a> for details.). By default <code>order.var</code> is set to <code>seg.var[1]</code></p>
 </div>
 <div id="deprecated-type-coord-names" class="section level3">
 <h3 class="hasAnchor">
@@ -207,7 +207,7 @@
 <h3 class="hasAnchor">
 <a href="#different-running-configurations" class="anchor"></a>Different running configurations</h3>
 <p>In this section we will try different ways of calling the <code><a href="../reference/segmentation.html">segmentation()</a></code> function. Minimal call should contains the data concerned (here the dataframe <code>simulshift</code>) and argument <code>lmin</code>. The function will automatically complete the missing argument with default values and communicate about it (not shown here).</p>
-<p><em><code>subsample_by</code> argument is described in section <a href="https://rpatin.github.io/segclust2d/articles/preparing_data.html#subsampling">Subsampling</a></em></p>
+<p><em><code>subsample_by</code> argument is described in section <a href="https://rpatin.github.io/segclust2d/articles/v01_preparing_data.html#subsampling">Subsampling</a></em></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">shift_seg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">simulshift</span>, 
                           lmin <span class="op">=</span> <span class="fl">240</span>,
