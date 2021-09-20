@@ -54,13 +54,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/explore_outputs.html">3 - Exploring Outputs from segclust2d</a>
+      <a href="../articles/v01_preparing_data.html">1 - Preparing data for Segmentation/Clustering with segclust2d</a>
     </li>
     <li>
-      <a href="../articles/preparing_data.html">1 - Preparing data for Segmentation/Clustering with segclust2d</a>
+      <a href="../articles/v02_run_segclust2d.html">2 - Running Segmentation/Clustering with segclust2d</a>
     </li>
     <li>
-      <a href="../articles/run_segclust2d.html">2 - Running Segmentation/Clustering with segclust2d</a>
+      <a href="../articles/v03_explore_outputs.html">3 - Exploring Outputs from segclust2d</a>
     </li>
   </ul>
 </li>
@@ -82,7 +82,7 @@
 
       
 
-      </header><script src="run_segclust2d_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><script src="v02_run_segclust2d_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>2 - Running Segmentation/Clustering with segclust2d</h1>
@@ -90,8 +90,8 @@
             
             <h4 class="date">2021-09-20</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/rpatin/segclust2d/blob/master/vignettes/run_segclust2d.Rmd"><code>vignettes/run_segclust2d.Rmd</code></a></small>
-      <div class="hidden name"><code>run_segclust2d.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/rpatin/segclust2d/blob/master/vignettes/v02_run_segclust2d.Rmd"><code>vignettes/v02_run_segclust2d.Rmd</code></a></small>
+      <div class="hidden name"><code>v02_run_segclust2d.Rmd</code></div>
 
     </div>
 
@@ -115,7 +115,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">simulshift</span><span class="op">)</span></code></pre></div>
 <p>Here we will load a test dataset: <code>simulshift</code>, containing a simulation of home-range behaviour with two shifts. It is a data.frame with two columns for coordinates : x and y. We can now run a simple segmentation with this dataset to find the different home-ranges.</p>
 <div class="figure">
-<img src="run_segclust2d_files/figure-html/plot%20simulshift-1.png" alt="`simulshift`: simulation of movement within three successive home-range. Data shown after subsampling by 100." width="480"><p class="caption">
+<img src="v02_run_segclust2d_files/figure-html/plot%20simulshift-1.png" alt="`simulshift`: simulation of movement within three successive home-range. Data shown after subsampling by 100." width="480"><p class="caption">
 <code>simulshift</code>: simulation of movement within three successive home-range. Data shown after subsampling by 100.
 </p>
 </div>
@@ -129,7 +129,7 @@
 <span class="va">simulmode</span> <span class="op">&lt;-</span> <span class="va">simulmode</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">simulmode</span><span class="op">$</span><span class="va">abs_spatial_angle</span><span class="op">)</span>, <span class="op">]</span></code></pre></div>
 <p><code>simulmode</code> is an example dataset containing a movement simulation with three different movement mode. It is a data.frame with 11 columns, with coordinates and several covariates. In addition to loading we calculated here the absolute value for the turning angle at constant step length (here called <code>spatial_angle</code>). We also checked the data for missing value.</p>
 <div class="figure">
-<img src="run_segclust2d_files/figure-html/map%20simulmode-1.png" alt="`simulmode`: simulation of movement with three different behavioural modes." width="480"><p class="caption">
+<img src="v02_run_segclust2d_files/figure-html/map%20simulmode-1.png" alt="`simulmode`: simulation of movement with three different behavioural modes." width="480"><p class="caption">
 <code>simulmode</code>: simulation of movement with three different behavioural modes.
 </p>
 </div>
@@ -241,7 +241,7 @@
 <p>As stated it is important to check that the number of segment selected correspond to a clear break in log-likelihood and if it is not the case to select a better value. This can be checked with <code>plot_likelihood</code> that shows the log-likelihood of the best segmentation versus the number of segments and highlights the one chosen with Lavielle’s criterium. The likelihood should show an increasing curve with a clear breakpoints for the optimal number of segment. Note that with real data breaks are often less clear than for that example. An artifactual decrease of likelihood can happen for large number of segment when Kmax is too high (close to <code>n/lmin</code>) and correspond generally to an oversegmentation (in such case, Kmax should be decreased).</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/segmentation-class.html">plot_likelihood</a></span><span class="op">(</span><span class="va">shift_seg</span><span class="op">)</span></code></pre></div>
-<p><img src="run_segclust2d_files/figure-html/plot_likelihood%20example-1.png" width="384"></p>
+<p><img src="v02_run_segclust2d_files/figure-html/plot_likelihood%20example-1.png" width="384"></p>
 <p>Another example on the <code>simulmode</code> dataset show a situation where the number of segment automatically selected by Lavielle’s criterium is 1, despite a (relatively) clear break in the likelihood at <code>nseg = 15</code>. In such case it is of paramount importance to explore the log-likelihood to confirm or select an appropriate number of segments.</p>
 <p><em>Note that in this case the problem in the selection of the number of segment would have been avoided by setting <code>Kmax = 25</code>. For Lavielle’s criterium to work properly <code>Kmax</code> should be larger enough than your expected number of segment.</em></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
@@ -252,7 +252,7 @@
                           scale.variable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/segmentation-class.html">plot_likelihood</a></span><span class="op">(</span><span class="va">mode_seg</span><span class="op">)</span></code></pre></div>
-<p><img src="run_segclust2d_files/figure-html/plot_likelihood%20mode_seg-1.png" width="384"></p>
+<p><img src="v02_run_segclust2d_files/figure-html/plot_likelihood%20mode_seg-1.png" width="384"></p>
 </div>
 </div>
 </div>
@@ -306,7 +306,7 @@
 <p>As stated, the number of cluster should preferentially be selected based on biological knowledge. Exploration of the BIC-based penalized log-likelihood can also help selecting an appropriate number of cluster, with the function <code><a href="../reference/segmentation-class.html">plot_BIC()</a></code>. Best-case scenario is as below, the BIC show a steep increase up to a maximum and a slow decrease after the optimum and one number of cluster is clearly above the others.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/segmentation-class.html">plot_BIC</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span></code></pre></div>
-<p><img src="run_segclust2d_files/figure-html/plot_BIC-1.png" width="768"></p>
+<p><img src="v02_run_segclust2d_files/figure-html/plot_BIC-1.png" width="768"></p>
 <p>With real data it also happens that more cluster always improve the penalized-likelihood so it will be a poor indication of the appropriate number of cluster. Such situation may be shown with our dataset <code>simulmode</code> indeed, if we allow the number of cluster to be tested between 2 and 5 instead of a maximum at three, we obtain the following BIC curve:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mode_segclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segclust.html">segclust</a></span><span class="op">(</span><span class="va">simulmode</span>,
@@ -316,14 +316,14 @@
                           scale.variable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/segmentation-class.html">plot_BIC</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span></code></pre></div>
-<p><img src="run_segclust2d_files/figure-html/simulmode%20plot%20BIC%20cluster%202-5-1.png" width="768"></p>
+<p><img src="v02_run_segclust2d_files/figure-html/simulmode%20plot%20BIC%20cluster%202-5-1.png" width="768"></p>
 <p>In the curve above we see that the optimum number of cluster selected is 4, despite the difference being relatively small compared to <code>ncluster = 2</code> and to the evolution with the number of segment. In addition, if we look at the results of the segmentation we can see identical segment distribution, the only difference is that state 2 in the segmentation with 3 cluster is divided into state 2 and 3 in the segmentation with 4 cluster:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mode_segclust</span>, ncluster <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
-<p><img src="run_segclust2d_files/figure-html/3%20clusters-1.png" width="768"></p>
+<p><img src="v02_run_segclust2d_files/figure-html/3%20clusters-1.png" width="768"></p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mode_segclust</span>, ncluster <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></code></pre></div>
-<p><img src="run_segclust2d_files/figure-html/4%20clusters-1.png" width="768"></p>
+<p><img src="v02_run_segclust2d_files/figure-html/4%20clusters-1.png" width="768"></p>
 <p>More generally, as in this example, if the selected number of segment for a higher number of cluster is the same, then the lower number of cluster should be favored.</p>
 <p>Once the number of cluster have been selected, the number of segment should be selected with the BIC criterium. When the segmentation-clustering is reliable, the selected optimum should the maximum just before a linear drop of the penalized log-Likelihood as in the examples above. With real data the signal is seldom as clear and may require adjustment based on exploration of the realized segmentation/clustering.</p>
 </div>
