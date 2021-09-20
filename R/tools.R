@@ -11,7 +11,9 @@
 #' if subsample_by is provided, use it to subsample.
 #' 
 #' @param x data.frame to be subsampled
-#' @param subsample if FALSE disable subsample
+#' @param is_segclust TRUE or FALSE whether the function was called from
+#' `segclust()` or `segmentation()`
+#' @param subsample if FALSE disable subsampling
 #' @param subsample_over maximum number of row accepted
 #' @param subsample_by subsampling parameters
 #' @return a data.frame

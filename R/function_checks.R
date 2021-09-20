@@ -346,7 +346,8 @@ argcheck_order.var <-
 #' and segmap. If not, propose default value.
 #' 
 #' @param order TRUE or FALSE depending on whether cluster be ordered
-#' @param seg.type types of the segmentation.
+#' @param seg.type types of the segmentation
+#' @param order.var name of the variable to order the cluster
 #' @return a boolean
 
 argcheck_ordering <- 

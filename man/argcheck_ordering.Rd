@@ -9,7 +9,9 @@ argcheck_ordering(order, seg.type, order.var)
 \arguments{
 \item{order}{TRUE or FALSE depending on whether cluster be ordered}
 
-\item{seg.type}{types of the segmentation.}
+\item{seg.type}{types of the segmentation}
+
+\item{order.var}{name of the variable to order the cluster}
 }
 \value{
 a boolean

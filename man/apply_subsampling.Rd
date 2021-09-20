@@ -9,7 +9,10 @@ apply_subsampling(x, is_segclust, subsample, subsample_over, subsample_by)
 \arguments{
 \item{x}{data.frame to be subsampled}
 
-\item{subsample}{if FALSE disable subsample}
+\item{is_segclust}{TRUE or FALSE whether the function was called from
+`segclust()` or `segmentation()`}
+
+\item{subsample}{if FALSE disable subsampling}
 
 \item{subsample_over}{maximum number of row accepted}
 
