@@ -47,7 +47,7 @@ htmltools::tagList()}
 
 \item{coord.names}{names of coordinates}
 
-\item{...}{additionnal arguments}
+\item{...}{additional arguments}
 }
 \value{
 a ggplot object

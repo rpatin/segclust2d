@@ -140,11 +140,11 @@ df.seg <- segmentation(simulshift,
 
 ## Running `segmentation()`
 
-`segmentation()` uses a Dynamic Programming algorithm that finds the best segmentation given a number of segment. The function runs the dynamic programming for each number of segment `<Kmax`. As a result, the optimal segmentation is associated with a likelihood value for each number of segment. Section [Different running configurations](#different-running-configurations) show several exemples of running `segmentation()` with different options. Section [Selecting the number of segments](#selecting-the-number-of-segments) discuss about the selection of the number of segments using either Lavielle's criterium or graphical explorations.
+`segmentation()` uses a Dynamic Programming algorithm that finds the best segmentation given a number of segment. The function runs the dynamic programming for each number of segment `<Kmax`. As a result, the optimal segmentation is associated with a likelihood value for each number of segment. Section [Different running configurations](#different-running-configurations) show several examples of running `segmentation()` with different options. Section [Selecting the number of segments](#selecting-the-number-of-segments) discuss about the selection of the number of segments using either Lavielle's criterium or graphical explorations.
 
 ### Different running configurations
 
-In this section we will try different ways of calling the `segmentation()` function. Minimal call should countains the data concerned (here the dataframe `simulshift`) and argument `lmin`. The function will automatically complete the missing argument with default values and communicate about it (not shown here). 
+In this section we will try different ways of calling the `segmentation()` function. Minimal call should contains the data concerned (here the dataframe `simulshift`) and argument `lmin`. The function will automatically complete the missing argument with default values and communicate about it (not shown here). 
 
 *`subsample_by` argument is described in section [Subsampling](https://rpatin.github.io/segclust2d/articles/preparing_data.html#subsampling)*
 
@@ -215,7 +215,7 @@ As stated it is important to check that the number of segment selected correspon
 plot_likelihood(shift_seg)
 ```
 
-Another exemple on the `simulmode` dataset show a situation where the number of segment automatically selected by Lavielle's criterium is 1, despite a (relatively) clear break in the likelihood at `nseg = 15`. In such case it is of paramount importance to explore the log-likelihood to confirm or select an appropriate number of segments.
+Another example on the `simulmode` dataset show a situation where the number of segment automatically selected by Lavielle's criterium is 1, despite a (relatively) clear break in the likelihood at `nseg = 15`. In such case it is of paramount importance to explore the log-likelihood to confirm or select an appropriate number of segments.
 
 *Note that in this case the problem in the selection of the number of segment would have been avoided by setting `Kmax = 25`. For Lavielle's criterium to work properly `Kmax` should be larger enough than your expected number of segment.*
 

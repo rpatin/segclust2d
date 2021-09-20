@@ -20,10 +20,10 @@ provides tools for analysing outputs from R packages `moveHMM` and
 Full documentation for segclust2d is available on its website:
 <https://rpatin.github.io/segclust2d/>
 
-Three differents topic are discussed there, and are also available as
+Three different topic are discussed there, and are also available as
 vignettes in the R package:
 
--   [First, preparation of data to be analysed with
+-   [First, preparation of data to be analyzed with
     segmentation/clustering algorithm, including covariate calculations,
     subsampling and guidelines to prepare movement
     data.](https://rpatin.github.io/segclust2d/articles/preparing_data.html)

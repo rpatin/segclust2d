@@ -174,7 +174,7 @@ segmentation_internal <-
     order.var <- 
       argcheck_order.var(order.var, diag.var)
 
-# Subsampling and checks -------------------------------------------------------------
+# Subsampling and checks -----------------------------
     cli::cli_h1("Preparing and checking data")
     
     cli::cli_h2("Subsampling")
@@ -187,7 +187,8 @@ segmentation_internal <-
       lmin <- max(floor(lmin/subsample_by),5)
       cli::cli_alert_success(
         "Adjusting lmin to subsampling. 
-        {cli::col_grey('Dividing lmin by ',subsample_by,', with a minimum of 5')}")
+        {cli::col_grey('Dividing lmin by ',
+        subsample_by,', with a minimum of 5')}")
       cli::cli_alert("After subsampling, {cli::col_green('lmin = ', lmin)}. 
                     {cli::col_grey('Corresponding to lmin = ',lmin*subsample_by,
                      ' on the original time scale')}")
@@ -239,7 +240,8 @@ segmentation_internal <-
         {cli::symbol$arrow_right} Please check for repeated \\
         or very similar values of {seg.var}")
       
-      stop("There are repetitions of identical values in the time series larger than lmin.")
+      stop("There are repetitions of identical
+           values in the time series larger than lmin.")
     } else {
       cli::cli_alert_success(
         "Data have no repetition of \\
@@ -260,8 +262,9 @@ segmentation_internal <-
       for all number of segments <= {Kmax}")
     # CostLoc <- segTraj::Gmean_simultanee(dat, lmin = lmin)
     # res.DynProg <- segTraj::DynProg(CostLoc, Kmax)
-    cli::cli_status_update(id = sb,
-                      "{cli::symbol$arrow_right} Calculating segment statistics")
+    cli::cli_status_update(
+      id = sb,
+      "{cli::symbol$arrow_right} Calculating segment statistics")
     outputs <- lapply(1:Kmax,function(k){
       # print(k)
       out <- stat_segm(x, 

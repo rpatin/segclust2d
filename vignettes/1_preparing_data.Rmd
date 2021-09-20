@@ -82,7 +82,7 @@ segmentation(x_ltraj, lmin = 5, Kmax = 25)
 
 # Limitations on data size and subsampling
 
-Computation cost for the algorithm scales non-linearly and can be both memory and time-consuming. Performance depends on computer, but from what we have ve tested, a segmentation on data of size > 10000 can be quite memory intensive (more than 10Go of RAM) and segmentation-clustering can be quite long for data > 1000 (few minutes to hours). For such dataset we recommend either subsampling if loosing resolution is not a big deal (looking for home-range changes over a year with hourly points might be a lost of time when daily points are sufficient) or splitting the dataset for very long data. Although for segmentation-clustering, clusters will not be easily comparable between the different part of the dataset, if one provides parts where all cluster are present for sure, there should be no problem.
+Computation cost for the algorithm scales non-linearly and can be both memory and time-consuming. Performance depends on computer, but from what we have tested, a segmentation on data of size > 10000 can be quite memory intensive (more than 10Go of RAM) and segmentation-clustering can be quite long for data > 1000 (few minutes to hours). For such dataset we recommend either subsampling if loosing resolution is not a big deal (looking for home-range changes over a year with hourly points might be a lost of time when daily points are sufficient) or splitting the dataset for very long data. Although for segmentation-clustering, clusters will not be easily comparable between the different part of the dataset, if one provides parts where all cluster are present for sure, there should be no problem.
 
 ## Subsampling options
 

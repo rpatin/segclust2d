@@ -155,7 +155,7 @@ segclust_internal <-
     order.var <- 
       argcheck_order.var(order.var, diag.var)
     
-    # Subsampling and checks -------------------------------------------------------------
+    # Subsampling and checks ----------------------------------
     cli::cli_h1("Preparing and checking data")
     
     cli::cli_h2("Subsampling")
@@ -168,7 +168,8 @@ segclust_internal <-
       lmin <- max(floor(lmin/subsample_by),5)
       cli::cli_alert_success(
         "Adjusting lmin to subsampling. 
-        {cli::col_grey('Dividing lmin by ',subsample_by,', with a minimum of 5')}")
+        {cli::col_grey('Dividing lmin by ',
+        subsample_by,', with a minimum of 5')}")
       cli::cli_alert("After subsampling, {cli::col_green('lmin = ', lmin)}. 
                     {cli::col_grey('Corresponding to lmin = ',lmin*subsample_by,
                      ' on the original time scale')}")
@@ -212,7 +213,8 @@ segclust_internal <-
        {cli::symbol$arrow_right} Please check for repeated \\
         or very similar values of {seg.var}")
       
-      stop("There are repetitions of identical values in the time series larger than lmin.")
+      stop("There are repetitions of identical values 
+           in the time series larger than lmin.")
     } else {
       cli::cli_alert_success(
         "Data have no repetition of \\
@@ -310,7 +312,8 @@ segclust_internal <-
     {segmented$ncluster.BIC} cluster and \\
     {segmented$Kopt.BIC[segmented$ncluster.BIC]} segments according to BIC")
   cli::cli_text(cli::col_grey(
-    '{cli::symbol$arrow_right} Number of cluster should preferentially be selected 
+    '{cli::symbol$arrow_right} Number of cluster \\
+    should preferentially be selected 
     according to biological knowledge. Exploring the BIC plot with plot_BIC()
     can also provide advice to select the number of cluster.'))
   cli::cli_text(cli::col_grey(

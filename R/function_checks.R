@@ -49,7 +49,7 @@ argcheck_type_coord <-
 #' Check for argument 'seg.var'
 #'
 #' Check whether argument 'seg.var' was adequately provided.
-#' If provided, additionnaly check for its length (1 or 2) and
+#' If provided, also check for its length (1 or 2) and
 #' for the existence of corresponding column names in x
 #' If unprovided, use default value (segmentation only) and tests
 #' if column names exists.
@@ -135,7 +135,8 @@ argcheck_seg.var <- function(x, seg.var, is_segclust){
   } else if ( length(seg.var) > 2 ) {
     cli::cli_alert_danger(
       "Segmentation is not supported for more than two variables.")
-    cli::cli_alert("Please provide only two variables in {cli::col_red('seg.var')} ")
+    cli::cli_alert("Please provide only two variables \\
+                   in {cli::col_red('seg.var')} ")
     stop("seg.var should have length 1 or 2")
   } 
   # do variable exists?
@@ -272,7 +273,8 @@ argcheck_scale.variable <-
         scale.variable <- FALSE
       }
     } else {
-      cli::cli_alert_success("Using {cli::col_green('scale.variable = ', scale.variable)}") 
+      cli::cli_alert_success("Using {cli::col_green('scale.variable = ',
+                             scale.variable)}") 
     }
     return(scale.variable)
   }
@@ -301,7 +303,9 @@ argcheck_diag.var <-
         "Setting diag.var = {deparse(seg.var)}"))
       diag.var <- seg.var
     } else {
-      cli::cli_alert_success("Using diagnostic variables {cli::col_green('diag.var = ', {deparse(diag.var)})})}") 
+      cli::cli_alert_success(
+        "Using diagnostic variables \\
+        {cli::col_green('diag.var = ', {deparse(diag.var)})})}") 
     }
     return(diag.var)
   }
@@ -328,7 +332,9 @@ argcheck_order.var <-
         "Setting order.var = {deparse(diag.var[1])}"))
       order.var <- diag.var[1]
     } else {
-      cli::cli_alert_success("Using ordering variable {cli::col_green('diag.var = ', {deparse(order.var)})}") 
+      cli::cli_alert_success(
+        "Using ordering variable \\
+        {cli::col_green('diag.var = ', {deparse(order.var)})}") 
     }
     return(order.var)
   }
@@ -368,7 +374,8 @@ argcheck_ordering <-
           {order.var}. To disable, use order = FALSE")
       } else {
         cli::cli_alert_success(
-          "Ordering of segment disabled. To allow ordering of segment, use order = TRUE")
+          "Ordering of segment disabled. \\
+          To allow ordering of segment, use order = TRUE")
       }
     }
     return(order)
@@ -399,7 +406,8 @@ argcheck_segclust <-
         
       if(!missing(nseg)){
         cli::cli_alert_danger(
-          "Argument nseg can only be provided if ncluster is provided as well. \\
+          "Argument nseg can only be provided \\
+          if ncluster is provided as well. \\
           Overwriting nseg with BIC-selected value")
       }
       nseg <- Kopt.BIC[ncluster]

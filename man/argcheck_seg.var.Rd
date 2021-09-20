@@ -24,7 +24,7 @@ a list with a data.frame and a vector with two character strings
 }
 \description{
 Check whether argument 'seg.var' was adequately provided.
-If provided, additionnaly check for its length (1 or 2) and
+If provided, also check for its length (1 or 2) and
 for the existence of corresponding column names in x
 If unprovided, use default value (segmentation only) and tests
 if column names exists.

@@ -57,8 +57,6 @@ hybrid_simultanee <- function(x, P, Kmax, lmin = 3,
 
     # message("Segmenting - ", P, " class")
     
-    # cli_progress_message("Segmentation-Clustering for ncluster = {P} and nseg = {K}/{Kmax}")
-    
     for (K in Kmin:Kmax) {
       # cli_progress_update()
       cli::cli_status_update(

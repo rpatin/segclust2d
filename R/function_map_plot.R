@@ -14,7 +14,7 @@
 #' @param scale for dividing coordinates to have compatibility with leaflet
 #' @param UTMstring projection of the coordinates
 #' @param coord.names names of coordinates
-#' @param ... additionnal arguments
+#' @param ... additional arguments
 #' @return a ggplot object
 #'
 #' @importFrom magrittr "%>%"
