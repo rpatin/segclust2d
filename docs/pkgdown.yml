@@ -2,8 +2,8 @@ pandoc: 2.11.4
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  explore_outputs: explore_outputs.html
-  preparing_data: preparing_data.html
-  run_segclust2d: run_segclust2d.html
-last_built: 2021-09-20T09:53Z
+  v01_preparing_data: v01_preparing_data.html
+  v02_run_segclust2d: v02_run_segclust2d.html
+  v03_explore_outputs: v03_explore_outputs.html
+last_built: 2021-09-20T10:12Z
 
