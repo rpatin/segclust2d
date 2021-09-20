@@ -95,13 +95,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/explore_outputs.html">3 - Exploring Outputs from segclust2d</a>
+      <a href="../articles/v01_preparing_data.html">1 - Preparing data for Segmentation/Clustering with segclust2d</a>
     </li>
     <li>
-      <a href="../articles/preparing_data.html">1 - Preparing data for Segmentation/Clustering with segclust2d</a>
+      <a href="../articles/v02_run_segclust2d.html">2 - Running Segmentation/Clustering with segclust2d</a>
     </li>
     <li>
-      <a href="../articles/run_segclust2d.html">2 - Running Segmentation/Clustering with segclust2d</a>
+      <a href="../articles/v03_explore_outputs.html">3 - Exploring Outputs from segclust2d</a>
     </li>
   </ul>
 </li>
@@ -145,8 +145,13 @@
       <td><p>data.frame to be subsampled</p></td>
     </tr>
     <tr>
+      <th>is_segclust</th>
+      <td><p>TRUE or FALSE whether the function was called from
+`segclust()` or `segmentation()`</p></td>
+    </tr>
+    <tr>
       <th>subsample</th>
-      <td><p>if FALSE disable subsample</p></td>
+      <td><p>if FALSE disable subsampling</p></td>
     </tr>
     <tr>
       <th>subsample_over</th>
