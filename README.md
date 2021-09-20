@@ -26,13 +26,13 @@ vignettes in the R package:
 -   [First, preparation of data to be analyzed with
     segmentation/clustering algorithm, including covariate calculations,
     subsampling and guidelines to prepare movement
-    data.](https://rpatin.github.io/segclust2d/articles/preparing_data.html)
+    data.](https://rpatin.github.io/segclust2d/articles/v01_preparing_data.html)
 -   [Second, a guide to run the segmentation and segmentation/clustering
     method, including advise on setting
-    parameters.](https://rpatin.github.io/segclust2d/articles/run_segclust2d.html)
+    parameters.](https://rpatin.github.io/segclust2d/articles/v02_run_segclust2d.html)
 -   [Finally, an overview of the possible outputs that can be generated
     with the
-    package.](https://rpatin.github.io/segclust2d/articles/explore_outputs.html)
+    package.](https://rpatin.github.io/segclust2d/articles/v03_explore_outputs.html)
 
 # Installation
 

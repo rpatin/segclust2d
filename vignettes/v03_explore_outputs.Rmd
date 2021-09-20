@@ -36,11 +36,11 @@ There are two types of functions: (1) some are general and show likelihood for a
 For the functions specific to a given segmentation, if you do not provide as argument the number of segment and of cluster, the functions will automatically select the best arguments based on a penalized log-likelihood as following:
 
 - for outputs of `segmentation()` the optimal number of segments is selected with
-[Lavielle`s criterium](https://rpatin.github.io/segclust2d/articles/run_segclust2d.html#selecting-the-number-of-segments-1). 
+[Lavielle`s criterium](https://rpatin.github.io/segclust2d/articles/v02_run_segclust2d.html#selecting-the-number-of-segments-1). 
 Other number may be provided with argument `nseg`.
 
 - for outputs of `segclust()` the optimal number of cluster and segment is selected with a 
-[BIC-based penalized criterium](https://rpatin.github.io/segclust2d/articles/run_segclust2d.html#selecting-the-number-of-segments-2). 
+[BIC-based penalized criterium](https://rpatin.github.io/segclust2d/articles/v02_run_segclust2d.html#selecting-the-number-of-segments-2). 
 Other parameters may be provided with argument `nseg` and `ncluster`. It is recommended to manually choose the number of cluster based on biological knowledge or careful exploration of the BIC-based penalized likelihood, while using the BIC-selected number of segment for this number of cluster, by providing only argument `ncluster`.
 
 ### Graphical outputs

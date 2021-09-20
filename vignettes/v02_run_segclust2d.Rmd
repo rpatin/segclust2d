@@ -35,7 +35,7 @@ into clusters of homogeneous behaviour through a
 [segmentation/clustering](#segmentation-clustering) algorithm. 
 This is generally used to identify behavioural modes. 
 
-Input data are here `data.frame` (shown in the first examples), but it can also be a `Move` object, a `ltraj` object (from package `adehabitatLT`) or a `sftraj` object, both shown in section [Preparing data for Segmentation/Clustering with segclust2d](https://rpatin.github.io/segclust2d/articles/preparing_data.html)
+Input data are here `data.frame` (shown in the first examples), but it can also be a `Move` object, a `ltraj` object (from package `adehabitatLT`) or a `sftraj` object, both shown in section [Preparing data for Segmentation/Clustering with segclust2d](https://rpatin.github.io/segclust2d/articles/v01_preparing_data.html)
 
 # Presentation of data sets
 
@@ -108,7 +108,7 @@ The function allow rescaling of variable with argument `scale.variable`. Rescali
 
 ### Optional: `order.var`
 
-`order.var` through which variables segments should be ordered when asked so in some of the output functions (see section [Exploring Outputs from segclust2d](https://rpatin.github.io/segclust2d/articles/explore_outputs.html) for details.). By default `order.var` is set to `seg.var[1]`
+`order.var` through which variables segments should be ordered when asked so in some of the output functions (see section [Exploring Outputs from segclust2d](https://rpatin.github.io/segclust2d/articles/v03_explore_outputs.html) for details.). By default `order.var` is set to `seg.var[1]`
 
 ### Deprecated: `type`, `coord.names`
 
@@ -146,7 +146,7 @@ df.seg <- segmentation(simulshift,
 
 In this section we will try different ways of calling the `segmentation()` function. Minimal call should contains the data concerned (here the dataframe `simulshift`) and argument `lmin`. The function will automatically complete the missing argument with default values and communicate about it (not shown here). 
 
-*`subsample_by` argument is described in section [Subsampling](https://rpatin.github.io/segclust2d/articles/preparing_data.html#subsampling)*
+*`subsample_by` argument is described in section [Subsampling](https://rpatin.github.io/segclust2d/articles/v01_preparing_data.html#subsampling)*
 
 ```{r minimal segmentation call, eval = FALSE, message = FALSE}
 shift_seg <- segmentation(simulshift, 

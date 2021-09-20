@@ -60,8 +60,6 @@ argcheck_type_coord <-
 #'   segmentation (either one or two names).
 #' @param is_segclust TRUE if function is called from \code{\link{segclust}} ; 
 #' FALSE otherwise, if function is called from \code{\link{segmentation}}.
-#' @param ... additional parameters transmitted from \code{\link{segmentation}}
-#' or \code{\link{segclust}}
 #' @return  a list with a data.frame and a vector with two character strings
 
 argcheck_seg.var <- function(x, seg.var, is_segclust){
