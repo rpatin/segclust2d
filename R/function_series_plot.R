@@ -38,15 +38,7 @@ plot_segm <-
            diag.var, x_col="expectTime",
            html=FALSE, order=FALSE,
            stationarity = FALSE){
-  # if(class(df.states) != "list"){
-  #   df.states <- list(df.states)
-  # }
-  # if(class(df.segm.list) != "list"){
-  #   df.segm.list <- list(df.segm.list)
-  # }
-  #
-  # if(length(df.segm.list) != length(df.states)){ message("Error, df.segm.list
-  # and df.states of different list size"); stop("Different list size")}
+
   data$indice <- seq_len(nrow(data))
   df.states <- output[[2]]
   df.segm <- output[[1]]
