@@ -4,7 +4,8 @@ output: github_document
 ---
 
 
-```{r echo=FALSE, results="hide", message=FALSE}
+```{r echo=FALSE, message=FALSE, results="hide"}
+options(Encoding="UTF-8")
 library(badger)
 ```
 
