@@ -3,12 +3,12 @@ citHeader("To cite segclust2d in publications use:")
 citEntry(
   entry    = "Article",
   title    = "Identifying stationary phases in multivariate time series for highlighting behavioural modes and home range settlements.",
-  author   = "Patin, R., Etienne, M. P., Lebarbier, E., Chamaill{\'e}‐Jammes, S.,  & Benhamou, S.",
+  author   = "Patin, R., Etienne, M. P., Lebarbier, E., Chamaill{\'e}-Jammes, S.,  & Benhamou, S.",
   journal  = "Journal of Animal Ecology",
   year     = 2020,
   volume   = 89,
   number   = 1,
   pages    = "44-56",
   url      = "https://doi.org/10.1111/1365-2656.13105",
-  textVersion = paste("Patin, R., Etienne, M. P., Lebarbier, E., Chamaill{\'e}‐Jammes, S., & Benhamou, S. (2020). Identifying stationary phases in multivariate time series for highlighting behavioural modes and home range settlements. Journal of Animal Ecology, 89(1), 44-56.")
+  textVersion = paste("Patin, R., Etienne, M. P., Lebarbier, E., Chamaill{\'e}-Jammes, S., & Benhamou, S. (2020). Identifying stationary phases in multivariate time series for highlighting behavioural modes and home range settlements. Journal of Animal Ecology, 89(1), 44-56.")
 )
