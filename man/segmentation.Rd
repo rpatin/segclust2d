@@ -5,6 +5,7 @@
 \alias{segmentation.data.frame}
 \alias{segmentation.Move}
 \alias{segmentation.ltraj}
+\alias{segmentation_internal}
 \title{Segmentation of movement data - Generic function}
 \usage{
 segmentation(x, ...)
@@ -14,34 +15,40 @@ segmentation(x, ...)
 \method{segmentation}{Move}(x, ...)
 
 \method{segmentation}{ltraj}(x, ...)
+
+segmentation_internal(
+  x,
+  seg.var,
+  diag.var,
+  order.var,
+  lmin,
+  Kmax,
+  scale.variable,
+  sameSigma = FALSE,
+  ...
+)
 }
 \arguments{
-\item{x}{data used for segmentation. Supported: data.frame, Move object,
-ltraj object}
+\item{x}{data.frame with observations}
 
-\item{...}{additional parameters given to \code{\link{segmentation_internal}}}
+\item{...}{additional parameters given to \link{chooseseg_lavielle}}
 
-\item{seg.var}{for behavioral segmentation: names of the variables used for
+\item{seg.var}{names of the variables used for
 segmentation (either one or two names).}
-
-\item{Kmax}{maximum number of segments.}
-
-\item{lmin}{minimum length of segments.}
 
 \item{diag.var}{names of the variables on which
 statistics are calculated.}
 
 \item{order.var}{names of the variable with which states are ordered.}
 
+\item{lmin}{minimum length of segments.}
+
+\item{Kmax}{maximum number of segments.}
+
 \item{scale.variable}{TRUE or FALSE for automatic scaling of variables
 (reduction and  centering)}
 
-\item{subsample_over}{over which size should subsampling begin (depending on
-speed and memory limitations)}
-
-\item{subsample}{if FALSE disable subsample}
-
-\item{subsample_by}{override subsample_over to adjust manually subsampling}
+\item{sameSigma}{does segments have same variance ?}
 }
 \value{
 a \code{\link{segmentation-class}} object

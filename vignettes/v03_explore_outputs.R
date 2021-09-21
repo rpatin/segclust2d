@@ -1,4 +1,5 @@
 ## ---- echo = FALSE------------------------------------------------------------
+options(Encoding="UTF-8")
 knitr::opts_chunk$set(
   fig.width = 8,
   fig.height = 5,

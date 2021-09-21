@@ -11,6 +11,7 @@ vignette: >
 
 
 ```{r option chunk, echo = FALSE}
+options(Encoding="UTF-8")
 knitr::opts_chunk$set(
   fig.width = 8,
   fig.height = 5,
@@ -92,7 +93,7 @@ Statistically, `lmin` cannot be `<5`, because of the need to estimate variances 
 
 ### Optional: `Kmax`: the maximum number of segments.
 
-By default, `Kmax` will be set to `0.75*floor(n/lmin)`, with `n` the number of observations, so you can omit this argument. You can however provide a different value, as large value may compromise speed or selection of optimal number of segments. See section [Changing Kmax](#changing-kmax-1) for more advices.
+By default, `Kmax` will be set to `0.75*floor(n/lmin)`, with `n` the number of observations, so you can omit this argument. You can however provide a different value, as large value may compromise speed or selection of optimal number of segments. 
 
 ### Optional: `seg.var`
  
@@ -312,7 +313,7 @@ mode_segclust <- segclust(simulmode,
 plot_BIC(mode_segclust)
 ```
 
-In the curve above we see that the optimum number of cluster selected is 4, despite the difference being relatively small compared to `ncluster = 2` and to the evolution with the number of segment. In addition, if we look at the results of the segmentation we can see identical segment distribution, the only difference is that state 2 in the segmentation with 3 cluster is divided into state 2 and 3 in the segmentation with 4 cluster:
+In the curve above we see that the optimum number of cluster selected is 4, despite the difference being relatively small compared to `ncluster = 3` and to the evolution with the number of segment. In addition, if we look at the results of the segmentation we can see identical segment distribution, the only difference is that state 2 in the segmentation with 3 cluster is divided into state 2 and 3 in the segmentation with 4 cluster:
 
 ```{r 3 clusters, fig.show='hold', message = FALSE}
 plot(mode_segclust, ncluster = 3)
@@ -325,5 +326,5 @@ plot(mode_segclust, ncluster = 4)
 
 More generally, as in this example, if the selected number of segment for a higher number of cluster is the same, then the lower number of cluster should be favored.
 
-Once the number of cluster have been selected, the number of segment should be selected with the BIC criterium. When the segmentation-clustering is reliable, the selected optimum should the maximum just before a linear drop of the penalized log-Likelihood as in the examples above. With real data the signal is seldom as clear and may require adjustment based on exploration of the realized segmentation/clustering.
+Once the number of cluster have been selected, the number of segment should be selected with the BIC criterium. When the segmentation-clustering is reliable, the selected optimum should be a maximum just before a linear drop of the penalized log-Likelihood as in the examples above. With real data the signal is seldom as clear and may require adjustment based on exploration of the realized segmentation/clustering.
 

@@ -11,6 +11,7 @@ vignette: >
 
 
 ```{r, echo = FALSE}
+options(Encoding="UTF-8")
 knitr::opts_chunk$set(
   fig.width = 8,
   fig.height = 5,
@@ -36,7 +37,7 @@ There are two types of functions: (1) some are general and show likelihood for a
 For the functions specific to a given segmentation, if you do not provide as argument the number of segment and of cluster, the functions will automatically select the best arguments based on a penalized log-likelihood as following:
 
 - for outputs of `segmentation()` the optimal number of segments is selected with
-[Lavielle`s criterium](https://rpatin.github.io/segclust2d/articles/v02_run_segclust2d.html#selecting-the-number-of-segments-1). 
+[Lavielle's criterium](https://rpatin.github.io/segclust2d/articles/v02_run_segclust2d.html#selecting-the-number-of-segments-1). 
 Other number may be provided with argument `nseg`.
 
 - for outputs of `segclust()` the optimal number of cluster and segment is selected with a 
@@ -45,7 +46,7 @@ Other parameters may be provided with argument `nseg` and `ncluster`. It is reco
 
 ### Graphical outputs
 
-All plot methods use `ggplot2` package and return `ggplot` objects that can be further modified and customized using classical `ggplot2` (see [ggplot2 function reference](https://ggplot2.tidyverse.org/reference/).
+All plot methods use `ggplot2` package and return `ggplot` objects that can be further modified and customized using classical `ggplot2` (see [ggplot2 function reference](https://ggplot2.tidyverse.org/reference/)).
 
 ### Default value for `order`
 
@@ -64,7 +65,7 @@ If you provide argument `order = TRUE` to a function specific to a segmentation,
 *Summary for all segmentations:*
 
 - `plot_likelihood` for segmentation() show the log-likelihood of the segmentation for all numbers of segments.
-- `plot_BIC` for segmentation() show the BIC-based penalized log-likelihood of the segmentation.clustering for all numbers of segments and cluster.
+- `plot_BIC` for segclust() show the BIC-based penalized log-likelihood of the segmentation.clustering for all numbers of segments and cluster.
 
 
 2. **Extracting results**

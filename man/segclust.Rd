@@ -16,13 +16,9 @@ segclust(x, ...)
 \method{segclust}{ltraj}(x, ...)
 }
 \arguments{
-\item{x}{data used for segmentation. Supported: data.frame, Move object,
-ltraj object}
+\item{x}{data.frame with observations}
 
 \item{...}{additional parameters given to \code{\link{segclust_internal}}.}
-
-\item{ncluster}{number of cluster into which segments should be grouped. Can
-be a vector if one want to test several number of clusters.}
 }
 \value{
 a \code{\link{segmentation-class}} object

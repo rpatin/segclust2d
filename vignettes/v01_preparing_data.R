@@ -1,4 +1,5 @@
 ## ----option chunk, echo = FALSE-----------------------------------------------
+options(Encoding="UTF-8")
 knitr::opts_chunk$set(
   fig.width = 8,
   fig.height = 5,
@@ -55,7 +56,7 @@ simulmode <- simulmode[!is.na(simulmode$abs_spatial_angle), ]
 #                            seg.var = c("speed","abs_spatial_angle"),
 #                            subsample_by = 2)
 
-## ----lmin and subsampling, include = FALSE------------------------------------
+## ----lmin and subsampling, echo = FALSE---------------------------------------
 lmin <-  240
 subsample_by  <-  60
   cli::cli_alert_success("Using {cli::col_green('lmin = ', lmin )}") 

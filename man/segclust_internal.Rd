@@ -18,10 +18,9 @@ segclust_internal(
 )
 }
 \arguments{
-\item{x}{data used for segmentation. Supported: data.frame, Move object,
-ltraj object}
+\item{x}{data.frame with observations}
 
-\item{seg.var}{for behavioral segmentation: names of the variables used for
+\item{seg.var}{names of the variables used for
 segmentation (either one or two names).}
 
 \item{diag.var}{names of the variables on which

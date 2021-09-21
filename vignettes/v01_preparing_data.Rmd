@@ -11,6 +11,7 @@ vignette: >
 
 
 ```{r option chunk, echo = FALSE}
+options(Encoding="UTF-8")
 knitr::opts_chunk$set(
   fig.width = 8,
   fig.height = 5,
@@ -39,8 +40,8 @@ This summary provides information on:
 Right now, the function in `segclust2d` package accept three different kind of input data:
 
 - [data.frame](#data-frame)
-- [Move](#move) objects based on package [`move`](https://cran.r-project.org/web/packages/move/index.html)
-- [ltraj](#ltraj) objects based on package [`adehabitatLT`](https://cran.r-project.org/web/packages/adehabitatLT/index.html)
+- [Move](#move) objects based on package [`move`](https://CRAN.R-project.org/package=move)
+- [ltraj](#ltraj) objects based on package [`adehabitatLT`](https://CRAN.R-project.org/package=adehabitatLT)
 
 Future version may provide support for `sftraj` objects as well.
 
@@ -62,9 +63,6 @@ If `x_move` is a `Move` object, the syntax is simply:
 ```{r ex Move, eval = FALSE}
 segmentation(x_move, lmin = 5, Kmax = 25)
 ```
-
-Of course the variable names provided must exist as column in `Move_object@data` and `adehabitatLT::infolocs(ltraj_object[1])`.
-
 
 ## ltraj
 
@@ -138,7 +136,7 @@ mode_segclust <- segclust(simulmode,
 
 Beware that subsampling will also affect your `lmin` argument. If subsampling by 2, `lmin` will be divided by 2. The function will tell about the value of lmin and its adjustment with subsampling with different messages:
 
-```{r lmin and subsampling, include = FALSE}
+```{r lmin and subsampling, echo = FALSE}
 lmin <-  240
 subsample_by  <-  60
   cli::cli_alert_success("Using {cli::col_green('lmin = ', lmin )}") 

@@ -15,9 +15,6 @@ segmentation (either one or two names).}
 
 \item{is_segclust}{TRUE if function is called from \code{\link{segclust}} ; 
 FALSE otherwise, if function is called from \code{\link{segmentation}}.}
-
-\item{...}{additional parameters transmitted from \code{\link{segmentation}}
-or \code{\link{segclust}}}
 }
 \value{
 a list with a data.frame and a vector with two character strings

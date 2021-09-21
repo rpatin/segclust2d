@@ -36,6 +36,8 @@ hybrid_simultanee(
 \item{lissage}{should likelihood be smoothed}
 
 \item{pureR}{should algorithm run in full R or use Rcpp speed improvements}
+
+\item{...}{additional parameters}
 }
 \value{
 a list with Linc, the incomplete loglikelihood =Linc,param=paramtau

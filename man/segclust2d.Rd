@@ -33,7 +33,7 @@ Lavielle, M. (2005) Using penalized contrasts for the change-point problem.
 Report number 5339, Institut national de recherche en informatique et en
 automatique.
 
-Patin, R., Etienne, M. P., Lebarbier, E., Chamaill{\'e}‐Jammes, S., 
+Patin, R., Etienne, M. P., Lebarbier, E., Chamaill{\'e}-Jammes, S., 
 & Benhamou, S. (2020). Identifying stationary phases in
 multivariate time series for highlighting behavioural modes 
 and home range settlements. \emph{Journal of Animal Ecology}, 
