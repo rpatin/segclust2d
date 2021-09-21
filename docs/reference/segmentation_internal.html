@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>hybrid_simultanee performs a simultaneous seg - clustering for
-bivariate signals. — hybrid_simultanee • segclust2d</title>
+<title>Internal segmentation function — segmentation_internal • segclust2d</title>
 
 
 <!-- jquery -->
@@ -40,14 +39,8 @@ bivariate signals. — hybrid_simultanee • segclust2d</title>
 
 
 
-<meta property="og:title" content="hybrid_simultanee performs a simultaneous seg - clustering for
-bivariate signals. — hybrid_simultanee" />
-<meta property="og:description" content="It is an algorithm which combines dynamic programming
-and the EM algorithm to calculate the MLE of phi and T, which
-are the mixture parameters and the change point instants.
-this algorithm is run for a given number of clusters,
-and estimates the parameters for a segmentation/clustering
-model with P clusters and 1:Kmax segments" />
+<meta property="og:title" content="Internal segmentation function — segmentation_internal" />
+<meta property="og:description" content="Internal segmentation function" />
 
 
 
@@ -133,31 +126,24 @@ model with P clusters and 1:Kmax segments" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1><code>hybrid_simultanee</code> performs a simultaneous seg - clustering for
-bivariate signals.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rpatin/segclust2d/blob/master/R/segTraj_hybrid_simultanee.R'><code>R/segTraj_hybrid_simultanee.R</code></a></small>
-    <div class="hidden name"><code>hybrid_simultanee.Rd</code></div>
+    <h1>Internal segmentation function</h1>
+    <small class="dont-index">Source: <a href='https://github.com/rpatin/segclust2d/blob/master/R/segmentation.R'><code>R/segmentation.R</code></a></small>
+    <div class="hidden name"><code>segmentation_internal.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>It is an algorithm which combines dynamic programming
-and the EM algorithm to calculate the MLE of phi and T, which
-are the mixture parameters and the change point instants.
-this algorithm is run for a given number of clusters,
-and estimates the parameters for a segmentation/clustering
-model with P clusters and 1:Kmax segments</p>
+    <p>Internal segmentation function</p>
     </div>
 
-    <pre class="usage"><span class='fu'>hybrid_simultanee</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>segmentation_internal</span><span class='op'>(</span>
   <span class='va'>x</span>,
-  <span class='va'>P</span>,
+  <span class='va'>seg.var</span>,
+  <span class='va'>diag.var</span>,
+  <span class='va'>order.var</span>,
+  <span class='va'>lmin</span>,
   <span class='va'>Kmax</span>,
-  lmin <span class='op'>=</span> <span class='fl'>3</span>,
-  sameSigma <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  sameVar.init <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  eps <span class='op'>=</span> <span class='fl'>1e-06</span>,
-  lissage <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  pureR <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>scale.variable</span>,
+  sameSigma <span class='op'>=</span> <span class='cn'>FALSE</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -166,53 +152,45 @@ model with P clusters and 1:Kmax segments</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>the two-dimensional signal, one line per dimension</p></td>
+      <td><p>data.frame with observations</p></td>
     </tr>
     <tr>
-      <th>P</th>
-      <td><p>the number of classes</p></td>
+      <th>seg.var</th>
+      <td><p>for behavioral segmentation: names of the variables used for
+segmentation (either one or two names).</p></td>
     </tr>
     <tr>
-      <th>Kmax</th>
-      <td><p>the maximal number of segments</p></td>
+      <th>diag.var</th>
+      <td><p>names of the variables on which
+statistics are calculated.</p></td>
+    </tr>
+    <tr>
+      <th>order.var</th>
+      <td><p>names of the variable with which states are ordered.</p></td>
     </tr>
     <tr>
       <th>lmin</th>
-      <td><p>minimum length of segment</p></td>
+      <td><p>minimum length of segments.</p></td>
+    </tr>
+    <tr>
+      <th>Kmax</th>
+      <td><p>maximum number of segments.</p></td>
+    </tr>
+    <tr>
+      <th>scale.variable</th>
+      <td><p>TRUE or FALSE for automatic scaling of variables
+(reduction and  centering)</p></td>
     </tr>
     <tr>
       <th>sameSigma</th>
-      <td><p>should segment have the same variance</p></td>
+      <td><p>does segments have same variance ?</p></td>
     </tr>
-    <tr>
-      <th>sameVar.init</th>
-      <td><p>sameVar.init</p></td>
-    </tr>
-    <tr>
-      <th>eps</th>
-      <td><p>eps</p></td>
-    </tr>
-    <tr>
-      <th>lissage</th>
-      <td><p>should likelihood be smoothed</p></td>
-    </tr>
-    <tr>
-      <th>pureR</th>
-      <td><p>should algorithm run in full R or use Rcpp speed improvements</p></td>
-    </tr>
-<<<<<<< HEAD
     <tr>
       <th>...</th>
-      <td><p>additional parameters</p></td>
+      <td><p>additional parameters given to <a href='chooseseg_lavielle.html'>chooseseg_lavielle</a></p></td>
     </tr>
-=======
->>>>>>> b7a4eb5ae88c31fd336c1c535d9f8a2199d1f445
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>a list with Linc, the incomplete loglikelihood =Linc,param=paramtau
-  posterior probability</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

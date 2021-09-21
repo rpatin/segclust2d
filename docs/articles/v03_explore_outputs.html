@@ -88,7 +88,11 @@
       <h1 data-toc-skip>3 - Exploring Outputs from segclust2d</h1>
                         <h4 class="author">R. Patin</h4>
             
+<<<<<<< HEAD
             <h4 class="date">2021-09-21</h4>
+=======
+            <h4 class="date">2021-09-20</h4>
+>>>>>>> b7a4eb5ae88c31fd336c1c535d9f8a2199d1f445
       
       <small class="dont-index">Source: <a href="https://github.com/rpatin/segclust2d/blob/master/vignettes/v03_explore_outputs.Rmd"><code>vignettes/v03_explore_outputs.Rmd</code></a></small>
       <div class="hidden name"><code>v03_explore_outputs.Rmd</code></div>
@@ -112,14 +116,22 @@
 <a href="#default-values-for-nseg-and-ncluster" class="anchor"></a>Default values for nseg and ncluster</h3>
 <p>For the functions specific to a given segmentation, if you do not provide as argument the number of segment and of cluster, the functions will automatically select the best arguments based on a penalized log-likelihood as following:</p>
 <ul>
+<<<<<<< HEAD
 <li><p>for outputs of <code><a href="../reference/segmentation.html">segmentation()</a></code> the optimal number of segments is selected with <a href="https://rpatin.github.io/segclust2d/articles/v02_run_segclust2d.html#selecting-the-number-of-segments-1">Lavielle’s criterium</a>. Other number may be provided with argument <code>nseg</code>.</p></li>
+=======
+<li><p>for outputs of <code><a href="../reference/segmentation.html">segmentation()</a></code> the optimal number of segments is selected with [Lavielle<code>s criterium](https://rpatin.github.io/segclust2d/articles/v02_run_segclust2d.html#selecting-the-number-of-segments-1).  Other number may be provided with argument</code>nseg`.</p></li>
+>>>>>>> b7a4eb5ae88c31fd336c1c535d9f8a2199d1f445
 <li><p>for outputs of <code><a href="../reference/segclust.html">segclust()</a></code> the optimal number of cluster and segment is selected with a <a href="https://rpatin.github.io/segclust2d/articles/v02_run_segclust2d.html#selecting-the-number-of-segments-2">BIC-based penalized criterium</a>. Other parameters may be provided with argument <code>nseg</code> and <code>ncluster</code>. It is recommended to manually choose the number of cluster based on biological knowledge or careful exploration of the BIC-based penalized likelihood, while using the BIC-selected number of segment for this number of cluster, by providing only argument <code>ncluster</code>.</p></li>
 </ul>
 </div>
 <div id="graphical-outputs" class="section level3">
 <h3 class="hasAnchor">
 <a href="#graphical-outputs" class="anchor"></a>Graphical outputs</h3>
+<<<<<<< HEAD
 <p>All plot methods use <code>ggplot2</code> package and return <code>ggplot</code> objects that can be further modified and customized using classical <code>ggplot2</code> (see <a href="https://ggplot2.tidyverse.org/reference/">ggplot2 function reference</a>).</p>
+=======
+<p>All plot methods use <code>ggplot2</code> package and return <code>ggplot</code> objects that can be further modified and customized using classical <code>ggplot2</code> (see <a href="https://ggplot2.tidyverse.org/reference/">ggplot2 function reference</a>.</p>
+>>>>>>> b7a4eb5ae88c31fd336c1c535d9f8a2199d1f445
 </div>
 <div id="default-value-for-order" class="section level3">
 <h3 class="hasAnchor">
@@ -148,7 +160,11 @@
 <li>
 <code>plot_likelihood</code> for segmentation() show the log-likelihood of the segmentation for all numbers of segments.</li>
 <li>
+<<<<<<< HEAD
 <code>plot_BIC</code> for segclust() show the BIC-based penalized log-likelihood of the segmentation.clustering for all numbers of segments and cluster.</li>
+=======
+<code>plot_BIC</code> for segmentation() show the BIC-based penalized log-likelihood of the segmentation.clustering for all numbers of segments and cluster.</li>
+>>>>>>> b7a4eb5ae88c31fd336c1c535d9f8a2199d1f445
 </ul>
 <ol start="2" style="list-style-type: decimal">
 <li><strong>Extracting results</strong></li>
