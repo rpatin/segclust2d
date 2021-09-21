@@ -88,11 +88,7 @@
       <h1 data-toc-skip>2 - Running Segmentation/Clustering with segclust2d</h1>
                         <h4 class="author">R. Patin</h4>
             
-<<<<<<< HEAD
             <h4 class="date">2021-09-21</h4>
-=======
-            <h4 class="date">2021-09-20</h4>
->>>>>>> b7a4eb5ae88c31fd336c1c535d9f8a2199d1f445
       
       <small class="dont-index">Source: <a href="https://github.com/rpatin/segclust2d/blob/master/vignettes/v02_run_segclust2d.Rmd"><code>vignettes/v02_run_segclust2d.Rmd</code></a></small>
       <div class="hidden name"><code>v02_run_segclust2d.Rmd</code></div>
@@ -154,11 +150,7 @@
 <div id="optional-kmax-the-maximum-number-of-segments-" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-kmax-the-maximum-number-of-segments-" class="anchor"></a>Optional: <code>Kmax</code>: the maximum number of segments.</h3>
-<<<<<<< HEAD
 <p>By default, <code>Kmax</code> will be set to <code>0.75*floor(n/lmin)</code>, with <code>n</code> the number of observations, so you can omit this argument. You can however provide a different value, as large value may compromise speed or selection of optimal number of segments.</p>
-=======
-<p>By default, <code>Kmax</code> will be set to <code>0.75*floor(n/lmin)</code>, with <code>n</code> the number of observations, so you can omit this argument. You can however provide a different value, as large value may compromise speed or selection of optimal number of segments. See section <a href="#changing-kmax-1">Changing Kmax</a> for more advices.</p>
->>>>>>> b7a4eb5ae88c31fd336c1c535d9f8a2199d1f445
 </div>
 <div id="optional-seg-var" class="section level3">
 <h3 class="hasAnchor">
@@ -325,11 +317,7 @@
 
 <span class="fu"><a href="../reference/segmentation-class.html">plot_BIC</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span></code></pre></div>
 <p><img src="v02_run_segclust2d_files/figure-html/simulmode%20plot%20BIC%20cluster%202-5-1.png" width="768"></p>
-<<<<<<< HEAD
 <p>In the curve above we see that the optimum number of cluster selected is 4, despite the difference being relatively small compared to <code>ncluster = 3</code> and to the evolution with the number of segment. In addition, if we look at the results of the segmentation we can see identical segment distribution, the only difference is that state 2 in the segmentation with 3 cluster is divided into state 2 and 3 in the segmentation with 4 cluster:</p>
-=======
-<p>In the curve above we see that the optimum number of cluster selected is 4, despite the difference being relatively small compared to <code>ncluster = 2</code> and to the evolution with the number of segment. In addition, if we look at the results of the segmentation we can see identical segment distribution, the only difference is that state 2 in the segmentation with 3 cluster is divided into state 2 and 3 in the segmentation with 4 cluster:</p>
->>>>>>> b7a4eb5ae88c31fd336c1c535d9f8a2199d1f445
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mode_segclust</span>, ncluster <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p><img src="v02_run_segclust2d_files/figure-html/3%20clusters-1.png" width="768"></p>
@@ -337,11 +325,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mode_segclust</span>, ncluster <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></code></pre></div>
 <p><img src="v02_run_segclust2d_files/figure-html/4%20clusters-1.png" width="768"></p>
 <p>More generally, as in this example, if the selected number of segment for a higher number of cluster is the same, then the lower number of cluster should be favored.</p>
-<<<<<<< HEAD
 <p>Once the number of cluster have been selected, the number of segment should be selected with the BIC criterium. When the segmentation-clustering is reliable, the selected optimum should be a maximum just before a linear drop of the penalized log-Likelihood as in the examples above. With real data the signal is seldom as clear and may require adjustment based on exploration of the realized segmentation/clustering.</p>
-=======
-<p>Once the number of cluster have been selected, the number of segment should be selected with the BIC criterium. When the segmentation-clustering is reliable, the selected optimum should the maximum just before a linear drop of the penalized log-Likelihood as in the examples above. With real data the signal is seldom as clear and may require adjustment based on exploration of the realized segmentation/clustering.</p>
->>>>>>> b7a4eb5ae88c31fd336c1c535d9f8a2199d1f445
 </div>
 </div>
 </div>
