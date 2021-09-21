@@ -53,10 +53,10 @@ plot_segm <-
   state_color <- ifelse(order,"state_ordered","state")
   prepMu <- find_mu_sd(df.states,diag.var)
   # 1 seule segmentation
-  segmentation <- dplyr::left_join(df.segm,prepMu, by = c("state"))
+  chosen_segmentation <- dplyr::left_join(df.segm,prepMu, by = c("state"))
   data.melt <- reshape2::melt(data,measure.vars = diag.var)
-  segmentation$begin_date <- data[segmentation$begin,x_col]
-  segmentation$end_date <- data[segmentation$end,x_col]
+  chosen_segmentation$begin_date <- data[chosen_segmentation$begin,x_col]
+  chosen_segmentation$end_date <- data[chosen_segmentation$end,x_col]
   if(stationarity){
     df_stat <- NULL
     for(seg in seq_len(nrow(df.segm))){
@@ -106,7 +106,7 @@ plot_segm <-
       ggplot2::geom_line(ggplot2::aes_string(x=x_col,y="value"),col='grey60')+
       ggplot2::facet_wrap(~variable,ncol=1,scales="free_y")+
       ggplot2::geom_rect(
-        data=segmentation,
+        data=chosen_segmentation,
         ggplot2::aes_string(xmin="begin_date",
                             xmax="end_date",
                             ymin="mu-sd",
@@ -114,7 +114,7 @@ plot_segm <-
                             fill=paste0("factor(",state_color,")")),
         alpha=0.2)+
       ggplot2::geom_segment(
-        data=segmentation,
+        data=chosen_segmentation,
         ggplot2::aes_string(
           x="begin_date",
           xend="end_date",
