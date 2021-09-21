@@ -8,19 +8,6 @@
 #'
 #' @param x data used for segmentation. Supported: data.frame, Move object,
 #' ltraj object
-#' @param seg.var for behavioral segmentation: names of the variables used for
-#'   segmentation (either one or two names).
-#' @param Kmax maximum number of segments.
-#' @param lmin minimum length of segments.
-#' @param diag.var names of the variables on which
-#'   statistics are calculated.
-#' @param order.var names of the variable with which states are ordered.
-#' @param scale.variable TRUE or FALSE for automatic scaling of variables
-#'  (reduction and  centering)
-#' @param subsample_over over which size should subsampling begin (depending on
-#'   speed and memory limitations)
-#' @param subsample if FALSE disable subsample
-#' @param subsample_by override subsample_over to adjust manually subsampling
 #' @param ... additional parameters given to \code{\link{segmentation_internal}}
 #' @return  a \code{\link{segmentation-class}} object
 #'
@@ -128,10 +115,19 @@ segmentation.ltraj <-
 #' Internal segmentation function
 #' @param x data.frame with observations
 #' @param sameSigma does segments have same variance ?
+#' @param seg.var names of the variables used for
+#'   segmentation (either one or two names).
+#' @param Kmax maximum number of segments.
+#' @param lmin minimum length of segments.
+#' @param diag.var names of the variables on which
+#'   statistics are calculated.
+#' @param order.var names of the variable with which states are ordered.
+#' @param scale.variable TRUE or FALSE for automatic scaling of variables
+#'  (reduction and  centering)
 #' @param ... additional parameters given to \link{chooseseg_lavielle}
-#' @inheritParams segmentation
 #'
-#' @inheritParams chooseseg_lavielle
+#' @rdname segmentation
+#' 
 #' @export
 
 segmentation_internal <-

@@ -18,6 +18,7 @@
 #' @param eps eps
 #' @param lissage should likelihood be smoothed
 #' @param pureR should algorithm run in full R or use Rcpp speed improvements
+#' @param ... additional parameters
 #' @return  a list with Linc, the incomplete loglikelihood =Linc,param=paramtau
 #'   posterior probability
 #

@@ -7,12 +7,11 @@
 #' Expectation-Maximization algorithm. Among the different segmentation found,
 #' the best one can be chosen using the maximum of a BIC penalized likelihood.
 #'
-#' @param ncluster number of cluster into which segments should be grouped. Can
-#'   be a vector if one want to test several number of clusters.
 #' @inheritParams segmentation
 #' @inheritParams segclust.data.frame
 #' @inheritParams segclust.Move
 #' @inheritParams segclust.ltraj
+#' @inheritParams segclust_internal
 #' @param ... additional parameters given to \code{\link{segclust_internal}}.
 #' @return  a \code{\link{segmentation-class}} object
 #'
@@ -110,6 +109,8 @@ segclust.ltraj <- function(x,  ...){
 }
 
 #' Internal segmentation/clustering function
+#' @param ncluster number of cluster into which segments should be grouped. Can
+#'   be a vector if one want to test several number of clusters.
 #' @param ... additional arguments given to \code{\link{chooseseg_lavielle}}
 #' @inheritParams segclust
 #' @inheritParams segmentation_internal
