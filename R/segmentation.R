@@ -281,7 +281,7 @@ segmentation_internal <-
                       {output_lavielle$Kopt} segments, \\
                       according to Lavielle's criterium")
     cli::cli_text(cli::col_grey(
-    'Other number of segment may be selected 
+    'Other number of segments may be selected 
       by looking for likelihood breaks with plot_likelihood()'))
     cli::cli_text(cli::col_grey(
     'Results of the segmentation may be explored with plot() and segmap()'))
