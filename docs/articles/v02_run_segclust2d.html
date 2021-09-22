@@ -99,12 +99,12 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rpatin/segclust2d">segclust2d</a></span><span class="op">)</span></code></pre></div>
-<p>The package <code>segclust2d</code> provides access to two different method:</p>
+<p>The package <code>segclust2d</code> provides access to two algorithms:</p>
 <ul>
-<li>It can perform a <a href="#segmentation">segmentation</a> of the time-series into homogeneous segments. A typical case is the identification of home-range behaviour.</li>
-<li>It can also perform an integrated classification of those segments into clusters of homogeneous behaviour through a <a href="#segmentation-clustering">segmentation/clustering</a> algorithm. This is generally used to identify behavioural modes.</li>
+<li><p>It can perform a <a href="#segmentation">segmentation</a> of the time-series into homogeneous segments. A typical case is the identification of home-range shifts</p></li>
+<li><p>It can also perform an integrated classification of those segments into clusters of homogeneous behaviour through a <a href="#segmentation-clustering">segmentation/clustering</a> algorithm. This can be used to identify behavioural modes.</p></li>
 </ul>
-<p>Input data are here <code>data.frame</code> (shown in the first examples), but it can also be a <code>Move</code> object, a <code>ltraj</code> object (from package <code>adehabitatLT</code>) or a <code>sftraj</code> object, both shown in section <a href="https://rpatin.github.io/segclust2d/articles/v01_preparing_data.html">Preparing data for Segmentation/Clustering with segclust2d</a></p>
+<p>Input data used in the examples here is a <code>data.frame</code> object but it can also be a <code>Move</code> object, a <code>ltraj</code> object (from package <code>adehabitatLT</code>) or a <code>sftraj</code> object, both shown in section <a href="https://rpatin.github.io/segclust2d/articles/v01_preparing_data.html">Preparing data for Segmentation/Clustering with segclust2d</a></p>
 <div id="presentation-of-data-sets" class="section level1">
 <h1 class="hasAnchor">
 <a href="#presentation-of-data-sets" class="anchor"></a>Presentation of data sets</h1>
@@ -127,7 +127,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">simulmode</span><span class="op">)</span>
 <span class="va">simulmode</span><span class="op">$</span><span class="va">abs_spatial_angle</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">simulmode</span><span class="op">$</span><span class="va">spatial_angle</span><span class="op">)</span>
 <span class="va">simulmode</span> <span class="op">&lt;-</span> <span class="va">simulmode</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">simulmode</span><span class="op">$</span><span class="va">abs_spatial_angle</span><span class="op">)</span>, <span class="op">]</span></code></pre></div>
-<p><code>simulmode</code> is an example dataset containing a movement simulation with three different movement mode. It is a data.frame with 11 columns, with coordinates and several covariates. In addition to loading we calculated here the absolute value for the turning angle at constant step length (here called <code>spatial_angle</code>). We also checked the data for missing value.</p>
+<p><code>simulmode</code> is an example dataset containing a movement simulation with three movement modes. It is a data.frame with 11 columns, with location coordinates and several covariates. In addition to loading we calculated here the absolute value for the turning angle at constant step length (here called <code>spatial_angle</code>). Data are also checked for missing values.</p>
 <div class="figure">
 <img src="v02_run_segclust2d_files/figure-html/map%20simulmode-1.png" alt="`simulmode`: simulation of movement with three different behavioural modes." width="480"><p class="caption">
 <code>simulmode</code>: simulation of movement with three different behavioural modes.
@@ -150,31 +150,31 @@
 <div id="optional-kmax-the-maximum-number-of-segments-" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-kmax-the-maximum-number-of-segments-" class="anchor"></a>Optional: <code>Kmax</code>: the maximum number of segments.</h3>
-<p>By default, <code>Kmax</code> will be set to <code>0.75*floor(n/lmin)</code>, with <code>n</code> the number of observations, so you can omit this argument. You can however provide a different value, as large value may compromise speed or selection of optimal number of segments.</p>
+<p>By default, <code>Kmax</code> will be set to <code>0.75*floor(n/lmin)</code>, with <code>n</code> the number of observations, so you can omit this argument. You can however provide a different value, as a large value may compromise speed or selection of optimal number of segments.</p>
 </div>
 <div id="optional-seg-var" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-seg-var" class="anchor"></a>Optional: <code>seg.var</code>
 </h3>
-<p>You can specify the variables to be segmented using argument <code>seg.var</code>. By default, function segmentation will use variables <code>x</code> and <code>y</code> for a data.frame or use the coordinates for <code>move</code>, <code>ltraj</code> and <code>sftraj</code> objects.</p>
+<p>You can specify the variables to be segmented using argument <code>seg.var</code>. By default, function segmentation will use variables <code>x</code> and <code>y</code> for a data.frame or use the coordinates for <code>move</code> and <code>ltraj</code> objects.</p>
 </div>
 <div id="optional-scale-variable" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-scale-variable" class="anchor"></a>Optional: <code>scale.variable</code>
 </h3>
-<p>The function allow rescaling of variable with argument <code>scale.variable</code>. Rescaling sets variable in <code>seg.var</code> to a mean of 0 and a variance of 1. It is recommended if variables chosen for segmentation are of different nature (e.g. speed and turning angle). It is therefore inadvisable for segmentation of coordinates to identify home-ranges. By default <code><a href="../reference/segmentation.html">segmentation()</a></code> disable rescaling and sets <code>scale.variable = FALSE</code>.</p>
+<p>The function allow rescaling of variable with argument <code>scale.variable</code>. Rescaling sets variable in <code>seg.var</code> to a mean of 0 and a variance of 1. It is recommended if the variables chosen for segmentation are of different nature (e.g. speed and turning angle). It is therefore inadvisable for segmentation of coordinates to identify home-ranges. By default <code><a href="../reference/segmentation.html">segmentation()</a></code> disables rescaling and sets <code>scale.variable = FALSE</code>.</p>
 </div>
 <div id="optional-diag-var" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-diag-var" class="anchor"></a>Optional: <code>diag.var</code>
 </h3>
-<p><code><a href="../reference/segmentation.html">segmentation()</a></code> use variables provided in <code>seg.var</code> and automatically produces summary statistics for each variable and each segments (mean and standard deviation). In case you want summary statistics for other variables than <code>seg.var</code> you can specify them in <code>diag.var</code>. By default <code>diag.var</code> is set to <code>seg.var</code>.</p>
+<p><code><a href="../reference/segmentation.html">segmentation()</a></code> uses variables provided in <code>seg.var</code> and automatically produces summary statistics for each variable and each segments (mean and standard deviation). In case you want summary statistics for other variables than <code>seg.var</code> you can specify them in <code>diag.var</code>. By default <code>diag.var</code> is set to <code>seg.var</code>.</p>
 </div>
 <div id="optional-order-var" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-order-var" class="anchor"></a>Optional: <code>order.var</code>
 </h3>
-<p><code>order.var</code> through which variables segments should be ordered when asked so in some of the output functions (see section <a href="https://rpatin.github.io/segclust2d/articles/v03_explore_outputs.html">Exploring Outputs from segclust2d</a> for details.). By default <code>order.var</code> is set to <code>seg.var[1]</code></p>
+<p><code>order.var</code> is the variable used for ordering segments in some of the output functions (see section <a href="https://rpatin.github.io/segclust2d/articles/v03_explore_outputs.html">Exploring Outputs from segclust2d</a> for details.). By default <code>order.var</code> is set to <code>seg.var[1]</code></p>
 </div>
 <div id="deprecated-type-coord-names" class="section level3">
 <h3 class="hasAnchor">
@@ -187,7 +187,7 @@
 <li>
 <code>type = "behaviour"</code> was associated with, <code>scale.variable = TRUE</code> and performed a segmentation based on the variables proposed as <code>seg.var</code>, with no default value.</li>
 </ul>
-<p>From version 0.3.0 and forward, those argument were removed so that the functions now work only with arguments <code>scale.variable</code> and <code>seg.var</code>. Using the arguments <code>type</code> makes the function fail and triggers message explaining the required changes:</p>
+<p>From version 0.3.0 and forward, those arguments were removed so that the functions now work only with arguments <code>scale.variable</code> and <code>seg.var</code>. Using the arguments <code>type</code> makes the function fail and triggers message explaining the required changes:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df.seg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">simulshift</span>, 
                        type <span class="op">=</span> <span class="st">"home-range"</span>,
@@ -202,11 +202,11 @@
 <h2 class="hasAnchor">
 <a href="#running-segmentation" class="anchor"></a>Running <code>segmentation()</code>
 </h2>
-<p><code><a href="../reference/segmentation.html">segmentation()</a></code> uses a Dynamic Programming algorithm that finds the best segmentation given a number of segment. The function runs the dynamic programming for each number of segment <code>&lt;Kmax</code>. As a result, the optimal segmentation is associated with a likelihood value for each number of segment. Section <a href="#different-running-configurations">Different running configurations</a> show several examples of running <code><a href="../reference/segmentation.html">segmentation()</a></code> with different options. Section <a href="#selecting-the-number-of-segments">Selecting the number of segments</a> discuss about the selection of the number of segments using either Lavielle’s criterium or graphical explorations.</p>
+<p><code><a href="../reference/segmentation.html">segmentation()</a></code> uses a Dynamic Programming algorithm that finds the best segmentation given a number of segments. The function runs the dynamic programming for each number of segments <code>&lt;Kmax</code>. As a result, the optimal segmentation is associated with a likelihood value for each number of segment. Section <a href="#different-running-configurations">Different running configurations</a> shows several examples of running <code><a href="../reference/segmentation.html">segmentation()</a></code> with different options. Section <a href="#selecting-the-number-of-segments">Selecting the number of segments</a> discusses the selection of the number of segments using either Lavielle’s criterium or graphical explorations.</p>
 <div id="different-running-configurations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#different-running-configurations" class="anchor"></a>Different running configurations</h3>
-<p>In this section we will try different ways of calling the <code><a href="../reference/segmentation.html">segmentation()</a></code> function. Minimal call should contains the data concerned (here the dataframe <code>simulshift</code>) and argument <code>lmin</code>. The function will automatically complete the missing argument with default values and communicate about it (not shown here).</p>
+<p>In this section we will try different ways of calling the <code><a href="../reference/segmentation.html">segmentation()</a></code> function. Minimal call only contains the data concerned (here the data.frame <code>simulshift</code>) and argument <code>lmin</code>. The function will automatically complete the missing arguments with default values and communicate about it (not shown here).</p>
 <p><em><code>subsample_by</code> argument is described in section <a href="https://rpatin.github.io/segclust2d/articles/v01_preparing_data.html#subsampling">Subsampling</a></em></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">shift_seg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">simulshift</span>, 
@@ -222,7 +222,7 @@
 <p>If not possible you will get an error and this message:</p>
 <pre><code>#&gt; x lmin*Kmax &gt; nrow(x) and Kmax cannot be adjusted. Please provide lower values for lmin
 #&gt; Error in eval(expr, envir, enclos): lmin*Kmax &gt; nrow(x)</code></pre>
-<p>By default the function is looking for column <code><a href="https://rdrr.io/r/base/c.html">c(x,y)</a></code> or the coordinates (in the case of a <code>Move</code> or a <code>ltraj</code> object). Alternatively the user can provide its own variable, depending on its aim:</p>
+<p>By default the function is looking for column <code><a href="https://rdrr.io/r/base/c.html">c(x,y)</a></code> or the coordinates (in the case of a <code>Move</code> or a <code>ltraj</code> object). Alternatively the user can provide its own variables, depending on its aim:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">shift_seg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">simulshift</span>,
                           seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>,<span class="st">"y"</span><span class="op">)</span>,
@@ -232,18 +232,18 @@
 <div id="selecting-the-number-of-segments" class="section level3">
 <h3 class="hasAnchor">
 <a href="#selecting-the-number-of-segments" class="anchor"></a>Selecting the number of segments</h3>
-<p>Once the segmentation have been successfully run. A summary like this will appear:</p>
+<p>Once the segmentation have been successfully run, a summary like this will appear</p>
 <pre><code>#&gt; ✓ Best segmentation estimated with 3 segments, according to Lavielle's criterium
-#&gt; Other number of segment may be selected by looking for likelihood breaks with
+#&gt; Other number of segments may be selected by looking for likelihood breaks with
 #&gt; plot_likelihood()
 #&gt; Results of the segmentation may be explored with plot() and segmap()</code></pre>
-<p>By default, the algorithm choose the number of segment given a criterium developed by Marc Lavielle based on the value of the second derivative of the penalized likelihood. This criterium use a threshold value of <code>S = 0.75</code>, but a different threshold can be specified to <code><a href="../reference/segmentation.html">segmentation()</a></code> if need be.</p>
-<p>As stated it is important to check that the number of segment selected correspond to a clear break in log-likelihood and if it is not the case to select a better value. This can be checked with <code>plot_likelihood</code> that shows the log-likelihood of the best segmentation versus the number of segments and highlights the one chosen with Lavielle’s criterium. The likelihood should show an increasing curve with a clear breakpoints for the optimal number of segment. Note that with real data breaks are often less clear than for that example. An artifactual decrease of likelihood can happen for large number of segment when Kmax is too high (close to <code>n/lmin</code>) and correspond generally to an oversegmentation (in such case, Kmax should be decreased).</p>
+<p>By default, the algorithm chooses the number of segments given a criterium developed by Marc Lavielle based on the value of the second derivative of the penalized likelihood. This criterium uses a threshold value of <code>S = 0.75</code>, but a different threshold can be specified to <code><a href="../reference/segmentation.html">segmentation()</a></code> if needed.</p>
+<p>As stated it is important to check that the number of segments selected corresponds to a clear break in log-likelihood and if it is not the case to select a better value. This can be checked with <code>plot_likelihood</code> that shows the log-likelihood of the best segmentation versus the number of segments and highlights the one chosen with Lavielle’s criterium. The likelihood should show an increasing curve with a clear breakpoint for the optimal number of segments. Note that with real data breaks are often less clear than for that example. An artifactual decrease of likelihood can happen for large number of segments when Kmax is too high (close to <code>n/lmin</code>) and corresponds generally to an oversegmentation (in such case, Kmax should be decreased).</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/segmentation-class.html">plot_likelihood</a></span><span class="op">(</span><span class="va">shift_seg</span><span class="op">)</span></code></pre></div>
 <p><img src="v02_run_segclust2d_files/figure-html/plot_likelihood%20example-1.png" width="384"></p>
-<p>Another example on the <code>simulmode</code> dataset show a situation where the number of segment automatically selected by Lavielle’s criterium is 1, despite a (relatively) clear break in the likelihood at <code>nseg = 15</code>. In such case it is of paramount importance to explore the log-likelihood to confirm or select an appropriate number of segments.</p>
-<p><em>Note that in this case the problem in the selection of the number of segment would have been avoided by setting <code>Kmax = 25</code>. For Lavielle’s criterium to work properly <code>Kmax</code> should be larger enough than your expected number of segment.</em></p>
+<p>Another example on the <code>simulmode</code> dataset shows a situation where the number of segments automatically selected by Lavielle’s criterium is 1, despite a (relatively) clear break in the likelihood at <code>nseg = 15</code>. In such case it is of paramount importance to explore the log-likelihood to confirm or select an appropriate number of segments.</p>
+<p><em>Note that in this case the problem in the selection of the number of segments would have been avoided by setting <code>Kmax = 25</code>. For Lavielle’s criterium to work properly <code>Kmax</code> should be clearly larger than your expected number of segment.</em></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">mode_seg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segmentation.html">segmentation</a></span><span class="op">(</span><span class="va">simulmode</span>,
@@ -263,11 +263,11 @@
 <div id="setting-segclust-parameters-" class="section level2">
 <h2 class="hasAnchor">
 <a href="#setting-segclust-parameters-" class="anchor"></a>Setting <code>segclust()</code> parameters.</h2>
-<p><code><a href="../reference/segclust.html">segclust()</a></code> share most of its parameter with <code><a href="../reference/segmentation.html">segmentation()</a></code> so you can read section <a href="#setting-segmentation-parameters--1">Setting <code>segmentation()</code> parameters.</a> for the parameters missing description here. The only additional parameter is the number of cluster to be tested.</p>
-<div id="required-ncluster-the-number-of-cluster" class="section level3">
+<p><code><a href="../reference/segclust.html">segclust()</a></code> shares most of its parameters with <code><a href="../reference/segmentation.html">segmentation()</a></code> so you can read section <a href="#setting-segmentation-parameters--1">Setting <code>segmentation()</code> parameters.</a> for the parameters missing description here. The only additional parameter is the number of clusters to be tested.</p>
+<div id="required-ncluster-the-number-of-clusters" class="section level3">
 <h3 class="hasAnchor">
-<a href="#required-ncluster-the-number-of-cluster" class="anchor"></a>Required: <code>ncluster</code>: the number of cluster</h3>
-<p><code>ncluster</code> is an argument required for <code><a href="../reference/segclust.html">segclust()</a></code>. The user can provide a vector of values or a single value. The algorithm provides a BIC-criterium to select the number of cluster, although it is advised to select it based on biological knowledge.</p>
+<a href="#required-ncluster-the-number-of-clusters" class="anchor"></a>Required: <code>ncluster</code>: the number of clusters</h3>
+<p><code>ncluster</code> is an argument required for <code><a href="../reference/segclust.html">segclust()</a></code>. The user can provide a vector of values or a single value. The algorithm provides a BIC-criterium to select the number of clusters, although it is advised to select it based on biological knowledge.</p>
 </div>
 </div>
 <div id="running-segclust" class="section level2">
@@ -277,7 +277,7 @@
 <div id="different-running-configurations-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#different-running-configurations-1" class="anchor"></a>Different running configurations</h3>
-<p>In this section we will try different ways of calling the <code><a href="../reference/segclust.html">segclust()</a></code> function. Minimal call should contains the data concerned (here the dataframe <code>simulmode</code>) as well as argument <code>lmin</code> and <code>ncluster</code> and <code>seg.var</code>. The function will automatically complete the missing argument with default values and communicate about it (not shown here).</p>
+<p>In this section we will try different ways of calling the <code><a href="../reference/segclust.html">segclust()</a></code> function. Minimal call only contains the data concerned (here the dataframe <code>simulmode</code>) as well as arguments <code>lmin</code>, <code>ncluster</code> and <code>seg.var</code>. The function will automatically complete the missing arguments with default values and communicate about it (not shown here).</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mode_segclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segclust.html">segclust</a></span><span class="op">(</span><span class="va">simulmode</span>,
                           Kmax <span class="op">=</span> <span class="fl">20</span>, lmin<span class="op">=</span><span class="fl">10</span>, 
@@ -291,23 +291,23 @@
                           seg.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"speed"</span>,<span class="st">"abs_spatial_angle"</span><span class="op">)</span>,
                           scale.variable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="selecting-the-number-of-cluster-and-segment-" class="section level3">
+<div id="selecting-the-number-of-clusters-and-segments-" class="section level3">
 <h3 class="hasAnchor">
-<a href="#selecting-the-number-of-cluster-and-segment-" class="anchor"></a>Selecting the number of cluster and segment.</h3>
+<a href="#selecting-the-number-of-clusters-and-segments-" class="anchor"></a>Selecting the number of clusters and segments.</h3>
 <p>Once the segmentation/clustering have been successfully run. A summary like this will appear:</p>
-<pre><code>#&gt; ✓ Best segmentation/clustering estimated with 3 cluster and 15 segments according to BIC
-#&gt; → Number of cluster should preferentially be selected according to biological
+<pre><code>#&gt; ✓ Best segmentation/clustering estimated with 3 clusters and 15 segments according to BIC
+#&gt; → Number of clusters should preferentially be selected according to biological
 #&gt; knowledge. Exploring the BIC plot with plot_BIC() can also provide advice to
-#&gt; select the number of cluster.
-#&gt; → Once number of cluster is selected, the number of segment should be selected
+#&gt; select the number of clusters.
+#&gt; → Once number of clusters is selected, the number of segments can be selected
 #&gt; according to BIC.
 #&gt; → Results of the segmentation/clustering may further be explored with plot()
 #&gt; and segmap()</code></pre>
-<p>As stated, the number of cluster should preferentially be selected based on biological knowledge. Exploration of the BIC-based penalized log-likelihood can also help selecting an appropriate number of cluster, with the function <code><a href="../reference/segmentation-class.html">plot_BIC()</a></code>. Best-case scenario is as below, the BIC show a steep increase up to a maximum and a slow decrease after the optimum and one number of cluster is clearly above the others.</p>
+<p>As stated, the number of clusters should preferentially be selected based on biological knowledge. Exploration of the BIC-based penalized log-likelihood can also help selecting an appropriate number of clusters, with the function <code><a href="../reference/segmentation-class.html">plot_BIC()</a></code>. Best-case scenario is as below, the BIC shows a steep increase up to a maximum and a slow decrease after the optimum and one number of clusters is clearly above the others.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/segmentation-class.html">plot_BIC</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span></code></pre></div>
 <p><img src="v02_run_segclust2d_files/figure-html/plot_BIC-1.png" width="768"></p>
-<p>With real data it also happens that more cluster always improve the penalized-likelihood so it will be a poor indication of the appropriate number of cluster. Such situation may be shown with our dataset <code>simulmode</code> indeed, if we allow the number of cluster to be tested between 2 and 5 instead of a maximum at three, we obtain the following BIC curve:</p>
+<p>With real data, a larger number of clusters almost always improves the penalized-likelihood so it will generally be a poor indication of the appropriate number of clusters. Such situation may be shown with our dataset <code>simulmode</code> indeed, if we allow the number of clusters to be tested between 2 and 5 instead of a maximum at three, we obtain the following BIC curve:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mode_segclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segclust.html">segclust</a></span><span class="op">(</span><span class="va">simulmode</span>,
                           Kmax <span class="op">=</span> <span class="fl">20</span>, lmin<span class="op">=</span><span class="fl">10</span>, 
@@ -317,15 +317,15 @@
 
 <span class="fu"><a href="../reference/segmentation-class.html">plot_BIC</a></span><span class="op">(</span><span class="va">mode_segclust</span><span class="op">)</span></code></pre></div>
 <p><img src="v02_run_segclust2d_files/figure-html/simulmode%20plot%20BIC%20cluster%202-5-1.png" width="768"></p>
-<p>In the curve above we see that the optimum number of cluster selected is 4, despite the difference being relatively small compared to <code>ncluster = 3</code> and to the evolution with the number of segment. In addition, if we look at the results of the segmentation we can see identical segment distribution, the only difference is that state 2 in the segmentation with 3 cluster is divided into state 2 and 3 in the segmentation with 4 cluster:</p>
+<p>In the curve above we see that the optimum number of clusters selected is 4, despite the difference being relatively small compared to <code>ncluster = 3</code> and to the evolution with the number of segments. In addition, if we look at the results of the segmentation we can see identical segment distribution, the only difference is that state 2 in the segmentation with 3 clusters is divided into state 2 and 3 in the segmentation with 4 clusters:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mode_segclust</span>, ncluster <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p><img src="v02_run_segclust2d_files/figure-html/3%20clusters-1.png" width="768"></p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mode_segclust</span>, ncluster <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></code></pre></div>
 <p><img src="v02_run_segclust2d_files/figure-html/4%20clusters-1.png" width="768"></p>
-<p>More generally, as in this example, if the selected number of segment for a higher number of cluster is the same, then the lower number of cluster should be favored.</p>
-<p>Once the number of cluster have been selected, the number of segment should be selected with the BIC criterium. When the segmentation-clustering is reliable, the selected optimum should be a maximum just before a linear drop of the penalized log-Likelihood as in the examples above. With real data the signal is seldom as clear and may require adjustment based on exploration of the realized segmentation/clustering.</p>
+<p>More generally, as in this example, if the selected number of segments for a higher number of clusters is the same, then the lower number of clusters should be favored.</p>
+<p>Once the number of clusters have been selected, the number of segments can be selected with the BIC criterium. When the segmentation-clustering is reliable, the selected optimum should be a maximum just before a linear drop of the penalized log-Likelihood as in the examples above. With real data the signal is seldom as clear and may require adjustment based on exploration of the realized segmentation/clustering.</p>
 </div>
 </div>
 </div>
