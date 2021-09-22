@@ -310,16 +310,16 @@ segclust_internal <-
   cli::cli_h1("Segmentation/Clustering results")
   cli::cli_alert_success(
     "Best segmentation/clustering estimated with \\
-    {segmented$ncluster.BIC} cluster and \\
+    {segmented$ncluster.BIC} clusters and \\
     {segmented$Kopt.BIC[segmented$ncluster.BIC]} segments according to BIC")
   cli::cli_text(cli::col_grey(
     '{cli::symbol$arrow_right} Number of cluster \\
     should preferentially be selected 
     according to biological knowledge. Exploring the BIC plot with plot_BIC()
-    can also provide advice to select the number of cluster.'))
+    can also provide advice to select the number of clusters.'))
   cli::cli_text(cli::col_grey(
-    '{cli::symbol$arrow_right} Once number of cluster is selected, \\
-    the number of segment should be selected according to BIC.'))
+    '{cli::symbol$arrow_right} Once number of clusters is selected, \\
+    the number of segment cab be selected according to BIC.'))
   
   cli::cli_text(cli::col_grey(
     '{cli::symbol$arrow_right} Results of the segmentation/clustering
