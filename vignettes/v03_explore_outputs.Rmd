@@ -26,15 +26,20 @@ library(segclust2d)
 
 # Possible outputs and general functioning
 
-Both `segmentation()` and `segclust()` return objects of `segmentation-class` for which several function are available (see [below](#list-of-functions)). 
+Both `segmentation()` and `segclust()` return objects of `segmentation-class`
+for which several function are available (see [below](#list-of-functions)).
 
 ## General functioning
 
-There are two types of functions: (1) some are general and show likelihood for all the different segmentation; (2) other are specific to a given segmentation and requires selecting a number of segment and of cluster (if applicable).
+There are two types of functions: (1) some are general and show likelihood for
+all the different segmentation; (2) other are specific to a given segmentation
+and requires selecting a number of segment and of cluster (if applicable).
 
 ### Default values for nseg and ncluster
 
-For the functions specific to a given segmentation, if you do not provide as argument the number of segment and of cluster, the functions will automatically select the best arguments based on a penalized log-likelihood as following:
+For the functions specific to a given segmentation, if you do not provide as
+argument the number of segment and of cluster, the functions will automatically
+select the best arguments based on a penalized log-likelihood as following:
 
 - for outputs of `segmentation()` the optimal number of segments is selected with
 [Lavielle's criterium](https://rpatin.github.io/segclust2d/articles/v02_run_segclust2d.html#selecting-the-number-of-segments-1). 
@@ -42,15 +47,23 @@ Other number may be provided with argument `nseg`.
 
 - for outputs of `segclust()` the optimal number of cluster and segment is selected with a 
 [BIC-based penalized criterium](https://rpatin.github.io/segclust2d/articles/v02_run_segclust2d.html#selecting-the-number-of-segments-2). 
-Other parameters may be provided with argument `nseg` and `ncluster`. It is recommended to manually choose the number of cluster based on biological knowledge or careful exploration of the BIC-based penalized likelihood, while using the BIC-selected number of segment for this number of cluster, by providing only argument `ncluster`.
+Other parameters may be provided with argument `nseg` and `ncluster`. It is
+recommended to manually choose the number of cluster based on biological
+knowledge or careful exploration of the BIC-based penalized likelihood, while
+using the BIC-selected number of segment for this number of cluster, by
+providing only argument `ncluster`.
 
 ### Graphical outputs
 
-All plot methods use `ggplot2` package and return `ggplot` objects that can be further modified and customized using classical `ggplot2` (see [ggplot2 function reference](https://ggplot2.tidyverse.org/reference/)).
+All plot methods use `ggplot2` package and return `ggplot` objects that can be
+further modified and customized using classical `ggplot2`
+(see [ggplot2 function reference](https://ggplot2.tidyverse.org/reference/)).
 
 ### Default value for `order`
 
-If you provide argument `order = TRUE` to a function specific to a segmentation, then the different segment or cluster will be numbered ordered by the variable provided as `order.var` in the `segmentation()` or `segclust()` call.
+If you provide argument `order = TRUE` to a function specific to a segmentation,
+then the different segment or cluster will be numbered ordered by the variable
+provided as `order.var` in the `segmentation()` or `segclust()` call.
 
 ## List of functions
 
@@ -64,26 +77,35 @@ If you provide argument `order = TRUE` to a function specific to a segmentation,
 
 *Summary for all segmentations:*
 
-- `plot_likelihood` for segmentation() show the log-likelihood of the segmentation for all numbers of segments.
-- `plot_BIC` for segclust() show the BIC-based penalized log-likelihood of the segmentation.clustering for all numbers of segments and cluster.
+- `plot_likelihood` for segmentation() show the log-likelihood of the
+segmentation for all numbers of segments. 
+- `plot_BIC` for segclust() show the
+BIC-based penalized log-likelihood of the segmentation.clustering for all
+numbers of segments and cluster.
 
 
 2. **Extracting results**
 
 *For a specific segmentation:*
 
-- `augment` returns a data.frame with the original data as well as the segment or cluster associated for each data point
+- `augment` returns a data.frame with the original data as well as the segment
+or cluster associated for each data point
 - `segment` returns a data.frame with the beginning and end of each segment
 - `states` for `segclust` provides a data.frame with summary statistics for all clusters
 
 *Summary for all segmentations:*
 
-- `logLik` for `segmentation()` returns a data.frame with the  log-likelihood for all number of segments. 
-- `BIC` for `segclust()` returns a data.frame with the BIC-based penalized log-likelihood for all number of cluster and segments.
+- `logLik` for `segmentation()` returns a data.frame with the  log-likelihood
+for all number of segments.
+- `BIC` for `segclust()` returns a data.frame with the BIC-based penalized
+log-likelihood for all number of cluster and segments.
 
 # Examples
 
-As function are really similar between segmentation and segmentation/clustering, we will show examples mostly for the segmentation/clustering outputs, but the use is very similar, argument `ncluster` just need to be omitted for obtaining outputs for segmentation.
+As function are really similar between segmentation and segmentation/clustering,
+we will show examples mostly for the segmentation/clustering outputs, but the
+use is very similar, argument `ncluster` just need to be omitted for obtaining
+outputs for segmentation.
 
 ```{r loading data and segclust, fig.show='hold', message = FALSE}
 data(simulmode)
@@ -104,7 +126,9 @@ plot(mode_segclust, ncluster = 3)
 
 ## segmap - map the segmentation
 
-`segmap()` plot the results of the segmentation as a map. This can be done only if data have a geographic meaning. Coordinate names are by default "x" and "y" but they can be provided through argument `coord.names`.
+`segmap()` plot the results of the segmentation as a map. This can be done only
+if data have a geographic meaning. Coordinate names are by default "x" and "y"
+but they can be provided through argument `coord.names`.
 
 ```{r segmap, fig.show='hold', message = FALSE, fig.width=5, fig.height=5}
 segmap(mode_segclust, ncluster = 3)
@@ -121,7 +145,9 @@ stateplot(mode_segclust, ncluster = 3)
 
 ### augment - get data.frame with segment/cluster information for all points
 
-`augment.segmentation()` is a method for `broom::augment`. It returns an augmented data.frame with outputs of the model - here, the attribution to segment or cluster.
+`augment.segmentation()` is a method for `broom::augment`. It returns an
+augmented data.frame with outputs of the model - here, the attribution to
+segment or cluster.
 
 ```{r augment, fig.show='hold', message = FALSE, eval = FALSE}
 augment(mode_segclust, ncluster = 3)
@@ -129,7 +155,12 @@ augment(mode_segclust, ncluster = 3)
 
 ### segment - Extract each segment (begin, end, statistics)
 
-`segment()` allows retrieving informations on the different segment of a given segmentation. Each segment is associated with the mean and standard deviation for each variable, the state (equivalent to the segment number for `segmentation`) and the state ordered given a variable - by default the first variable given by `seg.var`. One can specify the variable for ordering states through the `order.var` of `segmentation()` and `segclust()`.
+`segment()` allows retrieving informations on the different segment of a given
+segmentation. Each segment is associated with the mean and standard deviation
+for each variable, the state (equivalent to the segment number for
+`segmentation`) and the state ordered given a variable - by default the first
+variable given by `seg.var`. One can specify the variable for ordering states
+through the `order.var` of `segmentation()` and `segclust()`.
 
 ```{r segment, fig.show='hold', results = "hide", message = FALSE}
 segment(mode_segclust, ncluster = 3)
@@ -137,7 +168,9 @@ segment(mode_segclust, ncluster = 3)
 
 ### states - statistics about each states.
 
-`states()` return information on the different states of the segmentation. For `segmentation()` it is quite similar to `segment()`. For `segclust`, however it gives the different cluster found and the statistics associated.
+`states()` return information on the different states of the segmentation. For
+`segmentation()` it is quite similar to `segment()`. For `segclust`, however it
+gives the different cluster found and the statistics associated.
 
 ```{r states, fig.show='hold', results = "hide", message = FALSE}
 states(mode_segclust, ncluster = 3)
@@ -147,7 +180,9 @@ states(mode_segclust, ncluster = 3)
 
 ### log-Likelihood (segmentation)
 
-`logLik.segmentation()` return information on the log-likelihood of the different segmentations possible. It returns a data.frame with the number of segment and the log-likelihood.
+`logLik.segmentation()` return information on the log-likelihood of the
+different segmentations possible. It returns a data.frame with the number of
+segment and the log-likelihood.
 
 ```{r simulshift, fig.show='hold', message = FALSE}
 data("simulshift")
@@ -171,13 +206,18 @@ plot_likelihood(shift_seg)
 
 ### BIC-based penalized likelihood (segclust)
 
-`BIC.segmentation()` return information on the BIC-based penalized log-likelihood of the different segmentations possible. It returns a data.frame with the number of segment, the BIC-based penalized log-likelihood and the number of cluster. For `segclust()` only. Note that this does not truly returns a BIC. Here highest values are favored (in opposition to BIC)
+`BIC.segmentation()` return information on the BIC-based penalized
+log-likelihood of the different segmentations possible. It returns a data.frame
+with the number of segment, the BIC-based penalized log-likelihood and the
+number of cluster. For `segclust()` only. Note that this does not truly returns
+a BIC. Here highest values are favored (in opposition to BIC)
 
 ```{r BIC, fig.show='hold', results = "hide", message = FALSE}
 BIC(mode_segclust)
 ```
 
-`plot_BIC()` plot the BIC-based penalized log-likelihood of the segmentation for all the tested number of segments and clusters.
+`plot_BIC()` plot the BIC-based penalized log-likelihood of the segmentation for
+all the tested number of segments and clusters.
 
 ```{r plot_BIC, fig.show='hold', message = FALSE}
 plot_BIC(mode_segclust)
