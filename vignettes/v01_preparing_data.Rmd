@@ -57,7 +57,11 @@ segmentation(x_data.frame, lmin = 5, Kmax = 25)
 
 ## Move
 
-`Move` object can alternatively be provided to the function. If using `segmentation()`, the user may omit `seg.var` argument and the algorithm will use the movement coordinates as segmentation variables. Alternatively if the user specifies the segmented variable with argument `seg.var`, those variables must be present in the data associated to the `Move` object `x_move@data`
+`Move` object can alternatively be provided to the function. If using
+`segmentation()`, the user may omit `seg.var` argument and the algorithm will
+use the movement coordinates as segmentation variables. Alternatively if the
+user specifies the segmented variable with argument `seg.var`, those variables
+must be present in the data associated to the `Move` object `x_move@data`
 If `x_move` is a `Move` object, the syntax is simply:
 
 ```{r ex Move, eval = FALSE}
@@ -66,7 +70,11 @@ segmentation(x_move, lmin = 5, Kmax = 25)
 
 ## ltraj
 
-`ltraj` object can alternatively be provided to the function. If using `segmentation()`, the user may omit `seg.var` argument and the algorithm will use the movement coordinates as segmentation variables. Alternatively if the user specifies the segmented variable with argument `seg.var`, those variables must be present in the data associated to the `ltraj` object `x_ltraj@data`
+`ltraj` object can alternatively be provided to the function. If using
+`segmentation()`, the user may omit `seg.var` argument and the algorithm will
+use the movement coordinates as segmentation variables. Alternatively if the
+user specifies the segmented variable with argument `seg.var`, those variables
+must be present in the data associated to the `ltraj` object `x_ltraj@data`
 If `x_ltraj` is a `ltraj` object, the syntax is simply:
 
 ```{r ex ltraj, eval = FALSE}
@@ -80,13 +88,26 @@ segmentation(x_ltraj, lmin = 5, Kmax = 25)
 
 # Limitations on data size and subsampling
 
-Computation cost for the algorithm scales non-linearly and can be both memory and time-consuming. Performance depends on computer, but from what we have tested, a segmentation on data of size > 10000 can be quite memory intensive (more than 10Go of RAM) and segmentation-clustering can be quite long for data > 1000 (few minutes to hours). For such dataset we recommend either subsampling if loosing resolution is not a big deal (looking for home-range changes over a year with hourly points might be a lost of time when daily points are sufficient) or splitting the dataset for very long data. Although for segmentation-clustering, clusters will not be easily comparable between the different part of the dataset, if one provides parts where all cluster are present for sure, there should be no problem.
+Computation cost for the algorithm scales non-linearly and can be both memory
+and time-consuming. Performance depends on computer, but from what we have
+tested, a segmentation on data of size > 10000 can be quite memory intensive
+(more than 10Go of RAM) and segmentation-clustering can be quite long for data >
+1000 (few minutes to hours). For such dataset we recommend either subsampling if
+loosing resolution is not a big deal (looking for home-range changes over a year
+with hourly points might be a lost of time when daily points are sufficient) or
+splitting the dataset for very long data. Although for segmentation-clustering,
+clusters will not be easily comparable between the different part of the
+dataset, if one provides parts where all cluster are present for sure, there
+should be no problem.
 
 ## Subsampling options
 
 ### Disabling automatic subsampling
 
-Subsampling is automatically enabled in the function to avoid unwanted memory saturation or very long computation time. By default argument `subsample` is set to `TRUE`. In order to totally disable subsampling you have to provide argument `subsample` : 
+Subsampling is automatically enabled in the function to avoid unwanted memory
+saturation or very long computation time. By default argument `subsample` is set
+to `TRUE`. In order to totally disable subsampling you have to provide argument
+`subsample` :
 
 ```{r disabling subsampling, fig.show='hold', eval = FALSE }
 shiftseg <- segmentation(simulshift,
@@ -102,7 +123,13 @@ mode_segclust <- segclust(simulmode,
 
 ### Automatic subsampling
 
-By default subsampling is allowed (`subsample = TRUE`) and subsampling will occur if the number of data exceed a threshold (10000 for segmentation, 1000 for segmentation-clustering). The function will subsample by the lower factor (by 2, 3, 4...) for which the dataset will fall below the threshold once subsampled. For instance a 2500 rows dataset for segmentation-clustering would be subsampled by 3 to fall below 1000 rows. The threshold can be changed through argument `subsample_over`.
+By default subsampling is allowed (`subsample = TRUE`) and subsampling will
+occur if the number of data exceed a threshold (10000 for segmentation, 1000 for
+segmentation-clustering). The function will subsample by the lower factor (by 2,
+3, 4...) for which the dataset will fall below the threshold once subsampled.
+For instance a 2500 rows dataset for segmentation-clustering would be subsampled
+by 3 to fall below 1000 rows. The threshold can be changed through argument
+`subsample_over`.
 
 ```{r automatic subsampling, fig.show='hold', eval = FALSE}
 shiftseg <- segmentation(simulshift,
@@ -118,7 +145,8 @@ mode_segclust <- segclust(simulmode,
 
 ### Manual subsampling
 
-One can also override this automatic subsampling by selecting directly the subsampling factor through argument `subsample_by`.
+One can also override this automatic subsampling by selecting directly the
+subsampling factor through argument `subsample_by`.
 
 ```{r manual subsampling, fig.show='hold', eval = FALSE}
 shiftseg <- segmentation(simulshift,
@@ -134,7 +162,9 @@ mode_segclust <- segclust(simulmode,
 
 ## Consequences of subsampling on `lmin`
 
-Beware that subsampling will also affect your `lmin` argument. If subsampling by 2, `lmin` will be divided by 2. The function will tell about the value of lmin and its adjustment with subsampling with different messages:
+Beware that subsampling will also affect your `lmin` argument. If subsampling by
+2, `lmin` will be divided by 2. The function will tell about the value of lmin
+and its adjustment with subsampling with different messages:
 
 ```{r lmin and subsampling, echo = FALSE}
 lmin <-  240
@@ -154,7 +184,12 @@ lmin <- max(lmin/subsample_by,5)
 
 ## Best practice with subsampling
 
-In addition to reducing computation time, subsampling may also help the algorithm. Considering movement at the scale of hours when looking for home-ranges at the scale of months may blur the signal and for such analysis, one data per day may be sufficient. For all analyses, the user should think about the appropriate temporal resolution, with the idea that the finest temporal resolution may not always be appropriate.
+In addition to reducing computation time, subsampling may also help the
+algorithm. Considering movement at the scale of hours when looking for
+home-ranges at the scale of months may blur the signal and for such analysis,
+one data per day may be sufficient. For all analyses, the user should think
+about the appropriate temporal resolution, with the idea that the finest
+temporal resolution may not always be appropriate.
 
 *Note that subsampling has been implemented in such way that outputs will show all points but segmentation is calculated only on subsampled points. Points used in segmentation can be retrieved through `augment` in data column `subsample_ind` (The subsample indices for kept points and NA for ignored points).*
 
@@ -162,7 +197,16 @@ In addition to reducing computation time, subsampling may also help the algorith
 
 # Covariate calculations
 
-The package also includes functions in order to calculate unusual covariates, such as the turning angle at constant step length (here called `spatial_angle`, see Patin et al. 2020 for more details). For the latter, a radius have to be chosen and can be specified through argument `radius`. If no radius is specified, the default one will be the median of the step length distribution. Other covariates calculated are : persistence and turning speed (v_p and v_r) from Gurarie et al (2009), distance travelled between points, speed and smoothed version of the latter. Covariates dependent on time interval (like speed) are by default calculated with hours, but you can change this with argument `units` as in the example below.
+The package also includes functions in order to calculate unusual covariates,
+such as the turning angle at constant step length (here called `spatial_angle`,
+see Patin et al. 2020 for more details). For the latter, a radius have to be
+chosen and can be specified through argument `radius`. If no radius is
+specified, the default one will be the median of the step length distribution.
+Other covariates calculated are : persistence and turning speed (v_p and v_r)
+from Gurarie et al (2009), distance travelled between points, speed and smoothed
+version of the latter. Covariates dependent on time interval (like speed) are by
+default calculated with hours, but you can change this with argument `units` as
+in the example below.
  
 ```{r calculate covariate, fig.show='hold', eval = FALSE}
 simple_data <- simulmode[,c("dateTime","x","y")]
@@ -176,9 +220,16 @@ head(full_data)
 
 # Advice on data pre-processing
 
-When pre-processing movement data before segmentation/clustering it is common to interpolate missing data points. This may however cause problem if this leads to repetition of values. This can also arise if the individual has a very stable speed (i.e. a boat or a bird deriving on the sea) leading to very similar values.
+When pre-processing movement data before segmentation/clustering it is common to
+interpolate missing data points. This may however cause problem if this leads to
+repetition of values. This can also arise if the individual has a very stable
+speed (i.e. a boat or a bird deriving on the sea) leading to very similar
+values.
 
-When the repetition of identical or very similar values are longer than parameter `lmin`, there are segments with null variance, which cannot be accounted for by the algorithm. Should such cases arise, the algorithm will fail and tell you about it:
+When the repetition of identical or very similar values are longer than
+parameter `lmin`, there are segments with null variance, which cannot be
+accounted for by the algorithm. Should such cases arise, the algorithm will fail
+and tell you about it:
 
 ```{r example repeated, eval = FALSE}
 df <- data.frame(x = rep(1,500), y = rep(2, 500))
@@ -200,6 +251,11 @@ seg.var <- c("x","y")
         or very similar values of {seg.var}")
 ```
 
-To avoid this problem interpolation should be done rather on the covariates to be segmented rather than the coordinates. Alternatively small and rare gaps of data could be ignored. If the gap is too large there is also the possibility to split the dataset.
+To avoid this problem interpolation should be done rather on the covariates to
+be segmented rather than the coordinates. Alternatively small and rare gaps of
+data could be ignored. If the gap is too large there is also the possibility to
+split the dataset.
 
-Dataset with naturally occurring repetition of similar values (a boat at constant speed) are generally difficult to process with our segmentation/clustering algorithm.
+Dataset with naturally occurring repetition of similar values (a boat at
+constant speed) are generally difficult to process with our
+segmentation/clustering algorithm.
