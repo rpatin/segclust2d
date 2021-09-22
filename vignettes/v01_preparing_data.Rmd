@@ -57,7 +57,7 @@ segmentation(x_data.frame, lmin = 5, Kmax = 25)
 
 ## Move
 
-`Move` object can alternatively provided to the function. If using `segmentation()`, the user may omit `seg.var` argument and the algorithm will use the movement coordinates as segmentation variables. Alternatively if the user specify the segmented variable with argument `seg.var`, those variables must be present in the data associated to the `Move` object `x_move@data`
+`Move` object can alternatively be provided to the function. If using `segmentation()`, the user may omit `seg.var` argument and the algorithm will use the movement coordinates as segmentation variables. Alternatively if the user specifies the segmented variable with argument `seg.var`, those variables must be present in the data associated to the `Move` object `x_move@data`
 If `x_move` is a `Move` object, the syntax is simply:
 
 ```{r ex Move, eval = FALSE}
@@ -66,7 +66,7 @@ segmentation(x_move, lmin = 5, Kmax = 25)
 
 ## ltraj
 
-`ltraj` object can alternatively provided to the function. If using `segmentation()`, the user may omit `seg.var` argument and the algorithm will use the movement coordinates as segmentation variables. Alternatively if the user specify the segmented variable with argument `seg.var`, those variables must be present in the data associated to the `ltraj` object `x_ltraj@data`
+`ltraj` object can alternatively be provided to the function. If using `segmentation()`, the user may omit `seg.var` argument and the algorithm will use the movement coordinates as segmentation variables. Alternatively if the user specifies the segmented variable with argument `seg.var`, those variables must be present in the data associated to the `ltraj` object `x_ltraj@data`
 If `x_ltraj` is a `ltraj` object, the syntax is simply:
 
 ```{r ex ltraj, eval = FALSE}
@@ -154,7 +154,7 @@ lmin <- max(lmin/subsample_by,5)
 
 ## Best practice with subsampling
 
-In addition to reducing computation time, subsampling may also help the algorithm. Considering movement at the scale of hours when looking for home-ranges at the scale of months may blur the signal and for such analysis, one data per day may be sufficient. For all analysis, the user should think about the appropriate temporal resolution, with the idea that the finest temporal resolution may not always be appropriate.
+In addition to reducing computation time, subsampling may also help the algorithm. Considering movement at the scale of hours when looking for home-ranges at the scale of months may blur the signal and for such analysis, one data per day may be sufficient. For all analyses, the user should think about the appropriate temporal resolution, with the idea that the finest temporal resolution may not always be appropriate.
 
 *Note that subsampling has been implemented in such way that outputs will show all points but segmentation is calculated only on subsampled points. Points used in segmentation can be retrieved through `augment` in data column `subsample_ind` (The subsample indices for kept points and NA for ignored points).*
 
@@ -176,9 +176,9 @@ head(full_data)
 
 # Advice on data pre-processing
 
-When pre-processing movement data before segmentation/clustering it is common to use interpolation of trajectory to correct for missing data points. This may however cause problem if this lead to repetition of values. This can also arise if the individual have a very stable speed (i.e. a boat or a bird deriving on the sea) leading to very similar values.
+When pre-processing movement data before segmentation/clustering it is common to interpolate missing data points. This may however cause problem if this leads to repetition of values. This can also arise if the individual has a very stable speed (i.e. a boat or a bird deriving on the sea) leading to very similar values.
 
-When the repetition of identical or very similar values are longer than parameter `lmin`, there are segments with null variance, which cannot be accounted for by the algorithm. Should such cases arises, the algorithm will not fail and tell you about it:
+When the repetition of identical or very similar values are longer than parameter `lmin`, there are segments with null variance, which cannot be accounted for by the algorithm. Should such cases arise, the algorithm will fail and tell you about it:
 
 ```{r example repeated, eval = FALSE}
 df <- data.frame(x = rep(1,500), y = rep(2, 500))

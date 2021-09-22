@@ -1,4 +1,4 @@
-segclust2d: segmentation and joint segmentation/clustering methods for R
+segclust2d: bivariate segmentation with optional clustering for R
 ================
 
 [![](https://www.r-pkg.org/badges/version/segclust2d?color=orange)](https://cran.r-project.org/package=segclust2d)
@@ -17,11 +17,11 @@ provides tools for analysing outputs from R packages `moveHMM` and
 
 # Website
 
-Full documentation for segclust2d is available on its website:
+Full documentation for segclust2d is available on this website:
 <https://rpatin.github.io/segclust2d/>
 
-Three different topic are discussed there, and are also available as
-vignettes in the R package:
+Three topics are discussed there, and are also available as vignettes in
+the R package:
 
 -   [First, preparation of data to be analyzed with
     segmentation/clustering algorithm, including covariate calculations,
@@ -36,14 +36,17 @@ vignettes in the R package:
 
 # Installation
 
-For the CRAN version :
+For the
+[![](https://www.r-pkg.org/badges/version/segclust2d?color=orange)](https://cran.r-project.org/package=segclust2d)
+version :
 
 ``` r
 install.packages("segclust2d")
 ```
 
-If you want the newest version, you can install `segclust2d` from github
-with:
+If you want the newest
+[![](https://img.shields.io/badge/devel%20version-0.3.0-blue.svg)](https://github.com/rpatin/segclust2d),
+you can install `segclust2d` from github with:
 
 ``` r
 devtools::install_github("rpatin/segclust2d")
