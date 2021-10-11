@@ -85,14 +85,14 @@ Kmax = 25
 #                            subsample_by = 60)
 
 ## ----segmentation summary, echo = FALSE, results = 'asis'---------------------
-    cli::cli_alert_success("Best segmentation estimated with \\
-                      {shift_seg$Kopt.lavielle} segments, \\
-                      according to Lavielle's criterium")
-    cli::cli_text(cli::col_grey(
-    'Other number of segment may be selected 
-      by looking for likelihood breaks with plot_likelihood()'))
-    cli::cli_text(cli::col_grey(
-    'Results of the segmentation may be explored with plot() and segmap()'))
+   cli::cli_alert_success("Best segmentation estimated with \\
+                     {shift_seg$Kopt.lavielle} segments, \\
+                     according to Lavielle's criterium")
+   cli::cli_text(cli::col_grey(
+   'Other number of segments may be selected 
+     by looking for likelihood breaks with plot_likelihood()'))
+   cli::cli_text(cli::col_grey(
+   'Results of the segmentation may be explored with plot() and segmap()'))
 
 
 ## ----plot_likelihood example, fig.show = 'hold', fig.width = 4, fig.height = 3----
@@ -123,15 +123,15 @@ mode_segclust <- segclust(simulmode,
 ## ----segclust summary, echo = FALSE, results = 'asis'-------------------------
   cli::cli_alert_success(
     "Best segmentation/clustering estimated with \\
-    {mode_segclust$ncluster.BIC} cluster and \\
+    {mode_segclust$ncluster.BIC} clusters and \\
     {mode_segclust$Kopt.BIC[mode_segclust$ncluster.BIC]} segments according to BIC")
   cli::cli_text(cli::col_grey(
-    '{cli::symbol$arrow_right} Number of cluster should preferentially be selected 
+    '{cli::symbol$arrow_right} Number of clusters should preferentially be selected 
     according to biological knowledge. Exploring the BIC plot with plot_BIC()
-    can also provide advice to select the number of cluster.'))
+    can also provide advice to select the number of clusters.'))
   cli::cli_text(cli::col_grey(
-    '{cli::symbol$arrow_right} Once number of cluster is selected, \\
-    the number of segment should be selected according to BIC.'))
+    '{cli::symbol$arrow_right} Once number of clusters is selected, \\
+    the number of segments can be selected according to BIC.'))
   
   cli::cli_text(cli::col_grey(
     '{cli::symbol$arrow_right} Results of the segmentation/clustering
