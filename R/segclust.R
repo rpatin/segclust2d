@@ -188,7 +188,7 @@ segclust_internal <-
     if(scale.variable){
       cli::cli_alert_success(
         "Rescaling variables.
-      {cli::col_grey('To desactivate, use scale.variable = FALSE')}")
+      {cli::col_grey('To deactivate, use scale.variable = FALSE')}")
       dat[1,] <- scale(dat[1,])
       dat[2,] <- scale(dat[2,])
     } else {

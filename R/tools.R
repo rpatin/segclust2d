@@ -86,7 +86,7 @@ apply_subsampling <-
     } else {
       x$subsample_ind <- x_ind
       subsample_by <- 1
-      cli::cli_alert_success("Subsampling was desactivated with \\
+      cli::cli_alert_success("Subsampling was deactivated with \\
                            {cli::col_green('subsample = FALSE')}")
     } # end if(subsample)
     attr(x,'subsample_by') <- subsample_by
