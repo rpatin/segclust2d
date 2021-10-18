@@ -18,7 +18,7 @@ Description: Provides two methods for segmentation and joint segmentation/cluste
     The segmentation/clustering method alternates steps of dynamic programming with an Expectation-Maximization algorithm.
     This is an extension of Picard et al (2007) <doi:10.1111/j.1541-0420.2006.00729.x> method 
     (formerly available in 'cghseg' package) to the bivariate case.
-    The method is fully described in Patin et al (2018) <doi:10.1101/444794>.
+    The method is fully described in Patin et al (2020) <doi:10.1111/1365-2656.13105>.
 License: GPL-3
 LazyData: TRUE
 RoxygenNote: 7.1.1
