@@ -32,7 +32,7 @@ plot_states <- function(outputs,diag.var, position_width=0.3,order = FALSE){
   if(is.null(df.states$model)) df.states$model <- 'model'
   mu.list <- find_mu_sd(df.states,diag.var)
 
-  if(class(mu.list)== 'data.frame'){
+  if(inherits(mu.list,'data.frame')){
     g <- ggplot2::ggplot(data=mu.list, 
                          ggplot2::aes_string(x=state_variable,
                                              y="mu"))+
