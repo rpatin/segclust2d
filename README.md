@@ -9,11 +9,12 @@ segclust2d: bivariate segmentation with optional clustering for R
 # Introduction
 
 `segclust2d` provides R code for a segmentation method that can be used
-on all bivariate time-series. The segmentation method can additionaly be
-associated with a clustering algorithm. It was originally intended for
-ecological segmentation (home-range and behavioural modes) but can be
-easily applied on other type of time-series. The package also provides
-tools for analysing outputs from R packages `moveHMM` and `marcher`.
+on all bivariate time-series. The segmentation method can additionally
+be associated with a clustering algorithm. It was originally intended
+for ecological segmentation (home-range and behavioural modes) but can
+be easily applied on other type of time-series. The package also
+provides tools for analysing outputs from R packages `moveHMM` and
+`marcher`.
 
 # Website
 
