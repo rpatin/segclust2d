@@ -85,14 +85,14 @@ Kmax = 25
 #                            subsample_by = 60)
 
 ## ----segmentation summary, echo = FALSE, results = 'asis'---------------------
-   cli::cli_alert_success("Best segmentation estimated with \\
-                     {shift_seg$Kopt.lavielle} segments, \\
-                     according to Lavielle's criterium")
-   cli::cli_text(cli::col_grey(
-   'Other number of segments may be selected 
-     by looking for likelihood breaks with plot_likelihood()'))
-   cli::cli_text(cli::col_grey(
-   'Results of the segmentation may be explored with plot() and segmap()'))
+    cli::cli_alert_success("Best segmentation estimated with \\
+                      {shift_seg$Kopt.lavielle} segments, \\
+                      according to Lavielle's criterium")
+    cli::cli_text(cli::col_grey(
+    'Other number of segments may be selected 
+      by looking for likelihood breaks with plot_likelihood()'))
+    cli::cli_text(cli::col_grey(
+    'Results of the segmentation may be explored with plot() and segmap()'))
 
 
 ## ----plot_likelihood example, fig.show = 'hold', fig.width = 4, fig.height = 3----
