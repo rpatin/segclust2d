@@ -64,18 +64,18 @@ argcheck_type_coord <-
 
 argcheck_seg.var <- function(x, seg.var, is_segclust){
   
-  if(class(x) == "data.frame"){
+  if(inherits(x, "data.frame")){
     x.df <- x
-  } else if (class(x) == "Move") {
+  } else if (inherits(x,"Move")) {
     x.df <- x@data
-  } else if (class(x) == "ltraj") {
+  } else if (inherits(x,"ltraj")) {
     x.infolocs <- adehabitatLT::infolocs(x)[[1]]
     x.df <- cbind(x.infolocs,
                   dplyr::select(x[[1]],
                                 - dplyr::any_of(colnames(x.infolocs)))
     )
     
-  } else if (class(x) == "sftraj") {
+  } else if (inherits(x,"sftraj")) {
     
   }
   
@@ -91,12 +91,12 @@ argcheck_seg.var <- function(x, seg.var, is_segclust){
       cli::cli_alert_warning(
         "Argument {cli::col_yellow('seg.var')} missing")
       
-      if(class(x) == "data.frame"){
+      if(inherits(x,"data.frame")){
         cli::cli_text(cli::col_grey(
           "taking default value \\
         {cli::col_yellow('seg.var = c(\"x\",\"y\")')}")) 
         seg.var <- c("x","y")
-      } else if (class(x) == "Move") {
+      } else if (inherits(x,"Move")) {
         
         cli::cli_text(cli::col_grey(
           "taking coordinates as default value for a move object"))  
@@ -112,11 +112,11 @@ argcheck_seg.var <- function(x, seg.var, is_segclust){
           x.df[,seg.var[2]] <- x_coord[,2]
         }
         
-      } else if (class(x) == "ltraj") {
+      } else if (inherits(x,"ltraj")) {
         cli::cli_text(cli::col_grey(
           "taking coordinates as default value for a ltraj object"))
         seg.var <- c("x","y")
-      } else if (class(x) == "sftraj") {
+      } else if (inherits(x,"sftraj")) {
         
       }
       

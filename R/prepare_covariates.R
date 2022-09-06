@@ -144,9 +144,17 @@ add_covariates.data.frame <-
 
 calc_dist <- function(x, coord.names = c("x","y"), smoothed = FALSE){
   tmp <- 
-    zoo::rollapply(cbind(x[,coord.names[1]],
-                         x[,coord.names[2]]), 2,
-                   stats::dist, by.column = FALSE, fill = NA)
+    zoo::rollapply(
+      cbind(x[,coord.names[1]],
+            x[,coord.names[2]]), 2,
+      function(x){
+        x.tmp <- stats::dist(x)
+        return(as.numeric(x.tmp))
+      },
+      by.column = FALSE,
+      fill = NA
+    )
+  # tmp <- as.numeric(tmp)
   if( smoothed ){
     tmp <-
       zoo::rollapply(tmp, 2, mean, 

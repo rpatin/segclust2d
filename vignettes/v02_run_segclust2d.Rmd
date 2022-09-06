@@ -258,7 +258,7 @@ shift_seg <- segmentation(simulshift,
 
  Once the segmentation have been successfully run, a summary like this will appear
  
- ```{r segmentation summary, echo = FALSE, results = 'asis'}
+```{r segmentation summary, echo = FALSE, results = 'asis'}
     cli::cli_alert_success("Best segmentation estimated with \\
                       {shift_seg$Kopt.lavielle} segments, \\
                       according to Lavielle's criterium")

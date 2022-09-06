@@ -12,7 +12,7 @@ library(badger)
 
 `r badger::badge_cran_release("segclust2d", "orange")`
 `r badger::badge_cran_download("segclust2d", "grand-total", "yellow")`
-`r badger::badge_devel("rpatin/segclust2d", "blue")`
+`r badger::badge_github_version("rpatin/segclust2d", "blue")`
 `r badger::badge_last_commit("rpatin/segclust2d")`
 
 # Introduction

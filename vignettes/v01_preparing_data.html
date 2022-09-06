@@ -12,7 +12,7 @@
 
 <meta name="author" content="R. Patin" />
 
-<meta name="date" content="2021-09-21" />
+<meta name="date" content="2021-09-30" />
 
 <title>1 - Preparing data for Segmentation/Clustering with segclust2d</title>
 
@@ -141,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">1 - Preparing data for Segmentation/Clustering with segclust2d</h1>
 <h4 class="author">R. Patin</h4>
-<h4 class="date">2021-09-21</h4>
+<h4 class="date">2021-09-30</h4>
 
 
 
@@ -173,12 +173,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="move" class="section level2">
 <h2>Move</h2>
-<p><code>Move</code> object can alternatively provided to the function. If using <code>segmentation()</code>, the user may omit <code>seg.var</code> argument and the algorithm will use the movement coordinates as segmentation variables. Alternatively if the user specify the segmented variable with argument <code>seg.var</code>, those variables must be present in the data associated to the <code>Move</code> object <code>x_move@data</code> If <code>x_move</code> is a <code>Move</code> object, the syntax is simply:</p>
+<p><code>Move</code> object can alternatively be provided to the function. If using <code>segmentation()</code>, the user may omit <code>seg.var</code> argument and the algorithm will use the movement coordinates as segmentation variables. Alternatively if the user specifies the segmented variable with argument <code>seg.var</code>, those variables must be present in the data associated to the <code>Move</code> object <code>x_move@data</code> If <code>x_move</code> is a <code>Move</code> object, the syntax is simply:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">segmentation</span>(x_move, <span class="at">lmin =</span> <span class="dv">5</span>, <span class="at">Kmax =</span> <span class="dv">25</span>)</span></code></pre></div>
 </div>
 <div id="ltraj" class="section level2">
 <h2>ltraj</h2>
-<p><code>ltraj</code> object can alternatively provided to the function. If using <code>segmentation()</code>, the user may omit <code>seg.var</code> argument and the algorithm will use the movement coordinates as segmentation variables. Alternatively if the user specify the segmented variable with argument <code>seg.var</code>, those variables must be present in the data associated to the <code>ltraj</code> object <code>x_ltraj@data</code> If <code>x_ltraj</code> is a <code>ltraj</code> object, the syntax is simply:</p>
+<p><code>ltraj</code> object can alternatively be provided to the function. If using <code>segmentation()</code>, the user may omit <code>seg.var</code> argument and the algorithm will use the movement coordinates as segmentation variables. Alternatively if the user specifies the segmented variable with argument <code>seg.var</code>, those variables must be present in the data associated to the <code>ltraj</code> object <code>x_ltraj@data</code> If <code>x_ltraj</code> is a <code>ltraj</code> object, the syntax is simply:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">segmentation</span>(x_ltraj, <span class="at">lmin =</span> <span class="dv">5</span>, <span class="at">Kmax =</span> <span class="dv">25</span>)</span></code></pre></div>
 </div>
 <div id="sftraj" class="section level2">
@@ -242,7 +242,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="best-practice-with-subsampling" class="section level2">
 <h2>Best practice with subsampling</h2>
-<p>In addition to reducing computation time, subsampling may also help the algorithm. Considering movement at the scale of hours when looking for home-ranges at the scale of months may blur the signal and for such analysis, one data per day may be sufficient. For all analysis, the user should think about the appropriate temporal resolution, with the idea that the finest temporal resolution may not always be appropriate.</p>
+<p>In addition to reducing computation time, subsampling may also help the algorithm. Considering movement at the scale of hours when looking for home-ranges at the scale of months may blur the signal and for such analysis, one data per day may be sufficient. For all analyses, the user should think about the appropriate temporal resolution, with the idea that the finest temporal resolution may not always be appropriate.</p>
 <p><em>Note that subsampling has been implemented in such way that outputs will show all points but segmentation is calculated only on subsampled points. Points used in segmentation can be retrieved through <code>augment</code> in data column <code>subsample_ind</code> (The subsample indices for kept points and NA for ignored points).</em></p>
 <p><em>Outputs may be more easily explored if subsampling is done before providing the data to <code>segclust2d</code> functions</em></p>
 </div>
@@ -260,8 +260,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="advice-on-data-pre-processing" class="section level1">
 <h1>Advice on data pre-processing</h1>
-<p>When pre-processing movement data before segmentation/clustering it is common to use interpolation of trajectory to correct for missing data points. This may however cause problem if this lead to repetition of values. This can also arise if the individual have a very stable speed (i.e. a boat or a bird deriving on the sea) leading to very similar values.</p>
-<p>When the repetition of identical or very similar values are longer than parameter <code>lmin</code>, there are segments with null variance, which cannot be accounted for by the algorithm. Should such cases arises, the algorithm will not fail and tell you about it:</p>
+<p>When pre-processing movement data before segmentation/clustering it is common to interpolate missing data points. This may however cause problem if this leads to repetition of values. This can also arise if the individual has a very stable speed (i.e. a boat or a bird deriving on the sea) leading to very similar values.</p>
+<p>When the repetition of identical or very similar values are longer than parameter <code>lmin</code>, there are segments with null variance, which cannot be accounted for by the algorithm. Should such cases arise, the algorithm will fail and tell you about it:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">500</span>), <span class="at">y =</span> <span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">500</span>))</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">segclust</span>(df, </span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">seg.var =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>,<span class="st">&quot;y&quot;</span>),</span>
