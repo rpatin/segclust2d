@@ -101,9 +101,10 @@ add_covariates.data.frame <-
                      by.column = FALSE, 
                      fill = NA, align = "right")
     n <- nrow(x)
+
     tmptime  <- as.numeric(
-      difftime(x[2:n,timecol],
-               x[1:(n-1),timecol], 
+      difftime(x[2:n,timecol, drop = TRUE],
+               x[1:(n-1),timecol, drop = TRUE], 
                units = units)
     )
     x_speed <- x_dist/c(tmptime,NA)
