@@ -38,8 +38,7 @@
 #'Segmentation/Clustering Model for the Analysis of Array CGH Data.
 #'\emph{Biometrics}, 63: 758-766. doi:10.1111/j.1541-0420.2006.00729.x
 #'
-#' @docType package
 #' @name segclust2d
 #' @useDynLib segclust2d, .registration=TRUE
 #' @importFrom Rcpp evalCpp
-NULL
+"_PACKAGE"

@@ -1,3 +1,10 @@
+## version 0.3.3
+
+---
+
+- Further fix when using tibble or other data.frame format that requires using 
+`drop = TRUE` when subsetting columns
+
 ## version 0.3.2
 
 ---

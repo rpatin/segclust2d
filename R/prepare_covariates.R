@@ -146,8 +146,8 @@ add_covariates.data.frame <-
 calc_dist <- function(x, coord.names = c("x","y"), smoothed = FALSE){
   tmp <- 
     zoo::rollapply(
-      cbind(x[,coord.names[1]],
-            x[,coord.names[2]]), 2,
+      cbind(x[,coord.names[1], drop = TRUE],
+            x[,coord.names[2], drop = TRUE]), 2,
       function(x){
         x.tmp <- stats::dist(x)
         return(as.numeric(x.tmp))
@@ -193,12 +193,12 @@ calc_speed <-
     tmpdist  <- calc_dist(x, coord.names = coord.names)
     n <- nrow(x)
     tmptime  <- as.numeric(
-      difftime(x[2:n,timecol],
-               x[1:(n-1),timecol],
+      difftime(x[2:n,timecol, drop = TRUE],
+               x[1:(n - 1),timecol, drop = TRUE],
                units = units)
     )
     tmpspeed  <- tmpdist/c(tmptime,NA)
-    if(smoothed){
+    if (smoothed) {
       tmpspeed <-
         zoo::rollapply(tmpspeed, 2, mean,
                        by.column = FALSE, 
@@ -232,8 +232,8 @@ calc_speed <-
 
 spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
   tmpdist  <- calc_dist(x, coord.names = coord.names)
-  xx <- x[,coord.names[1]]
-  yy <- x[,coord.names[2]]
+  xx <- x[ , coord.names[1], drop = TRUE]
+  yy <- x[ , coord.names[2], drop = TRUE]
   if(is.null(radius)) radius <- stats::median(tmpdist,na.rm=TRUE)
   radius2 <- radius^2
   ri2 <- 0.998*radius2
@@ -330,8 +330,8 @@ spatial_angle <- function(x, coord.names = c("x","y"), radius = NULL){
 
 angular_speed <- function(x, coord.names = c("x","y")){
   
-  xx <- diff(x[,coord.names[1]])
-  yy <- diff(x[,coord.names[2]])
+  xx <- diff(x[,coord.names[1], drop = TRUE])
+  yy <- diff(x[,coord.names[2], drop = TRUE])
   b<-sign(xx)
   b[b==0] <- 1  #corrects for the fact that sign(0) == 0
   bearings <- b*(yy<0)*pi+atan(xx/yy)
